@@ -1,0 +1,57 @@
+{
+  "all_simulation_invariants_ok": true,
+  "created_utc": "2026-08-25T07:50:19.616289+00:00",
+  "n_source_records": 6,
+  "n_target_records": 4,
+  "numpy": "1.26.4",
+  "output_files": [
+    "data_dictionary.csv",
+    "figure_observation_aware_hb_tpm_smoke.png",
+    "learned_source_prior.json",
+    "method_summary.csv",
+    "observed_events/source/source_000.csv.gz",
+    "observed_events/source/source_001.csv.gz",
+    "observed_events/source/source_002.csv.gz",
+    "observed_events/source/source_003.csv.gz",
+    "observed_events/source/source_004.csv.gz",
+    "observed_events/source/source_005.csv.gz",
+    "observed_events/target/target_000.csv.gz",
+    "observed_events/target/target_001.csv.gz",
+    "observed_events/target/target_002.csv.gz",
+    "observed_events/target/target_003.csv.gz",
+    "settings_resolved.json",
+    "simulation_truth/trajectory_coefficients.csv",
+    "source_fit_results.csv",
+    "target_estimator_results.csv"
+  ],
+  "pandas": "2.2.2",
+  "protocol": "/Users/elviscui/Downloads/Trajectory_aware_Principal_Manifold_Framework_for_Data_Augmentation/collaboration_handoff/HB_TPM_experiment_package_20260825/photon/settings/oa_hb_tpm_smoke.json",
+  "python": "3.12.4",
+  "schema_version": "oa-hb-tpm-results-0.1.0",
+  "scipy": "1.13.1",
+  "simulation_truth_joined_after_all_fits": true,
+  "source_prior_input": "source event_time_s arrays only",
+  "stage": "smoke",
+  "target_estimator_input": "target event_time_s array only",
+  "truth_separation": {
+    "calibrated_inputs": [
+      "duration_s",
+      "wxy_um",
+      "kappa",
+      "molecular_brightness_cps",
+      "background_cps"
+    ],
+    "estimator_visible": [
+      "event_time_s"
+    ],
+    "truth_joined_only_after_all_fits": true,
+    "truth_only": [
+      "D_start",
+      "D_end",
+      "D(t)",
+      "positions_um",
+      "molecule_id_truth",
+      "conditional_photon_rate_cps"
+    ]
+  }
+}

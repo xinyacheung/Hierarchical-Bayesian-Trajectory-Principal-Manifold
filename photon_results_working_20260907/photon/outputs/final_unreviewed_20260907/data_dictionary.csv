@@ -1,0 +1,3 @@
+field,file_group,estimator_visible,unit,description
+event_time_s,observed_events,True,s,Ordered detected photon arrival time
+truth_log_d_start/truth_log_d_end,simulation_truth,False,log(um^2/s),Simulation-only trajectory coefficients

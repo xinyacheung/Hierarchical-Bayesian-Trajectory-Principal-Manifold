@@ -1,0 +1,50 @@
+{
+  "covariance_log_d": [
+    [
+      0.014644541332906345,
+      0.015893563956974235
+    ],
+    [
+      0.015893563956974235,
+      0.03499986047357721
+    ]
+  ],
+  "diagnostics": {
+    "covariance_shrinkage": 0.2,
+    "estimator_visible_input": "event_time_s only",
+    "failed_source_fits": 0,
+    "mean_source_measurement_covariance_log_d": [
+      [
+        0.14134271041314056,
+        -0.06136597487434633
+      ],
+      [
+        -0.061365974874346335,
+        0.10264157768406983
+      ]
+    ],
+    "observed_covariance_log_d": [
+      [
+        0.08376668840983931,
+        0.0026489443118231145
+      ],
+      [
+        0.0026489443118231145,
+        0.11065407255847977
+      ]
+    ],
+    "raw_deconvolved_eigenvalues": [
+      -0.09670792893537487,
+      0.047144401806483556
+    ],
+    "simulation_truth_used": false,
+    "source_information": "photon event quasi-likelihood fits only",
+    "variance_floor": 0.0025
+  },
+  "mean_log_d": [
+    3.7750797963660627,
+    4.305663617172027
+  ],
+  "n_source_records": 6,
+  "n_successful_source_fits": 6
+}

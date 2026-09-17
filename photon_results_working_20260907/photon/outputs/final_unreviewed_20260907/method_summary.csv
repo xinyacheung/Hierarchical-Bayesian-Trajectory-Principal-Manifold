@@ -1,0 +1,3 @@
+method_id,n_records,success_rate,log_endpoint_rmse,mean_curve_relative_rmse,median_curve_relative_rmse,endpoint_coverage,mean_runtime_s
+target_only_event_qmle,100,0.91,0.6953137909735664,0.4378448665988607,0.41571179480989723,0.82,0.22711734897457064
+oa_hb_tpm_map,100,1.0,0.3090892979495566,0.2180297435442849,0.1849617402674084,0.91,0.2023911842680536

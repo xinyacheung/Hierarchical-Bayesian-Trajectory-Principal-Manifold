@@ -1,0 +1,4 @@
+figure_label,script,input_result_directory,config_sha256,seed_set,output_file,manual_processing,verified_by
+Fig_card_trajectory,TBD,TBD,TBD,TBD,TBD,none,TBD
+Fig_card_sparse_budget,TBD,TBD,TBD,TBD,TBD,none,TBD
+Fig_photon_oa_hb_tpm,photon/src/run_observation_aware_hb_tpm_benchmark.py,photon/outputs/smoke,TBD,2026082501,photon/outputs/smoke/figure_observation_aware_hb_tpm_smoke.png,none,TBD

@@ -1,0 +1,60 @@
+{
+  "schema_version": "oa-hb-tpm-protocol-0.1.0",
+  "stage": "smoke",
+  "description": "Photon-only empirical-Bayes trajectory transfer for smooth time-varying diffusion",
+  "seed": 2026082501,
+  "source_records": 6,
+  "target_records": 4,
+  "duration_s": 0.08,
+  "brownian_dt_s": 0.00002,
+  "n_molecules": 12,
+  "wxy_um": 0.25,
+  "wz_um": 1.25,
+  "background_cps": 1000.0,
+  "source_molecular_brightness_cps": 60000.0,
+  "target_molecular_brightness_cps": 25000.0,
+  "truth_family": {
+    "mean_log_endpoints": [3.8066624897703196, 4.553876891600541],
+    "sd_log_endpoints": [0.18, 0.22],
+    "correlation": 0.65,
+    "note": "Simulation-only family; never passed to either estimator."
+  },
+  "estimator": {
+    "d_bounds_um2_s": [10.0, 220.0],
+    "occupancy_bounds": [0.02, 2.0],
+    "state_max": 8,
+    "n_refinement_intervals": 8,
+    "optimizer_maxiter": 40,
+    "optimizer_ftol": 1e-08,
+    "optimizer_gtol": 0.00002,
+    "hessian_step": 0.003,
+    "information_eigenvalue_floor": 0.001
+  },
+  "empirical_bayes": {
+    "variance_floor": 0.0025,
+    "covariance_shrinkage": 0.2
+  },
+  "methods": [
+    "target_only_event_qmle",
+    "oa_hb_tpm_map"
+  ],
+  "truth_separation": {
+    "estimator_visible": ["event_time_s"],
+    "calibrated_inputs": [
+      "duration_s",
+      "wxy_um",
+      "kappa",
+      "molecular_brightness_cps",
+      "background_cps"
+    ],
+    "truth_only": [
+      "D_start",
+      "D_end",
+      "D(t)",
+      "positions_um",
+      "molecule_id_truth",
+      "conditional_photon_rate_cps"
+    ],
+    "truth_joined_only_after_all_fits": true
+  }
+}

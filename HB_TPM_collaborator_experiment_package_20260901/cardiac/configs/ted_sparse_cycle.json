@@ -1,0 +1,29 @@
+{
+  "schema_version": "cardiac-sparse-cycle-1.0.0",
+  "dataset": "TED",
+  "seed": 20260825,
+  "n_folds": 5,
+  "validation_fold_offset": 1,
+  "shot_budgets": [2, 3, 5, 7, 10],
+  "sampling_strategies": ["uniform", "random", "clustered"],
+  "random_replicates": 5,
+  "uniform_replicates": 1,
+  "clustered_replicates": 5,
+  "clustered_fraction_of_cycle": 0.35,
+  "oracle_ed_es_sampling_enabled": false,
+  "primary_metrics": [
+    "hidden_frame_dice",
+    "hidden_frame_hd95_px",
+    "lv_area_curve_relative_rmse"
+  ],
+  "secondary_metrics": [
+    "ed_es_timing_error_frames",
+    "cycle_closure_error",
+    "temporal_jerk",
+    "lv_area_trajectory_95_coverage",
+    "failure_rate",
+    "runtime_s"
+  ],
+  "statistical_unit": "patient",
+  "hidden_frame_policy": "Hidden images and masks are scoring-only for the target patient."
+}

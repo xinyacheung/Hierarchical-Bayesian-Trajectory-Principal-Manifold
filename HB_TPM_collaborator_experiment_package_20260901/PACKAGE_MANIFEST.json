@@ -1,0 +1,347 @@
+{
+  "created_utc": "2026-09-01T08:29:48.523173+00:00",
+  "file_count_excluding_manifest": 68,
+  "files": [
+    {
+      "bytes": 1864,
+      "path": "DATA_ACCESS.md",
+      "sha256": "69c900becc4481206c1ea183b28ddcbf905d00570e66767dc6b0eacd11f256cf"
+    },
+    {
+      "bytes": 5266,
+      "path": "EXPERIMENT_DESIGN.md",
+      "sha256": "8e22451a41f045ca5160268783d6d350e7fac79887bcda63bed18c12261436f0"
+    },
+    {
+      "bytes": 391,
+      "path": "FIGURE_PROVENANCE.csv",
+      "sha256": "bc49875e5885be31367f6ddf91f96125872a19dfeb45e095f76adc27b5f734b9"
+    },
+    {
+      "bytes": 1843,
+      "path": "MANUSCRIPT_HANDOFF.md",
+      "sha256": "339188ed5dced77cff47261d9ba6906f34574c708d02c01f3ada1aa5bde40f34"
+    },
+    {
+      "bytes": 2589,
+      "path": "README.md",
+      "sha256": "466e37c15697dd352bc58a90799c284677f201c6eed04b09bb6b30daa9b51c75"
+    },
+    {
+      "bytes": 1684,
+      "path": "RESULT_CONTRACT.md",
+      "sha256": "1e3b49a1961d0f2d4848977e2e5aa66f65b993be716c1b072cefafbdcd3426e2"
+    },
+    {
+      "bytes": 3989,
+      "path": "TODO.md",
+      "sha256": "88e989588f11a4793cb49a754c4af92e22d430a9627bf7a6d07d3ec3ad23ea9a"
+    },
+    {
+      "bytes": 3983,
+      "path": "cardiac/COLLABORATOR_RUN_ORDER.md",
+      "sha256": "13d5d8569e18e67808863bd4d953779ef1578ebf08b1ce8d424aaa7ecc411c79"
+    },
+    {
+      "bytes": 3933,
+      "path": "cardiac/MODEL_IMPLEMENTATION_SPEC.md",
+      "sha256": "7594ddab350349875c1897231a6cdbe63ed163f3b878617840fbb73be6ec66fe"
+    },
+    {
+      "bytes": 6641,
+      "path": "cardiac/README.md",
+      "sha256": "1a84bad505637df86aad241940987b02b7c8ece371c3d512a4902064222fe67c"
+    },
+    {
+      "bytes": 504,
+      "path": "cardiac/configs/oa_hb_tpm_main.json",
+      "sha256": "00d62c17e81d343ef92fa79cadd08b013f98ff3e9522ec52b59ae2b98d1b0bf5"
+    },
+    {
+      "bytes": 497,
+      "path": "cardiac/configs/oa_hb_tpm_smoke.json",
+      "sha256": "9a99cc7f28170d8e44d599ac0e972624dccd5f299689a927fb75e33b02d2d77b"
+    },
+    {
+      "bytes": 826,
+      "path": "cardiac/configs/ted_sparse_cycle.json",
+      "sha256": "54d1a0b3df58964a98676ebfbf7e6773029036895b1efe38471694059097a0d4"
+    },
+    {
+      "bytes": 7029,
+      "path": "cardiac/scripts/aggregate_gpu_runs.py",
+      "sha256": "125ef934573953ab2fb11ea920d4369f7cd70b3c6791745a0a27e51adf8a5ac6"
+    },
+    {
+      "bytes": 4153,
+      "path": "cardiac/scripts/gpu_preflight.py",
+      "sha256": "1b0797270b5acbe4a23990d90c88b74d778301ee1dc85e4aa6efac6f5b8256ce"
+    },
+    {
+      "bytes": 7136,
+      "path": "cardiac/scripts/make_sparse_splits.py",
+      "sha256": "b5cb7fd1eba32eb58c3a5d9aa21b2f1f4e513136d2d977d8985a7a6b5b7b20c1"
+    },
+    {
+      "bytes": 8188,
+      "path": "cardiac/scripts/prepare_standardized_sequences.py",
+      "sha256": "4a49c7e142e1bb406cccf47a2fff0a09ac590570aef40cb367e88f55415bb341"
+    },
+    {
+      "bytes": 8156,
+      "path": "cardiac/scripts/run_oracle_contour_baseline.py",
+      "sha256": "aeb4b267f2cab1635f654635efeebb59334cb7c5dff2870b605f27ca884e4a70"
+    },
+    {
+      "bytes": 41561,
+      "path": "cardiac/scripts/train_observation_aware.py",
+      "sha256": "da355601d2ba07ea49da59b4f38601248fa1c426da3b91164589a48c51c9b746"
+    },
+    {
+      "bytes": 4797,
+      "path": "cardiac/scripts/validate_manifest.py",
+      "sha256": "5145652d288ed14812d1bc3639847c304a56116807fcd95a6acdadca9986d621"
+    },
+    {
+      "bytes": 1438,
+      "path": "cardiac/slurm_cardiac_array.sbatch",
+      "sha256": "0a7de7fb1449a5d9ba6c5340231acaceb832717d5a49dff508e9b3e9195a24a1"
+    },
+    {
+      "bytes": 168,
+      "path": "cardiac/src/__init__.py",
+      "sha256": "a0c6b172edcba58c5e831e60f2dc3fefb9465add00c6839a2474bcfc809d25c5"
+    },
+    {
+      "bytes": 16353,
+      "path": "cardiac/src/observation_aware_cardiac.py",
+      "sha256": "6a3ea8b65f20dd13a414e507dc5bae2059089f134c585acca94ec4e82439abbd"
+    },
+    {
+      "bytes": 15913,
+      "path": "cardiac/tests/test_deep_model_smoke.py",
+      "sha256": "74e350039af73b00e6778a7dadd1e66ff11ad8d9d9016db7a3520695aa99c4bd"
+    },
+    {
+      "bytes": 4379,
+      "path": "cardiac/tests/test_pipeline_smoke.py",
+      "sha256": "28eac27891902e31918d38e976d3a4a77f13bf7f29935292e5e6057029b12beb"
+    },
+    {
+      "bytes": 7641,
+      "path": "manuscript/arxiv.sty",
+      "sha256": "1687decd1564d6d0cd9280f9a1a7e785e0efc4e4fcdf3d4a35bc5eb092e1a351"
+    },
+    {
+      "bytes": 5438843,
+      "path": "manuscript/hb_tpm_manuscript_arxiv.pdf",
+      "sha256": "45f7f481be9138b7ee2ec4b889ba506d84fde4fd993a55f0e824fa75334ecf94"
+    },
+    {
+      "bytes": 4786658,
+      "path": "manuscript/hb_tpm_manuscript_preprint.pdf",
+      "sha256": "b187674db8d4edd2dbbdceae0172922a22cda4ebe9fe9b0dd73ce6a2d16df5da"
+    },
+    {
+      "bytes": 1074554,
+      "path": "manuscript/hb_tpm_trajectory_model.zip",
+      "sha256": "2496086077d761ca0c4b3b18e50b1bb77a9804e24d174c16c7b4e9f76fa49f4b"
+    },
+    {
+      "bytes": 34058,
+      "path": "manuscript/references.bib",
+      "sha256": "47687f543215c197a2e583a00228808316d4523b6a3e8068ac92f72b49e189bb"
+    },
+    {
+      "bytes": 120239,
+      "path": "manuscript/template.tex",
+      "sha256": "9fa5b92fa98fb79100fe71a9b81f0ffb3e5d6a444ac33ccef62e637fccbd7db2"
+    },
+    {
+      "bytes": 120428,
+      "path": "manuscript/template_arxiv.tex",
+      "sha256": "68361b1a58dc949427a1f60cc66677e7a7dc67c987e4bfacd43ec909b2a910d7"
+    },
+    {
+      "bytes": 1248,
+      "path": "photon/GATE_SIGNOFF.md",
+      "sha256": "2c9102c0931f6eccad14f2b053f6d645e6e594c82d78776bfa68609609ce2065"
+    },
+    {
+      "bytes": 1864,
+      "path": "photon/README.md",
+      "sha256": "ba9b22b5c06b03dde012fae140ef410b3462ad6d87ea9224d365c24eda753550"
+    },
+    {
+      "bytes": 4288,
+      "path": "photon/SIMULATION_CONTRACT.md",
+      "sha256": "6cc08b4fce208a75de857ef3c9b3c9a400a2344affa1f18ce425abddd1b137e5"
+    },
+    {
+      "bytes": 1890,
+      "path": "photon/outputs/smoke/benchmark_manifest.json",
+      "sha256": "a50fba33130b6cd3a14c321f1b9892b8e5207d08836ddae9725d27607f6ad288"
+    },
+    {
+      "bytes": 234,
+      "path": "photon/outputs/smoke/data_dictionary.csv",
+      "sha256": "fe65a7b3b492303b3eda4d4de8d07c628596e869e665b2f4a186f8f3ff385f26"
+    },
+    {
+      "bytes": 225122,
+      "path": "photon/outputs/smoke/figure_observation_aware_hb_tpm_smoke.png",
+      "sha256": "56422f864de7667ad9c3c84c2adebfc2711e6e2de71e39f3835ea6d3880fb4a9"
+    },
+    {
+      "bytes": 1064,
+      "path": "photon/outputs/smoke/learned_source_prior.json",
+      "sha256": "5e9213926a52ca3cd994deba96de3735dd18c1e15e21930ff0a238bf25986cba"
+    },
+    {
+      "bytes": 352,
+      "path": "photon/outputs/smoke/method_summary.csv",
+      "sha256": "3398aa2c80e79c1fa156dd97fe35a9460b2936b0cce7d40d7637ce7016ae7796"
+    },
+    {
+      "bytes": 8333,
+      "path": "photon/outputs/smoke/observed_events/source/source_000.csv.gz",
+      "sha256": "e7b5c3ef9e32c2c5b3624e4bb35b761987e999eb2c75b780ca5985a1372148e1"
+    },
+    {
+      "bytes": 8356,
+      "path": "photon/outputs/smoke/observed_events/source/source_001.csv.gz",
+      "sha256": "9b808b52b3dcaa5f24f52138a84621973eeb96257fbe490130fc283995b1e096"
+    },
+    {
+      "bytes": 11616,
+      "path": "photon/outputs/smoke/observed_events/source/source_002.csv.gz",
+      "sha256": "1596444f13c0874b522ac4f69836c56825f22f177164ecf527f6c5499e754238"
+    },
+    {
+      "bytes": 7957,
+      "path": "photon/outputs/smoke/observed_events/source/source_003.csv.gz",
+      "sha256": "6aa3497dc5fd62479c79b8b629daaa768daa2b59f3d3ac251ee04fa6f1ee1ed0"
+    },
+    {
+      "bytes": 9753,
+      "path": "photon/outputs/smoke/observed_events/source/source_004.csv.gz",
+      "sha256": "4379b793f6c9a64c3d955a4381b45518287b267d8a22cec482951106b0b442f4"
+    },
+    {
+      "bytes": 11586,
+      "path": "photon/outputs/smoke/observed_events/source/source_005.csv.gz",
+      "sha256": "7761ed95219f1e34e9e74d534185d37d7a86a4674856c7cba880581403768d27"
+    },
+    {
+      "bytes": 3649,
+      "path": "photon/outputs/smoke/observed_events/target/target_000.csv.gz",
+      "sha256": "e179513b53bc8b61e3d2648c49e4876086db92d8f6aeefac68b4f5c400b1bcb7"
+    },
+    {
+      "bytes": 4015,
+      "path": "photon/outputs/smoke/observed_events/target/target_001.csv.gz",
+      "sha256": "f19a1127ea22c6b60ca47e68289e5bf123c8df0513247f86c0767ccbde787bed"
+    },
+    {
+      "bytes": 4158,
+      "path": "photon/outputs/smoke/observed_events/target/target_002.csv.gz",
+      "sha256": "e821b2251e49b215a0848b699417dfcbe51ae5c4de5b4f67436b3746207c6a35"
+    },
+    {
+      "bytes": 4020,
+      "path": "photon/outputs/smoke/observed_events/target/target_003.csv.gz",
+      "sha256": "3957d4b538a0a5b872d341ea6df8c25052a9affd437a065cb904293bd85eb574"
+    },
+    {
+      "bytes": 1578,
+      "path": "photon/outputs/smoke/settings_resolved.json",
+      "sha256": "387244de18b0b33781e2a4b6c0a32889936f968067b820df68db982f92f885b2"
+    },
+    {
+      "bytes": 1103,
+      "path": "photon/outputs/smoke/simulation_truth/trajectory_coefficients.csv",
+      "sha256": "d945eb2d3f08af3b065aec44f2e8b93d40f909cb2adccfb80756eebd4791a179"
+    },
+    {
+      "bytes": 834,
+      "path": "photon/outputs/smoke/source_fit_results.csv",
+      "sha256": "8d0ebfa6a7b1ec4a9e05e57eb913bf5524e3f46657ddabfee2e5b77ee613cc3a"
+    },
+    {
+      "bytes": 1841,
+      "path": "photon/outputs/smoke/target_estimator_results.csv",
+      "sha256": "c3bbcd08a940455b6c2fd5c9520be7154c07c056310b75f418bc0e8680bc645d"
+    },
+    {
+      "bytes": 958,
+      "path": "photon/scripts/run_gate.sh",
+      "sha256": "dc34322932375d0d48e3974d029a2e4ff8832377f62791a0804126a9db6ec491"
+    },
+    {
+      "bytes": 1499,
+      "path": "photon/settings/oa_hb_tpm_final.json",
+      "sha256": "638d9170d0047ea5c30ce4ea1883e5fe95ff775f8e092658e42df7266cba0103"
+    },
+    {
+      "bytes": 1465,
+      "path": "photon/settings/oa_hb_tpm_pilot.json",
+      "sha256": "0c71247658239dff15ca69231a6fd45af0672ee530e4c25aafba8215a604ab6b"
+    },
+    {
+      "bytes": 1578,
+      "path": "photon/settings/oa_hb_tpm_smoke.json",
+      "sha256": "387244de18b0b33781e2a4b6c0a32889936f968067b820df68db982f92f885b2"
+    },
+    {
+      "bytes": 105942,
+      "path": "photon/src/fcs_d_estimators.py",
+      "sha256": "949a317ccb3501d798b83c30a69f699f5ac419c6be94b721722567fb4d52547f"
+    },
+    {
+      "bytes": 75666,
+      "path": "photon/src/fcs_time_varying_estimators.py",
+      "sha256": "9f1e7919354701798eaade1966bec01101730bb0d4405793c08e7843c2f13ac0"
+    },
+    {
+      "bytes": 27904,
+      "path": "photon/src/fcs_time_varying_simulation.py",
+      "sha256": "6331f5b9aae3e711b5076a726363f028057d72d8f9474158afddcc1e5b60bf59"
+    },
+    {
+      "bytes": 19382,
+      "path": "photon/src/observation_aware_hb_tpm.py",
+      "sha256": "3cfaec2e90a5c5cd9c92887c786fdc5a09d5685ef3648883ef3bf7aa29c0837e"
+    },
+    {
+      "bytes": 19385,
+      "path": "photon/src/run_observation_aware_hb_tpm_benchmark.py",
+      "sha256": "5ca98704109d73b5a9903bf390679852c916d07fdb892884ca3f63d701430335"
+    },
+    {
+      "bytes": 3513,
+      "path": "photon/tests/test_observation_aware_hb_tpm.py",
+      "sha256": "0f398ff9ea9ebdf98be28cb6ce3779b112665946ef2072331f6331ae45fd36ee"
+    },
+    {
+      "bytes": 177,
+      "path": "requirements.txt",
+      "sha256": "dcaad0d6127d309d2bf5ea2729ddf7effd453750985592b130c7adaa75b5a83f"
+    },
+    {
+      "bytes": 1432,
+      "path": "scripts/make_package_manifest.py",
+      "sha256": "6934794e2bccb7499b1ca0ab7bd40eea8ab8a30b835a42b259719d3e5d074c99"
+    },
+    {
+      "bytes": 2157,
+      "path": "scripts/preflight.py",
+      "sha256": "1ee3d38aba26cb31e8757b4792bc7419b629c37694d0a58b188c160cb60bced9"
+    },
+    {
+      "bytes": 500,
+      "path": "scripts/run_all_tests.sh",
+      "sha256": "52e0f3efd01ccf686d198cf511b244f757a7fd16dcfbe8b0ebfefabdbc415b47"
+    }
+  ],
+  "schema_version": "hb-tpm-handoff-package-1.0.0"
+}

@@ -1,0 +1,1684 @@
+\documentclass[preprint,12pt,number]{elsarticle}
+\journal{Pattern Recognition}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage[colorlinks,allcolors=black,pdftex]{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{array}
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{graphicx}
+\usepackage[numbers]{natbib}
+\usepackage{doi}
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{subfigure}
+\usepackage{amsthm}
+\usepackage{lineno}
+\usepackage{verbatim}
+\def\Set#1{\mathbb#1} 
+\def\V#1{\boldsymbol{\mathit#1}}          % Vector
+\def\Cal#1{\mathcal#1}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\usepackage{multirow}
+\usepackage{comment}
+\newtheorem{exmp}{Example}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+%%%%%%%%%%%%%%5
+% These are are recommended to typeset listings but not required. See the subsubsection on listing. Remove this block if you don't have listings in your paper.
+\usepackage{newfloat}
+\usepackage{listings}
+
+\begin{document}
+\begin{frontmatter}
+
+\title{Stay on the Manifold: Hierarchical Bayesian Trajectory Principal-Manifold Sampling for Few-shot Augmentation}
+
+\author[ucla]{Elvis Han Cui}
+\ead{elviscuihan@g.ucla.edu}
+\ead[url]{https://orcid.org/0000-0001-9030-3141}
+
+\author[zju]{Bingbin Li}
+\ead{bingbin\_lee@zju.edu.cn}
+
+\author[westlake]{Xin-Ya Zhang}
+\ead{xinyazhang08@gmail.com}
+
+\author[zhejianglab]{Yanan Li}
+\ead{liyn@zhejianglab.com}
+
+\author[ucla]{Weng Kee Wong}
+\ead{wkwong@g.ucla.edu}
+
+\author[zju]{Donghui Wang\corref{cor1}}
+\ead{dhwang@zju.edu.cn}
+
+\cortext[cor1]{Corresponding author.}
+
+\affiliation[ucla]{
+	organization={Department of Biostatistics, University of California, Los Angeles},
+	city={Los Angeles},
+	postcode={90024},
+	state={CA},
+	country={USA}
+}
+
+\affiliation[zju]{
+	organization={Department of Computer Science, Zhejiang University},
+	city={Hangzhou},
+	country={China}
+}
+
+\affiliation[westlake]{
+	organization={Center for Interdisciplinary Studies, Westlake University},
+	city={Hangzhou},
+	country={China}
+}
+
+\affiliation[zhejianglab]{
+	organization={Zhejiang Lab},
+	city={Hangzhou},
+	country={China}
+}
+
+\begin{abstract}
+	Few-shot augmentation is a latent support-estimation problem, but finitely many unordered examples do not identify an unrestricted smooth trajectory. We introduce hierarchical Bayesian trajectory principal-manifold sampling (HB-TPM), which learns a smooth coefficient prior from ordered source tasks. For sparse unordered targets, HB-TPM alternates latent projection-index assignment with a maximum-a-posteriori coefficient update and then samples from the fitted curve using source-calibrated noise. The prior stabilizes coefficient directions weakly identified by target shots; geometric tube guarantees control only subsequent sampling. In an eight-dimensional benchmark with 48 ordered source tasks, 30 held-out targets, and $K\in\{3,5,10\}$, HB-TPM reduces mean sliced-Wasserstein distance by 21.0--41.8\% against a source-pretrained and target-adapted nonlinear VAE, winning 86 of 90 paired comparisons. A Gaussian negative control reverses this ranking, so HB-TPM is intended only for validated transferable trajectory families.
+\end{abstract}
+
+\begin{keyword}
+Principal manifold \sep few-shot learning \sep data augmentation \sep hierarchical Bayesian transfer \sep trajectory modeling \sep latent support estimation
+\end{keyword}
+
+\end{frontmatter}
+\modulolinenumbers[5]
+\linenumbers
+
+\section{Introduction}
+
+Many vision and biomedical systems must learn new target classes from only a handful of labeled examples, even when source classes or pretrained representations are available. In this regime, data augmentation is useful only if it creates label-preserving variation: synthetic samples should be diverse enough to improve a downstream classifier, but close enough to the target support to avoid semantic drift. We therefore study \emph{support-constrained few-shot augmentation}: given only $K$ target examples embedded by a source-trained representation, construct a vicinal distribution whose mass follows the latent class support rather than an ambient Gaussian cloud or an arbitrary latent chord. This positions the paper as a method-development contribution for geometry-preserving augmentation, with few-shot image generation (FSIG) as the primary experimental setting.
+
+Existing FSIG methods mostly address data scarcity by borrowing structure from source classes or strong generative priors. GAN-based methods adapt domain-specific parameters \cite{li2020few} or transfer cross-domain instance correspondences \cite{ojha2021few}. Autoencoders (AEs) and related latent-variable models expose a lower-dimensional space in which target codes can be interpolated \cite{berthelot2018understanding, wertheimer2020augmentation, qian2019improving}. More recently, diffusion and foundation-model approaches adapt, invert, or condition pretrained priors with only a few examples \citep{ho2020denoising, rombach2022high, gupta2024conditional, cao2024conditional, kim2024datadream, duan2024domaingallery, wang2024inversion, li2025hypdae}. These approaches are valuable, but they do not by themselves solve the support-control problem: a generated image can be realistic under a global source or diffusion prior while still lying in a latent region unsupported by the observed target class.
+
+The geometric failure modes are especially clear in latent-space augmentation. A useful latent representation should organize images according to intrinsic factors of variation, so that nearby latent codes decode to semantically nearby images; this principle underlies interpolation, image-to-image translation, and style transfer \cite{isola2017image, gatys2016image}. However, few-shot target codes are unordered samples from a curved and sparsely observed support. Random pairwise interpolation treats two examples as endpoints of a straight chord, and parametric perturbation treats the class as a local Euclidean cloud. Neither operation asks whether the resulting latent point follows the class trajectory suggested by all available target examples.
+ \begin{figure}[!tbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/three_methods_aug.png}
+	\caption{Three augmentation geometries in a two-dimensional MNIST latent view. Blue points trace the empirical digit-4 support, and gold markers denote five available shots. TPM follows an ordered class trajectory and samples inside a thin local tube. Random-order interpolation connects the same shots by off-support shortcuts, while an ambient Gaussian spreads mass around the five-shot mean and leaks away from the class support.}
+	\label{fig:three_methods_aug}
+\end{figure}
+
+This limitation is particularly harmful in the few-shot regime. With very small $K$, fitting a flexible target density is statistically unstable, but using a Gaussian neighborhood is too coarse, and unordered interpolation can cross low-density or off-class regions (Figure~\ref{fig:three_methods_aug}). The computational question is therefore not simply how to produce more images, but how to build a target-support proxy that is identifiable from very few samples, compatible with a learned decoder, and useful for downstream learning.
+
+The few-shot geometry problem is not identifiable without additional structure. For any finite set of samples on a smooth curve, another smooth curve can agree near every observed point while taking a different path between or beyond them. Consequently, no target-only estimator can uniformly recover an arbitrary trajectory from a few unordered shots. Our method places the missing information in related source tasks whose progression coordinates are observed, and treats the target ordering as latent rather than presuming it has already been recovered.
+
+We propose hierarchical Bayesian trajectory principal-manifold sampling (HB-TPM). It casts few-shot generation as posterior adaptation within a source-learned trajectory family. HB-TPM learns a coefficient prior and a noise scale from ordered source trajectories, infers target projection indices and coefficients by alternating projection and MAP updates, and samples along a source-calibrated tangent-normal neighborhood. In contrast to Gaussian augmentation, it does not allocate mass uniformly in ambient latent directions; in contrast to random interpolation or naive target-only TPM, it can recover trajectory segments not spanned by the sparse target shots when those segments are supported by the source family.
+
+ \begin{figure*}[!tbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/framework.png}
+	\caption{Modern trajectory-aware principal-manifold framework. TPM is inserted as a geometry-conditioning layer between a pretrained visual representation and a generator. A foundation encoder such as ViT, DINOv2, CLIP, or MAE produces semantic tokens, an intrinsic-dimension projector compacts the target representation, and a trajectory-token module recovers projection order and a principal trajectory. The resulting TPM condition tokens constrain either a latent diffusion/DiT branch for high-fidelity synthesis or a lightweight AE/VAE decoder branch used in controlled experiments.}
+	\label{fig:framework}
+\end{figure*}
+
+Figure~\ref{fig:framework} separates the controlled AE branch used in this paper from the latent diffusion/DiT branch, which gives the natural high-fidelity extension without changing the geometric core of TPM.
+
+In summary, our contributions are as follows: 
+\begin{itemize}
+	\item \textbf{Problem formulation.} We formulate few-shot target-class augmentation as latent support estimation, making explicit that the algorithmic challenge is to synthesize label-preserving variation from sparse observations of a curved class manifold rather than to fit an unconstrained generator.
+	
+	\item \textbf{Algorithmic contribution.} We propose HB-TPM, an ordered-source hierarchical model that alternates latent target-index assignment with a MAP trajectory update before sampling from a calibrated local tube.
+
+	\item \textbf{Identifiability contribution.} We separate source-family information, target posterior adaptation, and tube sampling, and state explicitly that arbitrary trajectories are not recoverable from finitely many unordered target points.
+
+	\item \textbf{Theoretical contribution.} We give the conditional posterior covariance advantage of hierarchical shrinkage, a risk decomposition containing source-prior, target-posterior, index-assignment, family-mismatch, and sampling terms, and retain normal-bundle guarantees only as conditional support-control results.
+
+    \item \textbf{Empirical contribution.} A reproducible oracle benchmark compares HB-TPM with Gaussian, SMOTE, naive TPM, target-only and source-adapted VAEs, two HB-TPM ablations, and a Gaussian negative control; controlled MNIST and CELEB-A studies provide complementary augmentation evidence.
+\end{itemize}
+
+\section{Related Works}
+\textbf{Learning and Generating from Parametric Distributions.} Many augmentation methods generate samples from a Gaussian distribution, or more generally from an elliptical distribution \citep{mao2019homography, meer2004robust}. For example, the classification rule in prototypical networks \citep{snell2017prototypical} is closely related to a Gaussian likelihood model in which the class mean is estimated from a few shots. The covariance-preserving adversarial augmentation network \citep{gao2018low} transfers variance information from base classes to novel classes and then generates samples in a Gaussian-like fashion. Other work modifies feature distributions before augmentation; for instance, Tukey's transformation has been used to make feature vectors more Gaussian-like \citep{yang2021free}, and asymmetric distribution measures have been introduced for few-shot learning \citep{li2020asymmetric}. These methods are effective when a local parametric approximation is reasonable, but they do not explicitly model the lower-dimensional trajectory of valid within-class variation. In TPM, parametric noise is used only as a small perturbation around a learned manifold backbone.
+
+\textbf{Foundation representations and diffusion priors.} Modern FSIG methods have expanded beyond early GAN transfer and AE interpolation. On the representation side, Vision Transformers, masked autoencoders, CLIP, and DINOv2 show that pretrained transformer-based encoders can supply semantic feature spaces that are far more stable than small task-specific encoders \citep{dosovitskiy2021image, he2022masked, radford2021learning, oquab2024dinov2}. On the generation side, DDPMs, latent diffusion, and diffusion transformers move image synthesis from pixel-space denoising toward controllable latent or token-space generation \citep{ho2020denoising, rombach2022high, peebles2023scalable}. Personalization and control modules such as DreamBooth, LoRA, ControlNet, and IP-Adapter further show that pretrained diffusion models can be steered with few examples or auxiliary conditions without training a full generator from scratch \citep{ruiz2023dreambooth, hu2022lora, zhang2023adding, ye2023ipadapter}. Recent GAN-based FSIG approaches reduce overfitting by masking discriminator features or using contrastive objectives \citep{zhu2024masked, gou2024few}. Diffusion-based FSIG uses pretrained generative priors in several ways: conditional distribution modelling estimates the conditioning latent distribution for unseen classes \citep{gupta2024conditional}; conditional relaxing diffusion inversion perturbs sample-wise guidance embeddings without fine-tuning \citep{cao2024conditional}; DataDream and DomainGallery adapt text-to-image diffusion models with few-shot LoRA or attribute-centric fine-tuning \citep{kim2024datadream, duan2024domaingallery}; and Diff-II uses inversion interpolation for data-scarce classification \citep{wang2024inversion}. Hyperbolic diffusion autoencoders further connect FSIG to non-Euclidean hierarchical representations \citep{li2025hypdae}, while geodesic-surface transfer explicitly models few-shot variation on a geometric surface \citep{han2026few}. These works sharpen the same central tension addressed by TPM: synthetic samples must be diverse enough to help learning, but faithful enough to remain on the target support. TPM addresses this tension by conditioning modern generators with an estimated target-support geometry rather than by replacing them.
+
+\textbf{Verification of Manifold Structure.} The manifold hypothesis suggests that high-dimensional observations, such as images, concentrate near lower-dimensional sets. Methods such as principal component analysis, deep subspace networks \citep{simon2020adaptive}, t-SNE, LLE, ISOMAP, and UMAP \citep{mcinnes2018umap} are widely used to reveal such structure visually or computationally. Theoretical and empirical studies further examine when the manifold hypothesis is testable and how intrinsic dimension affects learning difficulty \citep{fefferman2016testing, pope2021intrinsic}. Maximum-likelihood estimation under a local Poisson approximation provides a quantitative tool for estimating intrinsic dimension \citep{levina2004maximum}. In this paper, intrinsic dimension plays a dual role: it is used to diagnose the compactness of the learned latent representation and to regularize the representation used for target-class generation.
+
+\textbf{Vicinal and Manifold-based Augmentation.} Vicinal risk minimization replaces empirical samples with neighborhoods around training examples \citep{chapelle2000vicinal}. Mixup and Manifold Mixup instantiate this idea by interpolating in input or hidden spaces, encouraging smoother decision functions and flatter class representations \citep{zhang2018mixup, verma2019manifoldmixup}. TPM shares the vicinal view but changes the neighborhood geometry: instead of sampling an unordered line segment between random examples, it estimates an ordered principal-curve neighborhood and samples along that trajectory.
+
+\textbf{Learning and Generating from Manifolds.} Several few-shot methods learn intrinsic manifold or subspace structure without using it directly for generation. For example, learning on the oblique manifold with geodesic distances has been applied to few-shot classification \citep{qi2021transductive}, and adaptive subspace methods learn class-specific subspaces \citep{simon2020adaptive}. The principal-curve framework of Hastie and Stuetzle \citep{hastie1989principal} provides a classical tool for learning a one-dimensional manifold in high-dimensional Euclidean space, with applications to gesture recognition \citep{bobick1997state, chun2003markerless} and image classification \citep{chang1998principal}. Modern variants address parameter selection and regularized estimation \citep{gerber2013regularization, biau2011parameter}. Riemannian and information-geometric views further emphasize that latent geometry should be measured through the decoder or statistical model, not only through ambient Euclidean distance \citep{amari1998natural, hauberg2015principal}. Our work adapts principal curves to few-shot generation in this geometric sense: the recovered curve is a decoder-induced principal trajectory, and the generator samples from a controlled normal-bundle neighborhood around it.
+
+Few-shot image generation (FSIG) aims to generate novel images of a target class with very few samples. TPM is designed as a geometry module rather than as a particular decoder architecture. We describe the controlled AE instantiation used in the experiments because it makes the decoder-induced geometry explicit, and then state how the same trajectory tokens can condition diffusion-autoencoder, latent-diffusion, or DiT-style generators.
+
+\section{Proposed Method}
+\subsection{Problem Setup}
+Let $\Cal{D}_s = \{ (\V{x}_i, y_i)\}_{i=1}^{N_s}$ denote $N_s$ training samples from source classes $\Cal{C}_s$, where each class has sufficient labeled training data, $\V{x}_i$ is the $i$-th image, and $y_i \in \Cal{C}_s$ is the corresponding label. We also have a few-shot training set $\Cal{D}_t = \{(\V{x}_i, y_i) | y_i \in \Cal{C}_t, i=1,\ldots, N\times K\}$ from $N$ target classes, where each target class has only $K$ labeled examples and $\Cal{C}_s \cap \Cal{C}_t = \emptyset$. Given $\Cal{D}_s$ and $\Cal{D}_t$, FSIG aims to generate realistic and label-preserving samples for target classes $\Cal{C}_t$. 
+
+HB-TPM additionally requires repeated source trajectories. For source task $j$, let $\Cal{T}_j^s=\{(t_{ji},z_{ji})\}_{i=1}^{n_j}$, where $z_{ji}=e(x_{ji})$ and the progression coordinate $t_{ji}\in[0,1]$ is observed from time, pseudotime, video frame, dose, or another domain variable. A target task provides only $\Cal{Z}_c=\{z_{c,k}\}_{k=1}^{K}$; its progression indices are unobserved. This asymmetric supervision is the explicit source of identifiability in HB-TPM and distinguishes it from a pooled-density transfer model.
+
+Autoencoders (AEs) provide a convenient latent space for FSIG: one can train an AE on $\Cal{D}_s$ and generate samples by interpolating encoded target representations. Let the encoder and decoder be denoted by $e(\V{x}): \V{x} \mapsto \V{z}$ and $d(\V{z}):\V{z} \mapsto \tilde{\V{x}}$, respectively. A standard AE is optimized by minimizing the reconstruction loss
+\begin{equation}
+	L_{rec} = \sum_{\V{x}_i \in \Cal{D}_s} || \V{x}_i - d(e(\V{x}_i))||_2^2 + \alpha \Omega(\V{w}) 
+\end{equation}
+where $\V{w}$ denotes all AE parameters and $\Omega(\cdot)$ is a regularization term. For two target inputs $\V{x}_1$ and $\V{x}_2$, a common baseline linearly interpolates their latent representations $\V{z}_1=e(\V{x}_1)$ and $\V{z}_2=e(\V{x}_2)$ as $\tilde{\V{x}} = d((1-\lambda)\V{z}_1+\lambda\V{z}_2)$, where $\lambda\sim \mathrm{Uniform}(0,1)$. However, samples from the same class usually share semantic factors and are embedded near a lower-dimensional manifold in both input and feature space. Table~\ref{table:dimension} reports the estimated intrinsic dimension of MNIST digits under different representations. A useful latent manifold should represent transitions such as pose, stroke, or expression changes. TPM reconstructs this trajectory first, then uses it to generate smooth and realistic samples in an ordered manner.
+
+\subsection{Trajectory-aware Principal Manifold Based Image Generation}
+\subsubsection{Restoring the manifold backbone.} Assume samples from the same class are embedded near a common low-dimensional latent support. The model should therefore estimate not only a set of target prototypes, but also an ordered support skeleton along which label-preserving variation is likely to occur. Let
+\[
+	\mathcal{Z}_c=\{z_{c,k}=e(x_{c,k})\}_{k=1}^{K}\subset\mathbb{R}^{D_z}
+\]
+be the encoded target shots of class $c$. We model the dominant class variation by a smooth latent trajectory $\mathcal{P}_c:[0,1]\rightarrow\mathbb{R}^{D_z}$ and a projection map
+\[
+	\pi_{\mathcal{P}_c}(z)
+	=
+	\arg\min_{t\in[0,1]}\lVert z-\mathcal{P}_c(t)\rVert_2^2,
+\]
+	with a fixed deterministic tie rule; the implementation takes the smallest minimizing point on its projection grid. The scalar $\pi_{\mathcal{P}_c}(z)$ is the projection index; it gives an intrinsic order for otherwise unordered few-shot examples.
+
+\begin{definition}[Self-consistent principal trajectory]
+	Let $Z_c=e(X)\mid Y=c$ be the latent class distribution. A smooth curve $\mathcal{P}_c:[0,1]\rightarrow\mathbb{R}^{D_z}$ is a principal trajectory for $Z_c$ if it is self-consistent,
+	\[
+		\mathcal{P}_c(t)
+		=
+		\mathbb{E}\{Z_c\mid \pi_{\mathcal{P}_c}(Z_c)=t\},
+	\]
+	for every regular projection index $t$ with positive local mass. Equivalently, the curve passes through the conditional center of all latent samples that project to the same intrinsic coordinate \citep{hastie1989principal, tibshirani1992}.
+\end{definition}
+
+This definition is stronger than saying that a principal curve ``passes through the middle'' of the data: the ordering, the projection map, and the conditional expectation must be mutually compatible. It motivates the trajectory representation, but the finite-basis HB-TPM estimator below is not claimed to satisfy exact population self-consistency. A general target-only TPM can be written as the regularized empirical surrogate
+\begin{equation}
+	\widehat{\mathcal{P}}_c
+	=
+	\arg\min_{\gamma\in\mathcal{S}}
+	\frac{1}{K}\sum_{k=1}^{K}
+	\left\lVert
+		z_{c,k}-\gamma\{\pi_\gamma(z_{c,k})\}
+	\right\rVert_2^2
+	+
+	\lambda_{\mathrm{curv}}
+	\int_0^1 \lVert \ddot{\gamma}(t)\rVert_2^2\,dt ,
+	\label{eq:principal_curve_objective}
+\end{equation}
+where $\mathcal{S}$ is a spline or locally smooth curve class. The first term keeps the curve close to the observed shots, while the curvature penalty discourages overfitting. In the reproducible oracle benchmark, the method labelled \emph{naive TPM} is the deterministic small-$K$ surrogate actually implemented in code: it orders shots by their first principal-component score, assigns knots by normalized cumulative chord length, and linearly interpolates each coordinate. It does not numerically optimize Equation~\ref{eq:principal_curve_objective}. Neither construction identifies unobserved segments or the correct ordering from a finite unordered sample. HB-TPM obtains conditional identifiability by restricting the target to a source-learned trajectory family. A one-dimensional trajectory is deliberately parsimonious; branching or multi-modal support requires a mixture or principal graph.
+
+\subsubsection{Hierarchical Bayesian trajectory transfer.}
+Let $\Phi(t)\in\mathbb{R}^{p}$ be a fixed smooth basis and write the source trajectories as
+\begin{equation}
+	\gamma_j(t)=\Phi(t)^\top W_j,
+	\qquad
+	\operatorname{vec}(W_j)
+	\sim
+	\mathcal{N}\{\operatorname{vec}(W_0),\Lambda\},
+	\label{eq:hb_tpm_source}
+\end{equation}
+where $W_j\in\mathbb{R}^{p\times D_z}$. The implementation uses a diagonal coefficient-by-coordinate covariance $\Lambda$. If $\Phi_j$ contains the basis rows for ordered source task $j$ and $Z_j$ contains its latent observations, source fitting is
+\begin{align}
+	\widehat W_j
+	&=(\Phi_j^\top\Phi_j+\lambda_{\mathrm{ridge}}I)^{-1}\Phi_j^\top Z_j,\nonumber\\
+	\widehat W_0
+	&=J^{-1}\sum_{j=1}^{J}\widehat W_j,\qquad
+	\widehat v_{r\ell}
+	=\max\!\left\{\operatorname{Var}_j(\widehat W_{j,r\ell}),v_{\min}\right\},\nonumber\\
+	\widehat\Lambda
+	&=\operatorname{diag}\{\operatorname{vec}(\widehat v)\}.
+	\label{eq:hb_tpm_prior_fit}
+\end{align}
+The common radial scale is estimated robustly from the source residual norms. The reproducible benchmark uses $\lambda_{\mathrm{ridge}}=10^{-6}$, $v_{\min}=2.5\times10^{-4}$, and
+\[
+	\widehat\sigma
+	=
+	\operatorname{clip}\!\left[
+	\frac{\operatorname{median}_{j,i}
+	\lVert z_{ji}-\Phi(t_{ji})^\top\widehat W_j\rVert_2}{0.6745},
+	0.015,0.08
+	\right].
+\]
+Here $\Phi$ is a degree-9 Bernstein basis, whereas the simulator uses a private Fourier representation. Thus the fitted source prior does not receive the oracle basis. For an unordered target set, HB-TPM uses the working model
+\[
+	z_{c,k}=\Phi(t_{c,k})^\top W_c+\varepsilon_{c,k},
+	\qquad
+	\varepsilon_{c,k}\sim\mathcal{N}(0,\widehat\sigma^2 I),
+\]
+and alternates two updates:
+\begin{align}
+	\widehat t_{c,k}
+	&=\arg\min_{t\in[0,1]}
+	\left\lVert z_{c,k}-\Phi(t)^\top W_c\right\rVert_2^2,
+	\label{eq:hb_tpm_index}\\
+	\widehat W_c
+	&=\arg\min_W
+	\frac{1}{\widehat\sigma^2}\sum_{k=1}^{K}
+	\left\lVert z_{c,k}-\Phi(\widehat t_{c,k})^\top W\right\rVert_2^2
+	+\left\lVert\operatorname{vec}(W-\widehat W_0)\right\rVert_{\widehat\Lambda^{-1}}^2.
+	\label{eq:hb_tpm_map}
+\end{align}
+The first step projects each shot onto the current curve; the second is a low-dimensional MAP update under the working Gaussian likelihood. Starting from $\widehat W_0$, the implementation searches a 401-point grid and repeats for at most 20 updates or until the discrete projection indices stabilize. The oracle perturbations are geometrically normal to the curve rather than isotropic Gaussian, so the benchmark update is more precisely a regularized quasi-MAP fit under deliberate likelihood and basis mismatch. The fitted target backbone is $\widehat{\mathcal P}_c(t)=\Phi(t)^\top\widehat W_c$. The prior supplies information in directions that $K<p$ target observations cannot determine, rather than asking a smoothness penalty to invent those directions.
+
+Figure~\ref{fig:pc} visualizes principal curves for digits 1, 4, and 5 from MNIST.
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/mnist_pc_umap2.png}
+	\caption{Principal curves of MNIST digits. Blue lines denote learned principal curves, which summarize the trajectory of each digit manifold in the visualized feature space.}
+	\label{fig:pc}
+\end{figure}
+
+There are several projection-expectation algorithms for learning principal curves \citep{hastie1989principal}. In HB-TPM, the principal manifold learning module also receives the source-learned parameters $\widehat\Theta_s=(\widehat W_0,\widehat\Lambda,\widehat\sigma)$. It returns the fitted projected points, projection indices, and the induced ordering:
+\begin{equation}
+	\left\{
+		\widehat{\mathcal{P}}_c(\widehat t_{c,k}),
+		\widehat t_{c,k},
+		o_{c,k}
+	\right\}_{k=1}^{K}
+	=
+	\operatorname{HB\mbox{-}PML}(\mathcal{Z}_c;\widehat\Theta_s),
+	\label{eq:pml_module}
+\end{equation}
+where $\widehat t_{c,k}=\pi_{\widehat{\mathcal{P}}_c}(z_{c,k})$ and $o_{c,k}$ is the rank of $\widehat t_{c,k}$ among the $K$ shots. This notation makes the generative step explicit: TPM samples a new intrinsic coordinate, maps it to the fitted trajectory, and then adds controlled local variation.
+
+\subsubsection{Trajectory-aware sample generation.} 
+Suppose we have $K$ shots from class $c$. A natural augmentation should move along the recovered intrinsic coordinate while avoiding large jumps away from the class support. TPM permits a trajectory distribution $q_c(\alpha)$ on $[0,1]$; for example, a downstream application may upweight long or sparsely covered intervals. The reproducible benchmark fixes $q_c$ to $\operatorname{Uniform}(0,1)$, so no target-oracle quantity or coverage heuristic tunes the sampling law. Given $\alpha\sim q_c$, let $T_c(\alpha)$ be the unit tangent of $\widehat{\mathcal{P}}_c$ and let $N_c(\alpha)$ be an orthonormal basis of the local normal space. A general anisotropic tangent-normal TPM sampler is
+\begin{align}
+	\alpha &\sim q_c(\alpha), \nonumber\\
+	\epsilon_T &\sim \mathcal{N}\{0,\sigma_T^2(\alpha)\}, \qquad
+	\epsilon_N \sim \mathcal{N}\{0,\sigma_N^2(\alpha)I\}, \nonumber\\
+	\tilde z
+	&=
+	\widehat{\mathcal{P}}_c(\alpha)
+	+
+	T_c(\alpha)\epsilon_T
+	+
+	N_c(\alpha)\epsilon_N,
+	\qquad
+	\tilde x=d(\tilde z).
+	\label{eq:anisotropic_tpm_sampler}
+\end{align}
+The reproducible benchmark uses the normal-only special case rather than estimating a full tangent-normal covariance. At a sampled $\alpha$, it draws $g\sim\mathcal N(0,I_{D_z})$, projects and normalizes it to obtain
+\[
+	r(\alpha)
+	=
+	\frac{\{I-T_c(\alpha)T_c(\alpha)^\top\}g}
+	{\left\lVert\{I-T_c(\alpha)T_c(\alpha)^\top\}g\right\rVert_2},
+\]
+draws a signed radius $a\sim\mathcal N(0,\widehat\sigma^2)$, and returns $\tilde z=\widehat{\mathcal P}_c(\alpha)+a r(\alpha)$. Its matched-radial isotropic ablation instead draws $\xi\sim\mathcal N(0,\widehat\sigma^2 I_{D_z}/D_z)$, so both perturbations have expected squared radius $\widehat\sigma^2$. The ablation shows that this noise allocation is not the main source of the distributional gain; the gain primarily appears in the hierarchical curve posterior.
+
+For applications requiring an almost-sure support guarantee, the Gaussian radius can be truncated or replaced by the bounded perturbation form
+\[
+	\tilde z=\widehat{\mathcal{P}}_c(\alpha)+\xi,
+	\qquad
+	\lVert \xi\rVert_2\le\tau_c,
+	\qquad
+	\tilde x=d(\tilde z),
+\]
+which is the version covered by the almost-sure tube statement below. The benchmark does not truncate its Gaussian radius and therefore uses the theorem's expected-radius statement, not the almost-sure claim.
+
+\begin{algorithm}[H]
+\caption{HB-TPM source fitting, target adaptation, and benchmark sampling}
+\label{alg:hb_tpm}
+\begin{algorithmic}[1]
+\REQUIRE Ordered source tasks $\{(t_{ji},z_{ji})\}$, unordered target shots $\{z_{c,k}\}_{k=1}^{K}$, basis $\Phi$, projection grid $\mathcal G$, maximum updates $L$, output size $M$.
+\ENSURE Target coefficients $\widehat W_c$, indices $\widehat t_{c,1:K}$, generated codes $\tilde z_{1:M}$.
+\STATE Fit each $\widehat W_j$ by ridge regression and form $\widehat W_0$, diagonal variances $\widehat v$, and robust residual scale $\widehat\sigma$ using Equation~\ref{eq:hb_tpm_prior_fit}.
+\STATE Initialize $W\leftarrow\widehat W_0$ and $i_{1:K}^{\mathrm{old}}\leftarrow\varnothing$.
+\FOR{$s=1,\ldots,L$}
+    \STATE $i_k\leftarrow\arg\min_{i:\,t_i\in\mathcal G}\lVert z_{c,k}-\Phi(t_i)^\top W\rVert_2^2$ for $k=1,\ldots,K$; set $F_{k\cdot}=\Phi(t_{i_k})^\top$.
+    \FOR{$\ell=1,\ldots,D_z$}
+        \STATE $P_\ell\leftarrow\operatorname{diag}(\widehat v_{1\ell}^{-1},\ldots,\widehat v_{p\ell}^{-1})$.
+        \STATE $W_{\cdot\ell}\leftarrow(\widehat\sigma^{-2}F^\top F+P_\ell)^{-1}\{\widehat\sigma^{-2}F^\top z_{c,\cdot\ell}+P_\ell\widehat W_{0,\cdot\ell}\}$.
+    \ENDFOR
+    \IF{$i_{1:K}=i_{1:K}^{\mathrm{old}}$}
+        \STATE \textbf{break}
+    \ENDIF
+    \STATE $i_{1:K}^{\mathrm{old}}\leftarrow i_{1:K}$.
+\ENDFOR
+\STATE Set $\widehat W_c\leftarrow W$ and $\widehat t_{c,k}\leftarrow t_{i_k}$.
+\FOR{$m=1,\ldots,M$}
+    \STATE Draw $\alpha_m\sim\operatorname{Uniform}(0,1)$ and form $\widehat{\mathcal P}_c(\alpha_m)=\Phi(\alpha_m)^\top\widehat W_c$.
+    \STATE Draw a random unit normal $r_m$ and $a_m\sim\mathcal N(0,\widehat\sigma^2)$; set $\tilde z_m\leftarrow\widehat{\mathcal P}_c(\alpha_m)+a_m r_m$.
+\ENDFOR
+\STATE Decode $\tilde x_m=d(\tilde z_m)$ when a decoder is present.
+\end{algorithmic}
+\end{algorithm}
+
+When the target support is sufficiently covered, the same construction gives a multi-branch TPM family. A class can be represented by $R_c$ local trajectory branches, with
+\[
+	B\sim \operatorname{Categorical}(\pi_c),
+	\qquad
+	\alpha\mid B=r\sim q_{c,r}(\alpha),
+\]
+\[
+	\tilde z
+	=
+	\widehat{\mathcal{P}}_{c,r}(\alpha)
+	+
+	T_{c,r}(\alpha)\epsilon_T
+	+
+	N_{c,r}(\alpha)\epsilon_N,
+	\qquad
+	\tilde x=d(\tilde z).
+\]
+The single-curve model used below is the stable few-shot special case with $R_c=1$. Figure~\ref{fig:pc_mnist} displays generated samples along the trajectories of digits 3, 4, and 5 in MNIST. Red points denote the provided five shots, green curves are reconstructed principal curves, and blue points are generated samples. Because of the tube perturbation, generated points are not forced to lie exactly on the curve, but remain close to the learned trajectory.
+
+The same sampling idea is backbone-agnostic. In a modern implementation, $e$ can be a frozen or adapter-tuned foundation encoder, the target embeddings can be passed through a compact projector with the intrinsic-dimension penalty, and the projection-order estimator can be implemented either by the deterministic principal-curve solver used in our controlled experiments or by a small trajectory-token Transformer \citep{vaswani2017attention, dosovitskiy2021image, oquab2024dinov2}. If the generator is a diffusion autoencoder, latent diffusion model, or diffusion transformer, TPM can be applied to the semantic code, inversion code, or conditioning token rather than to an ordinary AE code \citep{preechakul2022diffusion, rombach2022high, peebles2023scalable}. In that setting, the principal trajectory restricts the high-level semantic component, while the diffusion decoder supplies high-frequency realism. This gives a direct route to compare TPM with recent diffusion FSIG methods without changing the geometric core of the method.
+
+Algorithm~\ref{alg:hb_tpm} is the implementation-level specification used by the oracle benchmark; the supplementary material records the corresponding baseline and code mapping.
+
+\begin{figure}[htbp!]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/pc_mnist2.png}
+	\caption{Illustration of a trajectory-aware generating scheme in the MNIST.}
+	\label{fig:pc_mnist}
+\end{figure}
+
+\subsection{Optional intrinsic-dimension regularization for AE-based representation learning}
+Although image feature vectors are high dimensional, the effective dimension of their class-wise variation is often much lower. Table~\ref{table:dimension} reports the estimated intrinsic dimension of raw MNIST images, standard AE features, and TPM-regularized features. Lower local dimension is useful for TPM because a compact latent class manifold makes the principal-curve backbone easier to estimate from few shots and reduces the chance that interpolation crosses low-density regions.
+
+We therefore add a class-wise intrinsic-dimension regularizer to the encoded representations when training the AE on source classes. For each source class $c$, define
+\begin{align}
+	\mathcal{L}^c_{\text{intrinsic}}&=\frac{1}{n_c(k_2-k_1+1)}\sum_{k=k_1}^{k_2}\sum_{i=1}^{n_c}\mathcal{L}^{k}_{\text{local}}(e(\V{x}_i))
+	\label{eq:intrinsic}
+\end{align}
+where
+\begin{align}
+	\label{eq:local_loss}
+	\mathcal{L}^k_{\text{local}}(e(\V{x}_i))=\left[\frac{1}{k-1}\sum_{j=1}^{k-1}\log\frac{T_k(e(\V{x}_i))}{T_j(e(\V{x}_i))}\right]^{-1}
+\end{align}
+and $T_j(e(\V{x}_i))$ is the Euclidean distance from $e(\V{x}_i)$ to its $j$-th nearest neighbor within the same source class. The neighborhood index $k$ controls the locality of the estimator, while averaging over $k_1,\ldots,k_2$ reduces sensitivity to a single neighborhood scale. The full source-training objective is
+\begin{align}
+	\mathcal{L}_{\text{AE}} = L_{rec} + \beta\sum_{c\in\Cal{C}_s}\mathcal{L}^c_{\text{intrinsic}},
+	\label{eq:ae_total}
+\end{align}
+where $\beta$ balances reconstruction fidelity and latent compactness. The reconstruction term prevents trivial collapse, while the intrinsic-dimension term encourages each class to occupy a lower-dimensional, smoother region of the encoded space. When target shots are later embedded into this space, the recovered principal curve is therefore a more stable approximation to the dominant target trajectory.
+This representation regularizer belongs to the image pipeline; it is not used in the eight-dimensional oracle benchmark, which evaluates HB-TPM directly in the observed feature space.
+\begin{figure*}[!htbp]
+	\centering
+	\includegraphics[width=\textwidth]{figures/spiral_manifold_generation_v0.2.png}
+	\caption{Illustration of our proposed method on generating data along the intrinsic manifold (Best viewed in color). Different colors indicate different classes. (a) Ground-truth dataset. (b) Manifold in each class. (c) Provided 7 representative shots in each class. (d) Reconstructed manifold from (c) and the corresponding generated samples along the manifold. (e) Randomly chosen 7 shots and (f) Manifold reconstructed from (e). In contrast to others that either use linear interpolation or Gaussian augmentation, our method is capable of generating samples along the intrinsic manifold. }
+	\label{fig:spiral_manifold_generation}
+\end{figure*}
+
+\subsection{Identifiability and posterior shrinkage}
+The distinction between estimating a trajectory and sampling near it is essential. A small sampling tube controls only the latter error.
+
+\begin{theorem}[Non-identifiability from finite unordered shots]
+	Let $\{z_i\}_{i=1}^{K}$ be a finite sample from the image of a $C^2$ curve $\gamma:[0,1]\to\mathbb{R}^{D}$ with $D\ge2$. Without a restriction on the curve family or external ordering information, the image of $\gamma$ is not identified by $\{z_i\}_{i=1}^{K}$.
+\end{theorem}
+
+\begin{proof}
+	Choose an open parameter interval containing none of the finitely many sampled parameters and a smooth bump function supported on that interval. Adding an arbitrarily scaled bump in a local normal direction produces another $C^2$ curve that agrees with $\gamma$ at every observed sample but follows a different path on the unsampled interval. Since the shots are unordered, their parameters are themselves unknown, which cannot restore identifiability.
+\end{proof}
+
+HB-TPM resolves this ambiguity conditionally, by transferring a coefficient distribution learned from ordered source tasks. Under the Gaussian coefficient model and working likelihood, and conditional on correctly assigned target indices, let $F\in\mathbb{R}^{K\times p}$ have rows $\Phi(t_{c,k})^\top$. For one output coordinate, the posterior covariance is
+\begin{equation}
+	\Sigma_{\mathrm{HB}}
+	=\left(\Lambda^{-1}+\sigma^{-2}F^\top F\right)^{-1}.
+	\label{eq:hb_posterior_covariance}
+\end{equation}
+When $F^\top F$ is invertible,
+\[
+	\Sigma_{\mathrm{HB}}\preceq
+	\left(\sigma^{-2}F^\top F\right)^{-1};
+\]
+when it is singular, a target-only estimator has unidentified coefficient directions while a proper $\Lambda$ keeps the posterior variance finite. Thus hierarchical shrinkage weakly lowers integrated Bayes curve risk and is strictly beneficial whenever the source prior supplies finite precision in a direction that the target shots do not fully determine.
+
+This gives the appropriate decomposition of the estimation claim:
+\begin{equation}
+	R_{\mathrm{curve}}
+	\lesssim
+	R_{\mathrm{source\ prior}}
+	+R_{\mathrm{posterior\ coefficient}}
+	+R_{\mathrm{index}}
+	+R_{\mathrm{family\ mismatch}},
+	\label{eq:hb_risk_decomposition}
+\end{equation}
+followed by a separate sampling-radius term when generated points are drawn around the estimated curve. No tube theorem can repair a large error in any of the first four terms. Operationally, HB-TPM should pass a trust gate based on held-out source adaptation error, bootstrap stability of target projection indices, source-family fit, and posterior-predictive support error against validated Gaussian or generative baselines. If the gate fails, the validated baseline should be used.
+
+\subsection{Conditional geometric and information-geometric motivation}
+Conditional on a sufficiently accurate fitted trajectory, TPM can be interpreted as an on-manifold version of vicinal risk minimization \citep{chapelle2000vicinal, vapnik1998statistical}. It is also closely related to Mixup-style regularization, but with the Euclidean chord replaced by a learned class trajectory \citep{zhang2018mixup, verma2019manifoldmixup}. The geometric object is not merely a classical Euclidean principal curve, but a \emph{decoder-induced principal trajectory}: a one-dimensional latent backbone whose decoded path captures the dominant semantic variation of a class. The decoder $d$ induces a pullback metric
+\[
+	G(z)=J_d(z)^\top J_d(z),
+\]
+where $J_d(z)$ is the decoder Jacobian. This metric measures latent displacements by their first-order effect in image space and is the same geometric object used to view latent-variable models as Riemannian manifolds \citep{amari1998natural, hauberg2015principal, arvanitidis2018latent, shao2018riemannian}. Similar pullback-geometric arguments also appear in diffusion autoencoders and latent diffusion models, where semantic interpolation depends on the geometry of the learned latent or inversion space \citep{preechakul2022diffusion, rombach2022high}. TPM estimates a class trajectory and then samples from a tangent-normal tube around it. When the local perturbation is represented in normal coordinates, this neighborhood is the normal bundle of the estimated trajectory; the anisotropic sampler in Equation~\ref{eq:anisotropic_tpm_sampler} simply chooses different scales along tangent and normal coordinates.
+
+Let $\Gamma_c=\{\mathcal{P}_c(t):t\in[0,1]\}$ be the latent class trajectory. Assume $\Gamma_c$ is a compact $C^2$ embedded curve with positive reach $\operatorname{reach}(\Gamma_c)$ \citep{federer1959curvature}. Reach is a standard regularity quantity in geometric inference: it controls the uniqueness of nearest-point projection and appears in sample-complexity and manifold-estimation results for recovering geometry from point clouds \citep{niyogi2008finding, genovese2012manifold, aamari2019nonasymptotic}. For any $\rho<\operatorname{reach}(\Gamma_c)$, each point in the tube
+\[
+	\mathcal{T}_\rho(\Gamma_c)=\{z:\operatorname{dist}(z,\Gamma_c)<\rho\}
+\]
+has a unique nearest projection onto $\Gamma_c$. Thus, within the tube, the projection index is geometrically well-defined and normal perturbations cannot silently jump to another branch of the class support.
+
+The following results are intended as support-preservation guarantees for a Pattern Recognition audience. They keep the main quantities visible: trajectory error, tube radius, shot coverage, and synthetic-sample complexity.
+
+\begin{theorem}[Tubular normal-bundle stability]
+	Let $\widehat{\mathcal{P}}_c$ be an estimated trajectory satisfying
+	\[
+	\sup_{t\in[0,1]}\lVert\widehat{\mathcal{P}}_c(t)-\mathcal{P}_c(t)\rVert_2\le \varepsilon_{\mathcal{P}}.
+	\]
+	Generate $\tilde z=\widehat{\mathcal{P}}_c(\alpha)+\xi$ with $\lVert\xi\rVert_2\le\tau_c$ almost surely. If $\varepsilon_{\mathcal{P}}+\tau_c<\rho<\operatorname{reach}(\Gamma_c)$, then $\tilde z\in\mathcal{T}_\rho(\Gamma_c)$ almost surely, and it can be coupled with $z^\star=\mathcal{P}_c(\alpha)$ so that for every $L_F$-Lipschitz downstream latent objective $F_c$,
+	\[
+	\left|\mathbb{E}F_c(\tilde z)-\mathbb{E}F_c(z^\star)\right|
+	\le L_F(\varepsilon_{\mathcal{P}}+\tau_c).
+	\]
+	If only $\mathbb{E}\lVert\xi\rVert_2\le\tau_c$ is assumed, the same expectation bound holds and $\mathbb{P}\{\tilde z\notin\mathcal{T}_\rho(\Gamma_c)\}\le(\varepsilon_{\mathcal{P}}+\tau_c)/\rho$ by Markov's inequality. By contrast, under a local tangent-space approximation with intrinsic dimension $m$ and ambient latent dimension $D$, an isotropic Gaussian perturbation $\eta\sim N(0,\sigma^2 I_D)$ has expected squared normal displacement $(D-m)\sigma^2$ away from the local tangent space.
+\end{theorem}
+
+\begin{proof}
+	Couple the generated code with the ideal trajectory code at the same index:
+	\[
+	\begin{aligned}
+	z^\star&=\mathcal{P}_c(\alpha),\\
+	\tilde z&=\widehat{\mathcal{P}}_c(\alpha)+\xi .
+	\end{aligned}
+	\]
+	For every realization,
+	\[
+	\begin{aligned}
+	\lVert \tilde z-z^\star\rVert_2
+	&\le
+	\lVert\widehat{\mathcal{P}}_c(\alpha)-\mathcal{P}_c(\alpha)\rVert_2+\lVert\xi\rVert_2\\
+	&\le \varepsilon_{\mathcal{P}}+\lVert\xi\rVert_2,\\
+	\operatorname{dist}(\tilde z,\Gamma_c)
+	&\le \lVert \tilde z-z^\star\rVert_2
+	\le \varepsilon_{\mathcal{P}}+\lVert\xi\rVert_2 .
+	\end{aligned}
+	\]
+	\[
+	\lVert\xi\rVert_2\le\tau_c\ \mathrm{a.s.}
+	\Longrightarrow
+	\operatorname{dist}(\tilde z,\Gamma_c)
+	\le \varepsilon_{\mathcal{P}}+\tau_c
+	<\rho
+	\Longrightarrow
+	\tilde z\in\mathcal{T}_\rho(\Gamma_c)\ \mathrm{a.s.}
+	\]
+	By $\rho<\operatorname{reach}(\Gamma_c)$,
+	\[
+	\exists!\,\pi_{\Gamma_c}(\tilde z)\in\Gamma_c
+	\quad
+	(\tilde z\in\mathcal{T}_\rho(\Gamma_c)).
+	\]
+
+	For any $L_F$-Lipschitz objective,
+	\[
+	\begin{aligned}
+	\left|\mathbb{E}F_c(\tilde z)-\mathbb{E}F_c(z^\star)\right|
+	&=
+	\left|\mathbb{E}\{F_c(\tilde z)-F_c(z^\star)\}\right|\\
+	&\le
+	\mathbb{E}\left|F_c(\tilde z)-F_c(z^\star)\right|\\
+	&\le
+	L_F\mathbb{E}\lVert\tilde z-z^\star\rVert_2\\
+	&\le
+	L_F\left(\varepsilon_{\mathcal{P}}+\mathbb{E}\lVert\xi\rVert_2\right)\\
+	&\le
+	L_F(\varepsilon_{\mathcal{P}}+\tau_c).
+	\end{aligned}
+	\]
+	If only $\mathbb{E}\lVert\xi\rVert_2\le\tau_c$, the same display gives
+	\[
+	\mathbb{E}\operatorname{dist}(\tilde z,\Gamma_c)
+	\le
+	\varepsilon_{\mathcal{P}}+\tau_c .
+	\]
+	\[
+	\begin{aligned}
+	\mathbb{P}\{\tilde z\notin\mathcal{T}_\rho(\Gamma_c)\}
+	&=
+	\mathbb{P}\{\operatorname{dist}(\tilde z,\Gamma_c)\ge\rho\}\\
+	&\le
+	\rho^{-1}\mathbb{E}\operatorname{dist}(\tilde z,\Gamma_c)
+	\le
+	\frac{\varepsilon_{\mathcal{P}}+\tau_c}{\rho}.
+	\end{aligned}
+	\]
+
+	Finally, if $\Pi_N$ is the orthogonal projection onto the $(D-m)$-dimensional normal subspace, then
+	\[
+	\begin{gathered}
+	\eta_N=\Pi_N\eta,\qquad
+	\eta_N\sim N(0,\sigma^2 I_{D-m}),\\
+	\mathbb{E}\lVert\eta_N\rVert_2^2
+	=
+	\operatorname{tr}(\sigma^2 I_{D-m})
+	=
+	(D-m)\sigma^2 .
+	\end{gathered}
+	\]
+\end{proof}
+
+For the anisotropic sampler, set $\xi=T_c(\alpha)\epsilon_T+N_c(\alpha)\epsilon_N$. The same theorem applies whenever $\lVert\xi\rVert_2\le\tau_c$ almost surely, or in expectation with $\mathbb{E}\lVert\xi\rVert_2\le\tau_c$. Thus tangent-normal anisotropy is not an additional geometric assumption; it is a way to allocate the perturbation budget so that most variation follows the recovered trajectory rather than the ambient normal directions.
+
+\begin{theorem}[Vicinal empirical-process decomposition]
+	Let $\mathcal{Q}_c$ denote the ideal distribution obtained by sampling $z^\star=\mathcal{P}_c(A)$ along the true class trajectory, and let $\widehat{\mathcal{Q}}_c$ denote the TPM distribution generated from $\tilde z=\widehat{\mathcal{P}}_c(A)+\xi$, where $A$ has the same sampling law in both distributions. Consider a loss class $\mathcal{F}$ bounded by $B$, uniformly $L_F$-Lipschitz in latent space, and with pseudo-dimension $V$. If $\tilde z_1,\ldots,\tilde z_M$ are sampled from $\widehat{\mathcal{Q}}_c$, then with probability at least $1-\delta$,
+	\[
+	\sup_{F\in\mathcal{F}}
+	\left|
+	\mathbb{E}_{\mathcal{Q}_c}F(z)-
+	\frac{1}{M}\sum_{j=1}^{M}F(\tilde z_j)
+	\right|
+	\le
+	L_F(\varepsilon_{\mathcal{P}}+\tau_c)
+	+
+	CB\sqrt{\frac{V\log M+\log(1/\delta)}{M}},
+	\]
+	for a universal constant $C$.
+\end{theorem}
+
+\begin{proof}
+	Let $\mathbb{P}_M=M^{-1}\sum_{j=1}^{M}\delta_{\tilde z_j}$ and define
+	\[
+	\begin{aligned}
+	S_M
+	&=
+	\sup_{F\in\mathcal{F}}
+	\left|
+	\mathbb{E}_{\mathcal{Q}_c}F-\mathbb{P}_M F
+	\right|,\\
+	G_c
+	&=
+	\sup_{F\in\mathcal{F}}
+	\left|
+	\mathbb{E}_{\mathcal{Q}_c}F-\mathbb{E}_{\widehat{\mathcal{Q}}_c}F
+	\right|,\\
+	Z_M
+	&=
+	\sup_{F\in\mathcal{F}}
+	\left|
+	\mathbb{E}_{\widehat{\mathcal{Q}}_c}F-\mathbb{P}_M F
+	\right|.
+	\end{aligned}
+	\]
+	\[
+	S_M\le G_c+Z_M .
+	\]
+
+	Use the same-index coupling
+	\[
+	z^\star=\mathcal{P}_c(A),\qquad
+	\tilde z=\widehat{\mathcal{P}}_c(A)+\xi .
+	\]
+	Then
+	\[
+	\mathbb{E}\lVert z^\star-\tilde z\rVert_2
+	\le
+	\varepsilon_{\mathcal{P}}+\tau_c .
+	\]
+	\[
+	\begin{aligned}
+	G_c
+	&\le
+	\sup_{F\in\mathcal{F}}
+	\mathbb{E}\left|F(z^\star)-F(\tilde z)\right|\\
+	&\le
+	L_F\mathbb{E}\lVert z^\star-\tilde z\rVert_2
+	\le
+	L_F(\varepsilon_{\mathcal{P}}+\tau_c).
+	\end{aligned}
+	\]
+
+	The pseudo-dimension bound for bounded real-valued classes gives, for a universal constant $C$ \citep{vapnik1998statistical, vandervaart1996weak, wainwright2019high},
+	\[
+	\mathbb{P}\left\{
+	Z_M>
+	CB\sqrt{\frac{V\log M+\log(1/\delta)}{M}}
+	\right\}
+	\le\delta .
+	\]
+
+	Combining this event with $S_M\le G_c+Z_M$ yields
+	\[
+	\mathbb{P}\left\{
+	S_M
+	\le
+	L_F(\varepsilon_{\mathcal{P}}+\tau_c)
+	+
+	CB\sqrt{\frac{V\log M+\log(1/\delta)}{M}}
+	\right\}
+	\ge
+	1-\delta .
+	\]
+\end{proof}
+
+The decomposition clarifies the role of TPM as a vicinal generator. Increasing the number of generated samples reduces only the empirical-process term. It cannot remove the geometric bias $L_F(\varepsilon_{\mathcal{P}}+\tau_c)$ caused by a poorly recovered trajectory or an overly wide tube. This matches the empirical observation that too many augmented samples can eventually hurt classification when the synthetic distribution drifts away from the class manifold.
+
+\begin{theorem}[Dudley entropy-integral vicinal bound]
+	Let the assumptions of the vicinal empirical-process theorem hold, but replace the pseudo-dimension assumption by a metric-entropy condition. Assume the class $\mathcal{F}$ is pointwise measurable and satisfies $|F(z)|\le B$ for all $F\in\mathcal{F}$ and latent codes $z$. For a probability measure $P$, define the $L_2(P)$ covering entropy
+	\[
+		H(u,\mathcal{F},L_2(P))=\log N(u,\mathcal{F},L_2(P)),
+	\]
+	where $N(u,\mathcal{F},L_2(P))$ is the minimum number of $L_2(P)$ balls of radius $u$ needed to cover $\mathcal{F}$. Let
+	\[
+		J_{\widehat{\mathcal{Q}}_c}(\mathcal{F})
+		=
+		\int_{0}^{2B}
+		\sqrt{H(u,\mathcal{F},L_2(\widehat{\mathcal{Q}}_c))}\,du.
+	\]
+	Then, with probability at least $1-\delta$ over $\tilde z_1,\ldots,\tilde z_M\sim \widehat{\mathcal{Q}}_c$,
+	\[
+	\sup_{F\in\mathcal{F}}
+	\left|
+	\mathbb{E}_{\mathcal{Q}_c}F(z)-
+	\frac{1}{M}\sum_{j=1}^{M}F(\tilde z_j)
+	\right|
+	\le
+	L_F(\varepsilon_{\mathcal{P}}+\tau_c)
+	+
+	\frac{C}{\sqrt{M}}J_{\widehat{\mathcal{Q}}_c}(\mathcal{F})
+	+
+	B\sqrt{\frac{2\log(1/\delta)}{M}},
+	\]
+	for a universal constant $C$.
+\end{theorem}
+
+\begin{proof}
+	Let $\mathbb{P}_M=M^{-1}\sum_{j=1}^{M}\delta_{\tilde z_j}$ and set
+	\[
+	\begin{aligned}
+	S_M&=
+	\sup_{F\in\mathcal{F}}
+	\left|
+	\mathbb{E}_{\mathcal{Q}_c}F-\mathbb{P}_M F
+	\right|,\\
+	G_c&=
+	\sup_{F\in\mathcal{F}}
+	\left|
+	\mathbb{E}_{\mathcal{Q}_c}F-\mathbb{E}_{\widehat{\mathcal{Q}}_c}F
+	\right|,\\
+	Z_M&=
+	\sup_{F\in\mathcal{F}}
+	\left|
+	\mathbb{E}_{\widehat{\mathcal{Q}}_c}F-\mathbb{P}_M F
+	\right|.
+	\end{aligned}
+	\]
+	\[
+	S_M\le G_c+Z_M .
+	\]
+
+	Couple the ideal and generated codes by the same trajectory index:
+	\[
+	z^\star=\mathcal{P}_c(A),\qquad
+	\tilde z=\widehat{\mathcal{P}}_c(A)+\xi .
+	\]
+	\[
+	\begin{aligned}
+		\mathbb{E}\lVert z^\star-\tilde z\rVert_2
+		\le
+		\sup_{t\in[0,1]}
+		\lVert\widehat{\mathcal{P}}_c(t)-\mathcal{P}_c(t)\rVert_2
+		+
+		\mathbb{E}\lVert\xi\rVert_2
+		\le
+		\varepsilon_{\mathcal{P}}+\tau_c .
+	\end{aligned}
+	\]
+	\[
+	\begin{aligned}
+		\sup_{F\in\mathcal{F}}
+		\left|
+		\mathbb{E}_{\mathcal{Q}_c}F-
+		\mathbb{E}_{\widehat{\mathcal{Q}}_c}F
+		\right|
+		\le
+		\sup_{F\in\mathcal{F}}
+		\mathbb{E}\left|F(z^\star)-F(\tilde z)\right|
+			\le
+			L_F(\varepsilon_{\mathcal{P}}+\tau_c).
+	\end{aligned}
+	\]
+
+	It remains to control $Z_M$. By symmetrization and Dudley's entropy-integral bound for bounded pointwise measurable classes \citep{dudley1967sizes, vandervaart1996weak, wainwright2019high},
+	\[
+	\mathbb{E}Z_M
+	\le
+	\frac{C_0}{\sqrt{M}}\,
+	\mathbb{E}
+	\int_0^{2B}
+	\sqrt{\log N(u,\mathcal{F},L_2(\mathbb{P}_M))}\,du .
+	\]
+	The standard empirical-to-population entropy comparison gives
+	\[
+	\mathbb{E}Z_M
+	\le
+	\frac{C_1}{\sqrt{M}}J_{\widehat{\mathcal{Q}}_c}(\mathcal{F}).
+	\]
+	Changing one sample changes $Z_M$ by at most $2B/M$, so McDiarmid's inequality implies
+	\[
+	\mathbb{P}\left\{
+		Z_M
+		\le
+		\mathbb{E}Z_M
+		+
+		B\sqrt{\frac{2\log(1/\delta)}{M}}
+	\right\}
+	\ge
+	1-\delta .
+	\]
+
+	On the concentration event,
+	\[
+	S_M\le G_c+Z_M
+	\Longrightarrow
+	S_M
+	\le
+	L_F(\varepsilon_{\mathcal{P}}+\tau_c)
+	+
+	\frac{C}{\sqrt{M}}J_{\widehat{\mathcal{Q}}_c}(\mathcal{F})
+	+
+	B\sqrt{\frac{2\log(1/\delta)}{M}} .
+	\]
+\end{proof}
+
+\textbf{Interpretation in real scenarios.}
+This theorem should be read as an operational guarantee for using generated samples in downstream learning, not as an abstract empirical-process statement. The left-hand side is a uniform discrepancy over a family of downstream objectives, such as linear probes, small neural classifiers, calibrated class-consistency scores, or feature-space retrieval losses. The first term, $L_F(\varepsilon_{\mathcal{P}}+\tau_c)$, is the geometric bias: it is small only when the few target shots cover the class trajectory well and the tube radius is not too large. In image experiments this corresponds to preserving identity, pose, stroke width, texture, or viewpoint while avoiding off-class latent directions. In domain-shift experiments it means that target-domain generated examples should remain close to the target support rather than drifting toward source-domain artifacts. In single-cell experiments it means that generated cells should stay near a biologically meaningful trajectory such as pseudotime, activation, disease progression, or perturbation response, while avoiding normal directions that represent batch effects or implausible hybrid cell states.
+
+The second term, $M^{-1/2}J_{\widehat{\mathcal{Q}}_c}(\mathcal{F})$, is the sampling-complexity term for the synthetic set. It explains why adding more generated samples helps only up to the point where the effective loss-class complexity on the generated tube has been controlled. If the generated distribution spreads through many irrelevant ambient directions, the covering entropy can be large even when $M$ is large. Conversely, a thin trajectory-aligned tube can have much smaller effective entropy than the ambient latent space. The third term is the usual confidence penalty. Thus the bound gives practical design rules: improve shot coverage to reduce $\varepsilon_{\mathcal{P}}$, tune or reject samples by distance-to-trajectory to control $\tau_c$, choose an augmentation budget $M$ by validation rather than increasing it blindly, and report both downstream accuracy and support-preservation diagnostics such as class consistency, nearest-neighbor distance, tangent-normal residuals, calibration, and diversity.
+
+This entropy-integral view is sharper than a single pseudo-dimension number. If the generated distribution is supported in a thin tube around a low-dimensional trajectory and the downstream losses vary smoothly on that tube, then the relevant covering entropy is controlled by the effective geometry of the tube rather than by the ambient latent dimension. For example, if
+\[
+	H(u,\mathcal{F},L_2(\widehat{\mathcal{Q}}_c))
+	\le
+	v_{\mathrm{eff}}\log(A/u)
+	\quad\text{for }0<u\le 2B,
+\]
+then Dudley's integral gives
+\[
+	J_{\widehat{\mathcal{Q}}_c}(\mathcal{F})
+	\lesssim
+	B\sqrt{v_{\mathrm{eff}}\log(eA/B)}.
+\]
+Thus TPM is useful not only because it reduces geometric bias, but also because a trajectory-constrained vicinal distribution can reduce the entropy of the empirical process seen by the classifier. Random Gaussian augmentation in a high-dimensional latent space has the opposite tendency: it expands mass into normal directions and can increase the covering complexity of the induced loss class.
+
+\begin{theorem}[Decoder pullback smoothness]
+	Assume the decoder is $C^1$ on $\mathcal{T}_\rho(\Gamma_c)$ and its pullback metric satisfies $\lambda_{\max}\{G(z)\}\le \Lambda$ on this tube. For two ordered trajectory indices $s<t$ and perturbations $\xi_s,\xi_t$, let $\tilde z_s=\mathcal{P}_c(s)+\xi_s$ and $\tilde z_t=\mathcal{P}_c(t)+\xi_t$. Then
+	\[
+	\lVert d(\tilde z_t)-d(\tilde z_s)\rVert_2
+	\le
+	\int_s^t \sqrt{\dot{\mathcal{P}}_c(u)^\top G(\mathcal{P}_c(u))\dot{\mathcal{P}}_c(u)}\,du
+	+L_d(\lVert\xi_s\rVert_2+\lVert\xi_t\rVert_2),
+	\]
+	where $L_d$ is a Lipschitz constant for $d$ on $\mathcal{T}_\rho(\Gamma_c)$. In particular, if $\mathcal{P}_c$ is Euclidean arc-length parameterized, then
+	\[
+	\lVert d(\tilde z_t)-d(\tilde z_s)\rVert_2
+	\le \sqrt{\Lambda}|t-s|+L_d(\lVert\xi_s\rVert_2+\lVert\xi_t\rVert_2).
+	\]
+\end{theorem}
+
+\begin{proof}
+	Set $\gamma(u)=d(\mathcal{P}_c(u))$. Then
+	\[
+	\ell_{s,t}(\gamma)
+	=
+	\int_s^t
+	\sqrt{\dot{\mathcal{P}}_c(u)^\top G(\mathcal{P}_c(u))\dot{\mathcal{P}}_c(u)}\,du .
+	\]
+
+	Length controls the endpoint distance, and $d$ is $L_d$-Lipschitz on the tube:
+	\[
+	\begin{aligned}
+	\lVert d(\mathcal{P}_c(t))-d(\mathcal{P}_c(s))\rVert_2
+	&\le \ell_{s,t}(\gamma),\\
+	\lVert d(\tilde z_t)-d(\mathcal{P}_c(t))\rVert_2
+	&\le L_d\lVert\xi_t\rVert_2,\\
+	\lVert d(\tilde z_s)-d(\mathcal{P}_c(s))\rVert_2
+	&\le L_d\lVert\xi_s\rVert_2 .
+	\end{aligned}
+	\]
+	\[
+	\begin{aligned}
+	\lVert d(\tilde z_t)-d(\tilde z_s)\rVert_2
+	&\le
+	\lVert d(\tilde z_t)-d(\mathcal{P}_c(t))\rVert_2\\
+	&\quad+
+	\lVert d(\mathcal{P}_c(t))-d(\mathcal{P}_c(s))\rVert_2\\
+	&\quad+
+	\lVert d(\mathcal{P}_c(s))-d(\tilde z_s)\rVert_2\\
+	&\le
+	\int_s^t
+	\sqrt{\dot{\mathcal{P}}_c(u)^\top G(\mathcal{P}_c(u))\dot{\mathcal{P}}_c(u)}\,du\\
+	&\quad+
+	L_d(\lVert\xi_s\rVert_2+\lVert\xi_t\rVert_2).
+	\end{aligned}
+	\]
+
+	If $\mathcal{P}_c$ is Euclidean arc-length parameterized, then
+	\[
+	\lVert\dot{\mathcal{P}}_c(u)\rVert_2=1,\quad
+	\lambda_{\max}\{G(\mathcal{P}_c(u))\}\le\Lambda
+	\Longrightarrow
+	\dot{\mathcal{P}}_c(u)^\top G(\mathcal{P}_c(u))\dot{\mathcal{P}}_c(u)
+	\le\Lambda .
+	\]
+	\[
+	\int_s^t
+	\sqrt{\dot{\mathcal{P}}_c(u)^\top G(\mathcal{P}_c(u))\dot{\mathcal{P}}_c(u)}\,du
+	\le
+	\sqrt{\Lambda}\,|t-s|.
+	\]
+\end{proof}
+
+This theorem explains why ordering matters. Random pairwise interpolation can create long decoded paths through poorly controlled regions of latent space, whereas TPM moves along the decoder-induced trajectory and perturbs only locally. The smoothness metric used in experiments is therefore a crude finite-difference proxy for the pullback length of the decoded trajectory, analogous to geodesic and metric-distortion diagnostics used in latent generative models \citep{hauberg2015principal, arvanitidis2018latent, shao2018riemannian}.
+
+The next interpolation result is deliberately conditional: it assumes that the estimated order already equals the true order and therefore does not establish that a target-only algorithm can recover that order.
+
+\begin{lemma}[Conditional finite-shot interpolation error]
+	Assume the true class trajectory $\mathcal{P}_c:[0,1]\rightarrow\mathbb{R}^D$ is parameterized by arc length and has curvature bounded by $\kappa$. Suppose the $K$ target shots satisfy $z_i=\mathcal{P}_c(t_i)+\epsilon_i$, with $\lVert\epsilon_i\rVert_2\le\delta$, and the recovered projection ordering agrees with the ordering of $t_i$. Let $h_K=\max_i |t_{(i+1)}-t_{(i)}|$ be the largest gap between consecutive ordered shots, let $\widehat{\Gamma}_c$ be the image of the piecewise-linear curve $\widehat{\mathcal{P}}_c$ interpolating the ordered shots, and let $\Gamma_{c,K}=\{\mathcal{P}_c(t):t\in[t_{(1)},t_{(K)}]\}$. Define
+	\[
+	d_H(\widehat{\Gamma}_c,\Gamma_{c,K})
+	=
+	\max\left\{
+	\sup_{\hat z\in\widehat{\Gamma}_c}\operatorname{dist}(\hat z,\Gamma_{c,K}),
+	\sup_{z\in\Gamma_{c,K}}\operatorname{dist}(z,\widehat{\Gamma}_c)
+	\right\}.
+	\]
+	Then
+	\[
+	d_H(\widehat{\Gamma}_c,\Gamma_{c,K})
+	\le \delta+\frac{\kappa h_K^2}{8}.
+	\]
+	For a spline-smoothed PML estimate, the same bound holds with an additional spline fitting error term.
+\end{lemma}
+
+\begin{proof}
+	Fix a consecutive ordered pair and write
+	\[
+	h_i=t_{(i+1)}-t_{(i)},\qquad h_i\le h_K.
+	\]
+	\[
+	P_i=\mathcal{P}_c(t_{(i)}),\quad
+	P_{i+1}=\mathcal{P}_c(t_{(i+1)}),\quad
+	z_i=P_i+\epsilon_i,\quad
+	z_{i+1}=P_{i+1}+\epsilon_{i+1}.
+	\]
+	\[
+	q_i(\lambda)=(1-\lambda)P_i+\lambda P_{i+1},
+	\qquad
+	\hat q_i(\lambda)=(1-\lambda)z_i+\lambda z_{i+1},
+	\qquad
+	\lambda\in[0,1].
+	\]
+
+	The noisy chord stays within $\delta$ of the noiseless chord:
+	\[
+	\begin{aligned}
+	\lVert \hat q_i(\lambda)-q_i(\lambda)\rVert_2
+	&=
+	\lVert(1-\lambda)\epsilon_i+\lambda\epsilon_{i+1}\rVert_2\\
+	&\le
+	(1-\lambda)\lVert\epsilon_i\rVert_2+\lambda\lVert\epsilon_{i+1}\rVert_2
+	\le
+	\delta .
+	\end{aligned}
+	\]
+
+	Let $a=t_{(i)}$, $h=h_i$, $s=\lambda h$, and
+	\[
+	r_i(s)=\mathcal{P}_c(a+s)-\left(1-\frac{s}{h}\right)P_i-\frac{s}{h}P_{i+1},
+	\qquad 0\le s\le h .
+	\]
+	Since $r_i(0)=r_i(h)=0$ and $\lVert r_i''(s)\rVert_2\le\kappa$, the second-order interpolation remainder gives
+	\[
+	r_i(s)=\int_0^hG_h(s,u)r_i''(u)\,du,
+	\qquad
+	\int_0^h|G_h(s,u)|\,du=\frac{s(h-s)}{2}.
+	\]
+	\[
+	\operatorname{dist}\!\left(\mathcal{P}_c(a+s),\{q_i(\lambda):0\le\lambda\le1\}\right)
+	\le
+	\lVert r_i(s)\rVert_2
+	\le
+	\frac{\kappa s(h-s)}{2}
+	\le
+	\frac{\kappa h_i^2}{8}.
+	\]
+	The same chord-error bound holds in the reverse direction, because each point $q_i(\lambda)$ is paired with $\mathcal{P}_c(a+\lambda h)$:
+	\[
+	\sup_{\lambda\in[0,1]}
+	\operatorname{dist}\!\left(q_i(\lambda),\mathcal{P}_c([t_{(i)},t_{(i+1)}])\right)
+	\le
+	\frac{\kappa h_i^2}{8}
+	\le
+	\frac{\kappa h_K^2}{8}.
+	\]
+	\[
+	\sup_{t\in[t_{(i)},t_{(i+1)}]}
+	\operatorname{dist}\!\left(\mathcal{P}_c(t),\{q_i(\lambda):0\le\lambda\le1\}\right)
+	\le
+	\frac{\kappa h_i^2}{8}
+	\le
+	\frac{\kappa h_K^2}{8}.
+	\]
+
+	Combining the noise and chord bounds gives, for every segment,
+	\[
+	\begin{aligned}
+	\sup_{\lambda\in[0,1]}
+	\operatorname{dist}(\hat q_i(\lambda),\Gamma_{c,K})
+	&\le
+	\delta+\frac{\kappa h_K^2}{8},\\
+	\sup_{t\in[t_{(i)},t_{(i+1)}]}
+	\operatorname{dist}(\mathcal{P}_c(t),\widehat{\Gamma}_c)
+	&\le
+	\delta+\frac{\kappa h_K^2}{8}.
+	\end{aligned}
+	\]
+	Taking the maximum over all consecutive pairs,
+	\[
+	d_H(\widehat{\Gamma}_c,\Gamma_{c,K})
+	\le
+	\max_i\left(\delta+\frac{\kappa h_K^2}{8}\right)
+	=
+	\delta+\frac{\kappa h_K^2}{8}.
+	\]
+\end{proof}
+
+The lemma explains why TPM should be evaluated as a function of $K$ and shot coverage. When the available shots cover the trajectory, $h_K$ is small and the curve error is dominated by representation noise $\delta$. When shots cluster in one region, the largest gap is large and trajectory-aware interpolation can still fail. This mirrors classical geometric-inference results: sample coverage, curvature, tangent estimation, and reach jointly determine how reliably a manifold or its local tangent structure can be recovered \citep{niyogi2008finding, genovese2012manifold, aamari2019nonasymptotic}. This is precisely why K-shot sensitivity and repeated random-shot experiments are necessary in the empirical section. Topologically, TPM assumes that the dominant class variation is connected and non-branching; multi-component or branching class supports require either multiple trajectories or higher-dimensional principal manifolds.
+
+\begin{lemma}[Shot-adaptive tube calibration]
+	Under the assumptions of the conditional finite-shot interpolation lemma, suppose the spline fitting error is bounded by $e_{\mathrm{spl}}$ and the tube radius satisfies
+	\[
+		\tau_c
+		<
+		\rho-\delta-\frac{\kappa h_K^2}{8}-e_{\mathrm{spl}}
+		\quad\text{for some}\quad
+		\rho<\operatorname{reach}(\Gamma_c).
+	\]
+	Then every generated latent code $\tilde z=\widehat{\mathcal{P}}_c(\alpha)+\xi$, with $\lVert\xi\rVert_2\le\tau_c$, lies in $\mathcal{T}_\rho(\Gamma_c)$. Consequently, the geometric approximation term in the vicinal empirical-process bound is controlled by
+	\[
+		L_F\left(\delta+\frac{\kappa h_K^2}{8}+e_{\mathrm{spl}}+\tau_c\right).
+	\]
+\end{lemma}
+
+\begin{proof}
+	Set
+	\[
+	e_K=\delta+\frac{\kappa h_K^2}{8}+e_{\mathrm{spl}}.
+	\]
+	\[
+	d_H(\widehat{\Gamma}_c,\Gamma_{c,K})\le e_K
+	\Longrightarrow
+	\operatorname{dist}(\widehat{\mathcal{P}}_c(\alpha),\Gamma_{c,K})\le e_K
+	\quad(\forall\alpha).
+	\]
+	Since $\Gamma_{c,K}\subseteq\Gamma_c$,
+	\[
+	\operatorname{dist}(\widehat{\mathcal{P}}_c(\alpha),\Gamma_c)
+	\le
+	\operatorname{dist}(\widehat{\mathcal{P}}_c(\alpha),\Gamma_{c,K})
+	\le e_K .
+	\]
+
+	\[
+	\begin{aligned}
+	\operatorname{dist}(\tilde z,\Gamma_c)
+	&=
+	\operatorname{dist}(\widehat{\mathcal{P}}_c(\alpha)+\xi,\Gamma_c)\\
+	&\le
+	\operatorname{dist}(\widehat{\mathcal{P}}_c(\alpha),\Gamma_c)+\lVert\xi\rVert_2\\
+	&\le
+	e_K+\tau_c
+	<
+	\rho .
+	\end{aligned}
+	\]
+	\[
+	\tilde z\in\mathcal{T}_\rho(\Gamma_c).
+	\]
+
+	\[
+	\varepsilon_{\mathcal{P}}\le e_K
+	\Longrightarrow
+	L_F(\varepsilon_{\mathcal{P}}+\tau_c)
+	\le
+	L_F\left(\delta+\frac{\kappa h_K^2}{8}+e_{\mathrm{spl}}+\tau_c\right).
+	\]
+\end{proof}
+
+This calibration makes the augmentation radius data-dependent. With more uniformly covered shots, $h_K$ decreases and TPM can safely use a wider local tube. With clustered shots or high curvature, the admissible tube shrinks, so the method should prefer fewer samples, smaller perturbations, or multiple local branches. This provides a theoretical basis for the augmentation-budget sweeps reported below.
+
+\smallskip
+\noindent\textbf{Applications and real-data guidance.}
+The preceding bounds are intended to be operational rather than only asymptotic. The term $h_K$ suggests a shot-selection rule: target examples should cover the recovered projection index or pseudotime axis, rather than merely be numerous. The tube term $\tau_c$ suggests a radius-selection rule: increase the perturbation scale only when nearest-projection uniqueness, local curvature, and validation risk remain stable; otherwise use anisotropic normal noise, local rejection, or branch-specific curves. The empirical-process term and Dudley integral suggest an augmentation-budget rule: adding more synthetic samples reduces stochastic fluctuation only until the effective covering entropy of the generated tube is saturated, whereas geometric bias from a poor trajectory is not removed by increasing $M$. In practice this motivates reporting K-shot coverage sweeps, augmentation-number sweeps, tube-radius ablations, and rejection diagnostics based on distance-to-trajectory, tangent-normal residuals, pullback length, and downstream calibration \citep{dudley1967sizes, vandervaart1996weak, wainwright2019high, niyogi2008finding, genovese2012manifold, aamari2019nonasymptotic}.
+
+For image data, these diagnostics translate into using TPM in representation spaces where semantic variation is locally smooth, such as autoencoder, diffusion-autoencoder, or latent-diffusion inversion spaces, and then checking whether generated samples preserve class identity while moving along interpretable factors such as pose, stroke width, texture, viewpoint, or illumination \citep{hauberg2015principal, arvanitidis2018latent, shao2018riemannian, preechakul2022diffusion, rombach2022high}. For single-cell data, the same normal-bundle picture is especially natural: latent coordinates from scVI, totalVI, scArches, Geneformer-like transfer models, or scGPT can be ordered by pseudotime, activation state, dose, disease progression, or perturbation response \citep{lopez2018deep, gayoso2021joint, lotfollahi2022mapping, theodoris2023transfer, cui2024scgpt, trapnell2014dynamics, wolf2019paga, moon2019phate, bergen2020generalizing}. The theory then suggests concrete biological checks: generated cells should preserve marker-gene programs, differential-expression direction, cell-type neighborhood structure, RNA-velocity or pseudotime consistency, and perturbation-response direction, while avoiding normal directions that correspond to batch effects or implausible hybrid states. Thus the mathematical tube and entropy terms become practical levers for deciding when augmentation is trustworthy on real data, not just formal quantities in the proof.
+
+\begin{theorem}[Consistency of the local intrinsic-dimension proxy]
+	Let $Z=e(X)$ be supported on a compact $m$-dimensional $C^2$ manifold with density bounded away from zero and infinity in a neighborhood of a regular point $z$. Let $T_j(z)$ denote the distance from $z$ to its $j$-th nearest neighbor among $n$ same-class samples. If $k\rightarrow\infty$ and $k/n\rightarrow 0$, then
+	\[
+	\left[\frac{1}{k-1}\sum_{j=1}^{k-1}\log\frac{T_k(z)}{T_j(z)}\right]^{-1}
+	\stackrel{p}{\longrightarrow} m.
+	\]
+	Consequently, the class average in Equation~\ref{eq:intrinsic} estimates the average local intrinsic dimension of the encoded class manifold under the same regularity conditions.
+\end{theorem}
+
+\begin{proof}
+	For a regular point $z$, define
+	\[
+	p_z(r)=\mathbb{P}\{\lVert Z-z\rVert_2\le r\}.
+	\]
+	The $C^2$ manifold assumption and the local density condition imply
+	\[
+	p_z(r)=f(z)v_m r^m\{1+o(1)\},
+	\qquad
+	r\downarrow0.
+	\]
+	\[
+	k\rightarrow\infty,\quad k/n\rightarrow0
+	\Longrightarrow
+	T_k(z)\stackrel{p}{\longrightarrow}0.
+	\]
+
+	On the probability scale, define
+	\[
+	U_j
+	=
+	\frac{p_z(T_j(z))}{p_z(T_k(z))},
+	\qquad
+	j=1,\ldots,k-1.
+	\]
+	\[
+	(U_1,\ldots,U_{k-1})
+	=
+	(U_{(1)},\ldots,U_{(k-1)})+o_p(1).
+	\]
+	Here $U_{(1)}\le\cdots\le U_{(k-1)}$ are the order statistics of $k-1$ i.i.d. $U(0,1)$ variables.
+
+	Using the local expansion of $p_z(r)$,
+	\[
+	\begin{aligned}
+	\log\frac{T_k(z)}{T_j(z)}
+	&=
+	\frac{1}{m}
+	\log\frac{p_z(T_k(z))}{p_z(T_j(z))}
+	+o_p(1)\\
+	&=
+	-\frac{1}{m}\log U_j+o_p(1),
+	\qquad j=1,\ldots,k-1 .
+	\end{aligned}
+	\]
+	Since $(k-1)^{-1}\sum_{j=1}^{k-1}(-\log U_j)\stackrel{p}{\to}\mathbb{E}\{-\log U\}=1$,
+	\[
+	\begin{aligned}
+	\frac{1}{k-1}\sum_{j=1}^{k-1}\log\frac{T_k(z)}{T_j(z)}
+	&\stackrel{p}{\longrightarrow}
+	\frac{1}{m},\\
+	\left[
+	\frac{1}{k-1}\sum_{j=1}^{k-1}\log\frac{T_k(z)}{T_j(z)}
+	\right]^{-1}
+	&\stackrel{p}{\longrightarrow}
+	m .
+	\end{aligned}
+	\]
+
+	The same argument is uniform over any local range $k_1\le k\le k_2$ with $k_1,k_2\to\infty$ and $k_2/n\to0$, so
+	\[
+	\frac{1}{k_2-k_1+1}
+	\sum_{k=k_1}^{k_2}\widehat m_i(k)
+	\stackrel{p}{\longrightarrow}
+	m(z_i).
+	\]
+	Averaging over the same-class samples gives the stated class-average limit.
+\end{proof}
+
+Together, these results give the intended role of the regularizer. The reconstruction loss prevents latent collapse, while $\mathcal{L}_{\text{intrinsic}}^c$ encourages source-class representations whose dominant variation is easier to summarize by a low-dimensional curve. In the notation above, this should reduce the curve approximation term $\varepsilon_{\mathcal{P}}$ and the shot-noise term $\delta$, which are the quantities that directly control how far generated samples move from the latent class trajectory.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/mnist_feature_manifold.png}
+	\caption{Marginal distributions of a random digit in the MNIST. (a) Raw pixel space. (b) Encoded feature space learned by a typical AE. (c) Encoded feature space learned by ours. The manifold can be well preserved.}
+	\label{fig:mnist_feature_manifold}
+\end{figure}
+
+
+\section{Experiments}
+In this section, we evaluate TPM on synthetic data and image benchmarks. The experiments test four claims: whether ordered source trajectories improve held-out target support recovery, whether the latent representation becomes more compact, whether trajectory-aware augmentation helps low-shot classification, and whether generated samples vary smoothly along the recovered manifold.
+
+\subsection{Oracle trajectory-family transfer benchmark}
+We first isolate the statistical question introduced by HB-TPM. The oracle draws related smooth one-dimensional trajectories embedded in eight dimensions. Its private six-term Fourier representation is randomly rotated into the ambient space, receives coefficient-specific task variation, and is perturbed by a signed Gaussian radius in a uniformly random geometric normal direction with oracle scale 0.035. Forty-eight source tasks provide 96 ordered observations each. For every held-out target task, one unordered ten-shot set is drawn and the first $K\in\{3,5,10\}$ shots form nested evaluation sets shared by all methods. Evaluation uses one shared set of 192 fresh oracle samples and 192 generated samples per method. We repeat this protocol for 30 independent target tasks. The primary metric is sliced-Wasserstein distance (SWD) using the same 64 random projections for every method within a target-$K$ cell; secondary metrics are energy distance, support precision and coverage distances, and symmetric curve Chamfer error. All settings are fixed before target-test repeats, and target truth is used only for evaluation.
+
+The comparison includes Gaussian estimation, SMOTE, the PCA-ordered piecewise-linear naive TPM defined above, a nonlinear target-only VAE, a source-pretrained and target-adapted nonlinear VAE, HB-TPM, an HB-TPM weak-prior ablation, and HB-TPM with matched-radial isotropic noise. The weak-prior ablation multiplies every learned coefficient variance by 250; the prior remains finite and is not interpreted as exactly flat. Both transfer methods use the same pooled source samples, while HB-TPM additionally uses their progression coordinates. The experiment therefore measures the value of ordering-aware structured transfer relative to pooled-density transfer; it is not an upper bound on a conditional or meta-VAE given the same ordering supervision. The simulator and estimator also use different bases: the oracle uses a private Fourier representation, while HB-TPM uses the generic Bernstein basis described above.
+
+For reproducibility, the VAE is an $8$--$28$--$2$--$28$--$8$ nonlinear model with tanh hidden layers and a two-dimensional Gaussian latent variable. Source observations are standardized using pooled-source means and standard deviations with a 0.08 scale floor. Source pretraining uses 2400 Adam updates with learning rate 0.003 and $\beta=0.035$; target-only fitting uses 700 updates at learning rate 0.004; source adaptation uses 180 updates at learning rate 0.0015 with a quadratic anchor of 0.025 to the pretrained parameters. HB-TPM uses the source fit and target solver in Algorithm~\ref{alg:hb_tpm}. These fixed choices are benchmark settings rather than target-oracle-tuned hyperparameters.
+
+\begin{figure*}[t]
+	\centering
+	\includegraphics[width=\textwidth]{figures/hb_tpm_visual_recovery_k5.png}
+	\caption{Held-out trajectory recovery for repeat 0 with $K=5$. All panels use the same PCA projection learned from the true eight-dimensional curve and identical axis limits. The black dashed line is the oracle curve, gold markers are the five unordered target shots, colored points are generated or oracle samples, and solid lines are explicit fitted trajectories. Naive TPM connects only the locally covered shots; the source-adapted VAE produces a broad point cloud without a unique explicit path; HB-TPM uses the ordered-source prior to recover the unobserved bend and obtains the lowest SWD. This example is explanatory; statistical conclusions use all 30 held-out tasks.}
+	\label{fig:hb_tpm_visual_recovery}
+\end{figure*}
+
+Table~\ref{table:hb_tpm_swd} reports the paired primary comparison. HB-TPM improves mean SWD by 21.0\%, 30.2\%, and 41.8\% at $K=3,5,10$, respectively, and wins 86 of the 90 paired target-task comparisons. The advantage grows with $K$ because additional target shots refine the latent indices and task-specific posterior while the hierarchical prior continues to regularize weak directions.
+
+\begin{table*}[t]
+	\centering
+	\caption{Oracle trajectory-family benchmark. Values are mean $\pm$ standard error across 30 held-out target tasks. Paired wins count targets for which HB-TPM has lower SWD than the source-adapted VAE; $p$ is the exact one-sided sign-test value.}
+	\label{table:hb_tpm_swd}
+	\small
+	\setlength{\tabcolsep}{8pt}
+	\renewcommand{\arraystretch}{1.15}
+	\resizebox{\textwidth}{!}{%
+	\begin{tabular}{cccccc}
+		\toprule
+		$K$ & HB-TPM SWD & Source-adapted VAE SWD & Relative reduction & Paired wins & $p$ \\
+		\midrule
+		3  & $0.1180\pm0.0045$ & $0.1494\pm0.0037$ & 21.0\% & 28/30 & $4.34\times10^{-7}$ \\
+		5  & $0.0934\pm0.0047$ & $0.1340\pm0.0033$ & 30.2\% & 28/30 & $4.34\times10^{-7}$ \\
+		10 & $0.0739\pm0.0031$ & $0.1270\pm0.0033$ & 41.8\% & 30/30 & $9.31\times10^{-10}$ \\
+		\bottomrule
+	\end{tabular}%
+	}
+\end{table*}
+
+The support metrics agree with the primary result. At $K=3,5,10$, HB-TPM obtains support precision distances of 0.2584, 0.1747, and 0.0904, compared with 0.3824, 0.3476, and 0.3304 for the source-adapted VAE; the corresponding support coverage distances are 0.2579, 0.1723, and 0.0909 versus 0.2944, 0.2295, and 0.1899. Target-only VAE SWD is 0.2762, 0.2004, and 0.1783; Gaussian SWD is 0.2687, 0.2089, and 0.1786; and naive TPM SWD is 0.2910, 0.1945, and 0.1539.
+
+The ablations identify the source of the gain. Symmetric curve error for full HB-TPM is 0.2588, 0.1717, and 0.0845 at $K=3,5,10$, compared with 0.3047, 0.2957, and 0.1623 after removing effective shrinkage and 0.4170, 0.2838, and 0.1825 for naive TPM. Replacing normal noise with matched-radial isotropic noise changes SWD little at $K=3$ and $K=5$ and is slightly better at $K=10$ despite using the same curve. Thus the primary gain comes from the hierarchical curve posterior, not from the tube orientation.
+
+Finally, a full-dimensional diagonal-Gaussian oracle provides a negative control. The correctly specified Gaussian estimator beats naive TPM in 82 of 90 comparisons: 26/30, 29/30, and 27/30 at $K=3,5,10$. This reversal supports the conditional claim that HB-TPM is useful for a transferable trajectory family, rather than for arbitrary target distributions. Complete records and scripts are under \path{hb_tpm_trajectory_model/}: \path{results/benchmark.json}, \path{run_experiment.py}, and \path{make_final_artifacts.py}.
+
+\begin{table}[H]
+	\centering
+	\caption{Estimated intrinsic dimension for each MNIST digit under different representations.}
+	\label{table:dimension}
+	\small
+	\setlength{\tabcolsep}{7.5pt}
+	\renewcommand{\arraystretch}{1.12}
+	{
+		\begin{tabular}{lcccccccccc}
+			\toprule
+			& \multicolumn{10}{c}{MNIST digit class} \\
+			\cmidrule(lr){2-11}
+			Representation & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+			\midrule
+			Raw input & 11 & 9 & 12 & 12 & 12 & 13 & 11 & 10 & 14 & 11 \\
+			AE feature & 10 & 8 & 10 & 11 & 10 & 11 & 9 & 9 & 11 & 10 \\
+			TPM feature & 4 & 3 & 5 & 5 & 5 & 5 & 4 & 4 & 5 & 4 \\
+			\bottomrule
+		\end{tabular}
+	}
+\end{table}
+\subsection{Ablation Studies}
+\subsubsection{Manifold structure in encoded latent features.} The first experiment examines whether the latent feature space learned by an AE contains exploitable manifold structure. We train an AE on MNIST. The encoder contains five convolutional layers followed by a fully connected layer that outputs a 128-dimensional code, and the decoder uses five convolutional layers to reconstruct the input. Figure~\ref{fig:mnist_feature_manifold} visualizes 1000 randomly sampled examples in three dimensions for raw pixels, standard AE features, and TPM-regularized features. The visualization suggests two patterns. First, the marginal distributions are not well described by a simple Gaussian model in either raw or standard AE feature space. Second, TPM produces a more compact and structured feature distribution, which is better suited to principal-curve reconstruction. Table~\ref{table:dimension} further shows that the proposed regularizer reduces the estimated intrinsic dimension of the learned feature space.
+
+\subsubsection{Classification improvements by our generated samples.}
+The second experiment tests whether TPM can reconstruct a useful manifold from very few samples and whether the generated samples support classification. We use the 2D spiral dataset shown in Figure~\ref{fig:spiral_manifold_generation}(a). Each class contains 300 samples distributed around a class-specific manifold (Figure~\ref{fig:spiral_manifold_generation}(b)). Given seven shots in each class, TPM generates samples concentrated around the restored manifold (Figure~\ref{fig:spiral_manifold_generation}(c)-(d)). The reconstruction is strongest when the shots cover the class trajectory, but even randomly selected shots provide useful interpolation anchors (Figure~\ref{fig:spiral_manifold_generation}(e)-(f)).
+
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=0.93\textwidth]{figures/spiral_classifier_total.png}
+	\caption{Illustration of decision boundaries learned from ground-truth data (a) and evaluated with generated samples (b). The boundaries are visually similar, indicating that the generated samples preserve the class geometry of the spiral data.}
+	\label{fig:spiral_classifier_total}
+\end{figure}
+
+We then evaluate the generated samples in a classification setting. Each class is augmented from seven random points to 300 samples. A classifier trained on ground-truth data achieves 97.89\% accuracy on TPM-generated samples, while a classifier trained on generated samples achieves 89.4\% accuracy on real samples. Figure~\ref{fig:spiral_classifier_total} shows that the decision boundaries are similar across the two settings, supporting the claim that trajectory-aware generation preserves the class geometry.
+
+\begin{figure}[!htbp]
+	\centering
+	\includegraphics[width=0.93\textwidth]{figures/mnist_classification.png}
+	\caption{MNIST few-shot classification under different target-shot budgets and synthetic-sample budgets. Shaded bands indicate small run-to-run variation; the no-augmentation curve in the synthetic-budget panel is shown as a fixed reference. TPM gives the largest gain in the low-shot regime and peaks at a moderate augmentation budget.}
+	\label{fig:mnist_classification}
+\end{figure}
+
+
+\subsection{Experiments on Image Datasets}
+
+We next evaluate TPM on MNIST \cite{mnist6296535} and CELEB-A \citep{liu2015faceattributes, karras2018progressive}. We employ a CNN-based AE architecture and optimize the model with Adam. Unless otherwise stated, the learning rate is $10^{-3}$ and the batch size is 128.
+
+\textbf{Frontier-aligned evaluation protocol.} To keep the empirical standard current, TPM should be judged against both classical few-shot augmentation and modern generative baselines. The minimal comparison set includes no augmentation, Gaussian feature augmentation, random-order interpolation, Manifold Mixup, AE interpolation, GAN transfer methods such as EWC and masked discrimination, and diffusion-based FSIG or data augmentation methods such as CDM, CRDI, DataDream, DomainGallery, Diff-II, and HypDAE \citep{li2020few, verma2019manifoldmixup, zhu2024masked, gupta2024conditional, cao2024conditional, kim2024datadream, duan2024domaingallery, wang2024inversion, li2025hypdae}. A complete benchmark should vary $K\in\{1,3,5,10,20\}$, the synthetic-to-real ratio, the shot-coverage pattern, and the tube radius $\tau_c$; report downstream accuracy together with FID, KID, precision/recall, LPIPS diversity, and class-consistency scores \citep{heusel2017gans, binkowski2018demystifying, kynkaanniemi2019improved, zhang2018unreasonable}; and include ablations for intrinsic-dimension regularization, trajectory ordering, spline smoothing, tangent-normal noise, and multi-branch fitting. The experiments below cover the core geometric claims on synthetic manifolds, MNIST, and CELEB-A; the diffusion comparisons in this paragraph define the natural next-stage benchmark rather than unreported results.
+
+The first image experiment evaluates whether TPM generates smooth transitions from only $K$ shots per target class. We use the smoothness metric $d_{\text{smooth}} =\frac{1}{N-1}\sum_{i=1}^{N-1}d(\tilde{\V{x}}_i, \tilde{\V{x}}_{i+1})$, where $N$ is the number of generated samples, $\tilde{\V{x}}_i$ is the $i$-th generated sample in trajectory order, and $d(\cdot,\cdot)$ is the $L^2$ distance. This metric is not intended to measure perceptual quality by itself; rather, it quantifies whether consecutive samples along the recovered trajectory change gradually and is interpreted together with visual inspection and classification results.
+\begin{figure}[!htbp]
+	\centering
+	%\includegraphics[width=0.4\textwidth]{figures/mnist_smoothness.png}
+	\includegraphics[width=0.75\textwidth]{figures/celeb_smoothness.png}
+	%\includegraphics[width=0.45\textwidth]{figures/mnist_celeb_smoothness.png}
+	\caption{Smoothness of generated samples on CELEB-A. Dashed horizontal lines show the mean smoothness for each ordering strategy. The predicted order along the intrinsic manifold yields smoother transitions than a random order.}
+	\label{fig:celeb_inter_curve}
+\end{figure}
+
+
+For each target setting, we hold out a class from MNIST or CELEB-A and train on the remaining classes. We then estimate the target principal curve from the few target shots, interpolate along the encoded trajectory, and decode the interpolated latent codes. Figure~\ref{fig:mnist_inter_samples}, Figure~\ref{fig:mnist_inter_curve}, and Figure~\ref{fig:celeb_inter_curve} visualize the generated samples and their corresponding smoothness. TPM produces smoother transformations than random-order interpolation because the interpolation follows the recovered projection-index order.
+
+\begin{figure*}[h]
+	\centering
+	\includegraphics[width=\textwidth]{figures/mnist_celeb12.png}
+	\caption{Visualization of generated samples on MNIST and CELEB-A in the FSIG setting. Row 1: the original seven samples. Row 2: AE reconstructions of the seven samples. Row 3: reconstructions from projected points on the intrinsic manifold. Row 4: linear interpolation in the predicted order. Row 5: spline interpolation in the predicted order. Row 6: linear interpolation in a random order. Row 7: real samples corresponding to the random samples in Row 6.}
+	\label{fig:mnist_inter_samples}
+\end{figure*}
+The second image experiment studies the impact of the number of target training samples and the number of augmented samples on classification. Figure~\ref{fig:mnist_classification} shows two trends. First, when the number of target training samples is below 13, Gaussian augmentation improves over no augmentation, and TPM further improves the result. Second, both TPM and Gaussian augmentation achieve their best performance when the number of augmented samples is between 100 and 150. Adding too many synthesized samples eventually hurts performance, likely because the accumulated synthetic distribution deviates from the true target manifold.
+\begin{figure}[h]
+	\centering
+	%\includegraphics[width=0.4\textwidth]{figures/mnist_smoothness.png}
+	\includegraphics[width=0.82\textwidth]{figures/mnist_smoothness.png}
+	%\includegraphics[width=0.45\textwidth]{figures/mnist_celeb_smoothness.png}
+	\caption{Smoothness of generated samples on MNIST. The predicted order along the intrinsic manifold yields smoother transitions than a random order.}
+	\label{fig:mnist_inter_curve}
+\end{figure}
+
+\subsection{Large-scale visual benchmark and application extensions}
+MNIST and CELEB-A are useful controlled benchmarks, but they do not fully stress modern few-shot generation. A full-scale evaluation should therefore include high-resolution, long-tailed, fine-grained, and domain-shifted datasets. Table~\ref{table:large_visual_benchmark} summarizes the expanded visual benchmark. The protocol uses episodic target-class splits, reports mean and standard error across at least 20 random shot selections, and evaluates both generated-image quality and downstream utility. For diffusion baselines, the source model is kept fixed or adapted only through the few target shots; for TPM, the same target shots are encoded, ordered by the principal trajectory, and decoded by the chosen AE, diffusion autoencoder, or latent-diffusion backbone.
+
+\begin{table*}[t]
+	\centering
+	\caption{Large-scale visual benchmark for stress-testing TPM beyond MNIST and CELEB-A. This table specifies the expanded protocol rather than reporting unrun numerical results.}
+	\label{table:large_visual_benchmark}
+	\small
+	\setlength{\tabcolsep}{4.5pt}
+	\renewcommand{\arraystretch}{1.18}
+	\begin{tabular}{L{0.18\textwidth}L{0.25\textwidth}L{0.28\textwidth}L{0.20\textwidth}}
+		\toprule
+		Dataset family & Few-shot setting & Stress test & Metrics \\
+		\midrule
+		miniImageNet / tieredImageNet \citep{vinyals2016matching, ren2018meta} & 5-way and 10-way, $K\in\{1,5,10,20\}$, disjoint target classes & Generic object synthesis under class-level transfer & Accuracy, macro-F1, FID, KID, precision/recall \\
+		ImageNet-1K and iNaturalist \citep{deng2009imagenet, vanhorn2018inaturalist} & Long-tailed target classes with rare species or subclasses & Extreme class imbalance and fine-grained morphology & Balanced accuracy, calibration error, class-consistency, LPIPS diversity \\
+		CUB-200, Stanford Cars, Oxford Flowers \citep{wah2011caltech, krause20133d, nilsback2008automated} & Fine-grained target categories, $K\le 10$ & Whether trajectory ordering preserves subtle attributes & Attribute consistency, retrieval precision, FID/KID \\
+		DomainNet and PACS \citep{peng2019moment, li2017deeper} & Same semantic class across sketch, painting, clipart, photo, and cartoon domains & Domain shift between source and target manifolds & Cross-domain accuracy, domain confusion, semantic consistency \\
+		CelebA-HQ / FFHQ / LSUN \citep{liu2015faceattributes, karras2019style, yu2015lsun} & Attribute-conditioned or identity-conditioned few-shot synthesis & High-resolution realism and disentangled latent motion & FID, identity similarity, attribute preservation, LPIPS \\
+		\bottomrule
+	\end{tabular}
+\end{table*}
+
+The main comparison grid should include no augmentation, Gaussian feature augmentation, SMOTE-style interpolation, Mixup and Manifold Mixup, random-order AE interpolation, TPM without intrinsic-dimension regularization, TPM without trajectory ordering, EWC-GAN, masked-discrimination GANs, CDM, CRDI, DataDream, DomainGallery, Diff-II, and HypDAE. The most important ablations are the tube radius $\tau_c$, the spline smoothness, the number of generated samples per real shot, the ordering error rate, and whether perturbations are isotropic or tangent-normal. This design separates three effects that are often conflated: visual fidelity of the generator, coverage of the target class support, and downstream benefit for a classifier trained with the generated samples.
+
+\subsection{Single-cell application experiment}
+TPM is not restricted to images. Single-cell data provide a natural non-image application because cell states often evolve along continuous differentiation, activation, disease, or perturbation trajectories. In a single-cell setting, $\V{x}_i$ denotes a gene-expression or multimodal profile, $e(\V{x}_i)$ can be a scVI, totalVI, scArches, Geneformer, or scGPT embedding, and the decoder maps generated latent codes back to normalized expression or protein abundance \citep{lopez2018deep, gayoso2021joint, lotfollahi2022mapping, theodoris2023transfer, cui2024scgpt}. The target ``class'' can be a rare cell type, a disease state, a donor-specific cell population, or a perturbation response with only a few observed cells.
+
+\begin{table*}[t]
+	\centering
+	\caption{Single-cell application benchmark for TPM. Each experiment evaluates whether trajectory-aware latent augmentation improves rare-state learning without destroying biological structure.}
+	\label{table:single_cell_benchmark}
+	\small
+	\setlength{\tabcolsep}{4.3pt}
+	\renewcommand{\arraystretch}{1.18}
+	\begin{tabular}{L{0.20\textwidth}L{0.22\textwidth}L{0.26\textwidth}L{0.23\textwidth}}
+		\toprule
+		Dataset / atlas & Few-shot target & Application task & Biological checks \\
+		\midrule
+		Tabula Sapiens and Human Cell Atlas \citep{tabula2022single, regev2017human} & Rare cell types and tissue-specific subpopulations & Rare-cell classification and balanced atlas annotation & Marker-gene preservation, donor mixing, cell-type purity \\
+		PBMC CITE-seq / multimodal immune atlas \citep{hao2021integrated} & Low-frequency immune states and activated subsets & Joint RNA/protein augmentation for immune-state recognition & Protein-RNA concordance, batch mixing, neighborhood conservation \\
+		Perturb-seq / CRISPR screens \citep{dixit2016perturbseq, replogle2022mapping} & Gene perturbations with few captured cells & Perturbation-response prediction and counterfactual augmentation & Differential-expression recovery, pathway enrichment, perturbation separability \\
+		Differentiation or developmental atlases & Sparse pseudotime windows & Trajectory completion and early/late state interpolation & Pseudotime correlation, velocity consistency, branch purity \\
+		\bottomrule
+	\end{tabular}
+\end{table*}
+
+For single-cell experiments, TPM should be compared with random oversampling, SMOTE, Mixup, Gaussian latent perturbation, scVI latent sampling, scGen, scArches, conditional perturbation autoencoders, Geneformer/scGPT embedding augmentation, and trajectory-aware TPM variants \citep{chawla2002smote, zhang2018mixup, lopez2018deep, lotfollahi2019scgen, lotfollahi2022mapping, lotfollahi2023predicting, theodoris2023transfer, cui2024scgpt}. Downstream metrics include balanced accuracy, macro-F1, AUROC for rare-state detection, ARI/NMI for clustering, silhouette and kBET-style batch mixing, maximum mean discrepancy in latent space, differential-expression overlap, and preservation of known marker genes. This application is especially aligned with TPM: a principal trajectory can represent differentiation or perturbation progression, while the tube radius controls local biological variation around that trajectory.
+
+\newpage
+\section{Conclusion and Limitations}
+We proposed HB-TPM, a trajectory-aware framework that learns a coefficient distribution from ordered source trajectories and performs low-dimensional posterior adaptation for sparse unordered targets. This structure addresses the central identifiability defect of target-only curve reconstruction: finite unordered shots cannot determine an unrestricted trajectory. On the oracle trajectory-family benchmark, HB-TPM wins 86 of 90 paired SWD comparisons against the source-adapted VAE, with relative mean reductions from 21.0\% to 41.8\% as $K$ increases. The weak-prior ablation locates the gain in the hierarchical curve posterior, while the Gaussian negative control shows that the advantage reverses when the structural assumption is false. Normal-bundle sampling remains useful for support control, but is downstream of correct trajectory estimation.
+
+The conditional nature of this result defines the main limitations. First, source progression coordinates must be genuinely available and the target must belong to the fitted source family; family mismatch, unstable projection indices, or high held-out source adaptation error should trigger the fallback gate. Second, the source-adapted VAE comparison uses the same pooled samples but not their ordering, so the next decisive baseline is a conditional or meta-VAE supplied with the same $(t,x)$ supervision. Third, the present model uses a single trajectory. A principal curve cannot represent all variation in a multi-branch or higher-dimensional class support; mixtures, principal graphs, or surfaces are required when data support that complexity \citep{ozertem2011locally, hauberg2015principal, han2026few}. Finally, the oracle benchmark establishes the statistical mechanism rather than high-resolution image realism. Future work should combine the HB-TPM posterior with diffusion or foundation-model decoders and evaluate perceptual quality, diversity, family-mismatch robustness, and real ordered data.
+
+%\newpage
+\bibliographystyle{elsarticle-num}
+%\bibliography{references}
+
+\newpage
+\section{Supplementary materials}
+\subsection{Benchmark implementation and code map}
+The complete implementation and raw benchmark records are under \path{hb_tpm_trajectory_model/}. The main code map is:
+\begin{itemize}
+    \item source coefficient fitting and prior estimation: \path{learn_hierarchical_prior};
+    \item alternating target adaptation: \path{fit_hb_tpm};
+    \item trajectory-conditioned sampling: \path{sample_hb_tpm}.
+\end{itemize}
+These functions are defined in \path{core.py}; the frozen protocol and baselines are assembled in \path{run_experiment.py}.
+
+The benchmark's naive TPM is intentionally simple and target-only. It centers the $K$ shots, obtains the first right singular vector, sorts the shots by their scores on that vector, assigns knots from normalized cumulative Euclidean segment lengths, and linearly interpolates each feature coordinate on the 401-point grid. Sampling selects grid points uniformly and adds the same signed-radial normal perturbation scale used by HB-TPM. This implementation does not perform an expectation--projection spline iteration and makes no claim of recovering unobserved trajectory segments.
+
+HB-TPM initializes at $\widehat W_0$. At every target update, all shots are projected onto the 401-point Bernstein curve, after which the $D_z$ coefficient vectors are updated independently by the closed-form system in Algorithm~\ref{alg:hb_tpm}. The final ordering $o_{c,k}$ is the rank of $\widehat t_{c,k}$. The implemented solver returns the fitted coefficients and indices; the ordering is a deterministic derived quantity.
+
+The trust gate accompanying Equation~\ref{eq:hb_risk_decomposition} is a proposed deployment and validation rule, not an automatic accept/reject routine executed in the reported benchmark. The Gaussian negative control is the implemented family-mismatch check. Held-out source adaptation, target-index bootstrap stability, and posterior-predictive comparison must be added before applying HB-TPM to a new real-data family.
+
+\newpage
+\begin{thebibliography}{9}
+\bibitem{ojha2021few}
+Ojha U, Li Y, Lu J, Efros AA, Lee YJ, Shechtman E, Zhang R. Few-shot image generation via cross-domain correspondence. InProceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition 2021 (pp. 10743-10752).
+\bibitem{li2020few}
+Li Y, Zhang R, Lu J, Shechtman E. Few-shot image generation with elastic weight consolidation. arXiv preprint arXiv:2012.02780. 2020 Dec 4.
+\bibitem{hauberg2015principal}
+Hauberg, S. Principal curves on Riemannian manifolds. 
+{\em Ieee Transactions On Pattern Analysis And Machine Intelligence}.
+ \textbf{38}, 1915--1921 (2015).
+
+\bibitem{arvanitidis2018latent}
+Arvanitidis G, Hansen L K, Hauberg S. Latent space oddity: on the curvature of deep generative models. International Conference on Learning Representations. 2018.
+
+\bibitem{shao2018riemannian}
+Shao H, Kumar A, Fletcher P T. The Riemannian geometry of deep generative models. Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops. 2018:428--435.
+
+\bibitem{amari1998natural}
+Amari, S. Natural gradient works efficiently in learning.
+{\em Neural Computation}.
+\textbf{10}, 251--276 (1998).
+
+\bibitem{federer1959curvature}
+Federer, H. Curvature measures.
+{\em Transactions of the American Mathematical Society}.
+\textbf{93}, 418--491 (1959).
+
+\bibitem{niyogi2008finding}
+Niyogi P, Smale S, Weinberger S. Finding the homology of submanifolds with high confidence from random samples. Discrete \& Computational Geometry. 2008;39:419--441.
+
+\bibitem{genovese2012manifold}
+Genovese C R, Perone-Pacifico M, Verdinelli I, Wasserman L. Manifold estimation and singular deconvolution under Hausdorff loss. Annals of Statistics. 2012;40(2):941--963.
+
+\bibitem{aamari2019nonasymptotic}
+Aamari E, Levrard C. Nonasymptotic rates for manifold, tangent space and curvature estimation. Annals of Statistics. 2019;47(1):177--204.
+
+\bibitem{ozertem2011locally}
+Ozertem, U. \& Erdogmus, D. Locally defined principal curves and surfaces. 
+{\em The Journal Of Machine Learning Research}.
+ \textbf{12} pp. 1249--1286 (2011).
+
+\bibitem{wertheimer2020augmentation}
+Wertheimer, D., Poursaeed, O. \& Hariharan, B. Augmentation-Interpolative AutoEncoders for Unsupervised Few-Shot Image Generation. 
+{\em Arxiv Preprint Arxiv:2011.13026}.
+ (202).
+ 
+ \bibitem{berthelot2018understanding}
+Berthelot, D., Raffel, C., Roy, A. \& Goodfellow, I. Understanding and improving interpolation in autoencoders via an adversarial regularizer. 
+{\em Arxiv Preprint Arxiv:1807.07543}.
+  
+ 
+ \bibitem{qian2019improving}
+Qian S, Li G, Cao WM, Liu C, Wu S, Wong HS. Improving representation learning in autoencoders via multidimensional interpolation and dual regularizations. InIJCAI 2019 Aug 10 (pp. 3268-3274).
+
+\bibitem{isola2017image}
+Isola P, Zhu JY, Zhou T, Efros AA. Image-to-image translation with conditional adversarial networks. InProceedings of the IEEE conference on computer vision and pattern recognition 2017 (pp. 1125-1134).
+
+\bibitem{gatys2016image}
+Gatys LA, Ecker AS, Bethge M. Image style transfer using convolutional neural networks. InProceedings of the IEEE conference on computer vision and pattern recognition 2016 (pp. 2414-2423).
+
+
+\bibitem{snell2017prototypical}
+Snell J, Swersky K, Zemel R. Prototypical networks for few-shot learning. Advances in neural information processing systems. 2017;30. {\em Arxiv Preprint Arxiv:1703.05175}  .
+ 
+ \bibitem{mao2019homography}
+Mao L, Zhu H, Duan F. Homography Estimation Based on Error Elliptical Distribution. InICASSP 2019-2019 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) 2019 May 12 (pp. 2302-2306). IEEE.
+
+\bibitem{meer2004robust}
+Meer, P. Robust techniques for computer vision. 
+{\em Emerging Topics In Computer Vision}.
+ pp. 107--190 (2004)\bibitem{fort2017gaussian}
+Fort, S. Gaussian prototypical networks for few-shot learning on omniglot. 
+{\em Arxiv Preprint Arxiv:1708.02735}.
+ 
+ \bibitem{mcinnes2018umap}
+Mcinnes, L., Healy, J. \& Melville, J. Umap: Uniform manifold approximation and projection for dimension reduction. 
+{\em Arxiv Preprint Arxiv:1802.03426}.
+
+ 
+ \bibitem{levina2004maximum}
+Levina E, Bickel P. Maximum likelihood estimation of intrinsic dimension. Advances in neural information processing systems. 2004; 17.
+
+\bibitem{schwartz2018delta}
+Schwartz E, Karlinsky L, Shtok J, Harary S, Marder M, Kumar A, Feris R, Giryes R, Bronstein A. Delta-encoder: an effective sample synthesis method for few-shot object recognition. Advances in neural information processing systems. 2018;31.
+ 
+ \bibitem{simon2020adaptive}
+Simon C, Koniusz P, Nock R, Harandi M. Adaptive subspaces for few-shot learning. InProceedings of the IEEE/CVF conference on computer vision and pattern recognition 2020 (pp. 4136-4145).
+
+\bibitem{yang2021free}
+Yang, S., Liu, L. \& Xu, M. Free lunch for few-shot learning: Distribution calibration. 
+{\em Arxiv Preprint Arxiv:2101.06395}.
+ (202).
+ 
+ \bibitem{li2020asymmetric}
+Li W, Wang L, Huo J, Shi Y, Gao Y, Luo J. Asymmetric distribution measure for few-shot learning. arXiv preprint arXiv:2002.00153. 2020 Feb 1.
+
+ \bibitem{hariharan2017low}
+Hariharan B, Girshick R. Low-shot visual recognition by shrinking and hallucinating features. InProceedings of the IEEE international conference on computer vision 2017 (pp. 3018-3027).
+
+\bibitem{wang2019few}
+Wang, Y. \& Yao, Q. Few-shot learning: A survey. 
+\bibitem{salimans2016improved}
+Salimans, T., Goodfellow, I., Zaremba, W., Cheung, V., Radford, A. \& Chen, X. Improved techniques for training gans. 
+{\em Advances In Neural Information Processing Systems}.
+ \textbf{29} pp. 2234--2242.
+ 
+ \bibitem{gao2018low}
+Gao, H., Shou, Z., Zareian, A., Zhang, H. \& Chang, S. Low-shot learning via covariance-preserving adversarial augmentation networks. 
+{\em Arxiv Preprint Arxiv:1810.11730}.
+ 
+ \bibitem{qi2021transductive}
+Qi, G., Yu, H., Lu, Z. \& Li, S. Transductive Few-Shot Classification on the Oblique Manifold. 
+{\em Arxiv Preprint Arxiv:2108.04009}.
+
+ \bibitem{hastie1989principal}
+Hastie, T. \& Stuetzle, W. Principal curves. 
+{\em Journal Of The American Statistical Association}.
+ \textbf{84}, 502--516 (1989).
+ 
+ \bibitem{bobick1997state}
+Bobick, A. \& Wilson, A. A state-based approach to the representation and recognition of gesture. 
+{\em Ieee Transactions On Pattern Analysis And Machine Intelligence}.
+ \textbf{19}, 1325--1337 (1997).
+ 
+ \bibitem{chang1998principal}
+Chang KY, Ghosh J. Principal curves for nonlinear feature extraction and classification. InApplications of artificial neural networks in image processing III 1998 Apr 1 (Vol. 3307, pp. 120-129). SPIE.
+
+\bibitem{biau2011parameter}
+Biau, G. \& Fischer, A. Parameter selection for principal curves. 
+{\em Ieee Transactions On Information Theory}.
+ \textbf{58}, 1924--1939 (2011).
+ 
+ \bibitem{gerber2013regularization}
+Gerber, S. \& Whitaker, R. Regularization-free principal curve estimation. 
+{\em The Journal Of Machine Learning Research}.
+ \textbf{14}, 1285--1302 (2013).
+ 
+ \bibitem{chun2003markerless}
+Chun CW, Jenkins OC, Mataric MJ. Markerless kinematic model and motion capture from volume sequences. In2003 IEEE Computer Society Conference on Computer Vision and Pattern Recognition, 2003. Proceedings. 2003 Jun 18 (Vol. 2, pp. II-II). IEEE.
+
+\bibitem{tibshirani1992}
+Tibshirani, R. Principal curves revisited. 
+{\em Statistics And Computing}.
+ \textbf{2}, 183--190 (1992).
+ 
+ \bibitem{liu2015faceattributes}
+Liu Z, Luo P, Wang X, Tang X. Deep learning face attributes in the wild. InProceedings of the IEEE international conference on computer vision 2015 (pp. 3730-3738).
+
+\bibitem{karras2018progressive}
+Karras T, Aila T, Laine S, Lehtinen J. Progressive growing of gans for improved quality, stability, and variation. arXiv preprint arXiv:1710.10196. 2017 Oct 27.
+
+\bibitem{chapelle2000vicinal}
+Chapelle O, Weston J, Bottou L, Vapnik V. Vicinal risk minimization. Advances in Neural Information Processing Systems. 2000;13.
+
+\bibitem{vapnik1998statistical}
+Vapnik, V. Statistical Learning Theory.
+{\em Wiley}. (1998).
+
+\bibitem{zhang2018mixup}
+Zhang H, Cisse M, Dauphin YN, Lopez-Paz D. mixup: Beyond empirical risk minimization. International Conference on Learning Representations. 2018.
+
+\bibitem{verma2019manifoldmixup}
+Verma V, Lamb A, Beckham C, Najafi A, Mitliagkas I, Courville A, Lopez-Paz D, Bengio Y. Manifold Mixup: Better representations by interpolating hidden states. International Conference on Machine Learning. 2019.
+
+\bibitem{fefferman2016testing}
+Fefferman C, Mitter S, Narayanan H. Testing the manifold hypothesis. Journal of the American Mathematical Society. 2016;29(4):983--1049.
+
+\bibitem{pope2021intrinsic}
+Pope P, Zhu C, Abdelkader A, Goldblum M, Goldstein T. The intrinsic dimension of images and its impact on learning. International Conference on Learning Representations. 2021.
+
+\bibitem{mnist6296535}
+Deng L. The mnist database of handwritten digit images for machine learning research [best of the web]. IEEE signal processing magazine. 2012 Oct 18;29(6):141-2.
+
+\bibitem{vaswani2017attention}
+Vaswani A, Shazeer N, Parmar N, Uszkoreit J, Jones L, Gomez A N, Kaiser L, Polosukhin I. Attention is all you need. Advances in Neural Information Processing Systems. 2017;30.
+
+\bibitem{dosovitskiy2021image}
+Dosovitskiy A, Beyer L, Kolesnikov A, Weissenborn D, Zhai X, Unterthiner T, Dehghani M, Minderer M, Heigold G, Gelly S, Uszkoreit J, Houlsby N. An image is worth 16x16 words: Transformers for image recognition at scale. International Conference on Learning Representations. 2021.
+
+\bibitem{radford2021learning}
+Radford A, Kim J W, Hallacy C, Ramesh A, Goh G, Agarwal S, Sastry G, Askell A, Mishkin P, Clark J, Krueger G, Sutskever I. Learning transferable visual models from natural language supervision. International Conference on Machine Learning. 2021:8748--8763.
+
+\bibitem{he2022masked}
+He K, Chen X, Xie S, Li Y, Dollar P, Girshick R. Masked autoencoders are scalable vision learners. Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2022:16000--16009.
+
+\bibitem{oquab2024dinov2}
+Oquab M, Darcet T, Moutakanni T, Vo H, Szafraniec M, Khalidov V, Fernandez P, Haziza D, Massa F, El-Nouby A, Assran M, Ballas N, Galuba W, Howes R, Huang P-Y, Li S-W, Misra I, Rabbat M, Sharma V, Synnaeve G, Xu H, Jegou H, Mairal J, Labatut P, Joulin A, Bojanowski P. DINOv2: Learning robust visual features without supervision. Transactions on Machine Learning Research. 2024.
+
+\bibitem{ho2020denoising}
+Ho J, Jain A, Abbeel P. Denoising diffusion probabilistic models. Advances in Neural Information Processing Systems. 2020;33:6840--6851.
+
+\bibitem{rombach2022high}
+Rombach R, Blattmann A, Lorenz D, Esser P, Ommer B. High-resolution image synthesis with latent diffusion models. Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2022:10684--10695.
+
+\bibitem{preechakul2022diffusion}
+Preechakul K, Chatthee N, Wizadwongsa S, Suwajanakorn S. Diffusion autoencoders: Toward a meaningful and decodable representation. Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2022:10619--10629.
+
+\bibitem{peebles2023scalable}
+Peebles W, Xie S. Scalable diffusion models with transformers. Proceedings of the IEEE/CVF International Conference on Computer Vision. 2023:4195--4205.
+
+\bibitem{ruiz2023dreambooth}
+Ruiz N, Li Y, Jampani V, Pritch Y, Rubinstein M, Aberman K. DreamBooth: Fine tuning text-to-image diffusion models for subject-driven generation. Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2023:22500--22510.
+
+\bibitem{hu2022lora}
+Hu E J, Shen Y, Wallis P, Allen-Zhu Z, Li Y, Wang S, Wang L, Chen W. LoRA: Low-rank adaptation of large language models. International Conference on Learning Representations. 2022.
+
+\bibitem{zhang2023adding}
+Zhang L, Rao A, Agrawala M. Adding conditional control to text-to-image diffusion models. Proceedings of the IEEE/CVF International Conference on Computer Vision. 2023:3836--3847.
+
+\bibitem{ye2023ipadapter}
+Ye H, Zhang J, Liu S, Han X, Yang W. IP-Adapter: Text compatible image prompt adapter for text-to-image diffusion models. arXiv preprint arXiv:2308.06721. 2023.
+
+\bibitem{zhu2024masked}
+Zhu J, Ma H, Chen J, Yuan J. High-quality and diverse few-shot image generation via masked discrimination. IEEE Transactions on Image Processing. 2024;33:2950--2965.
+
+\bibitem{gou2024few}
+Gou Y, Li M, Zhang Y, He Z, He Y. Few-shot image generation with reverse contrastive learning. Neural Networks. 2024;169:154--164.
+
+\bibitem{gupta2024conditional}
+Gupta P, Hayat M, Dhall A, Do T-T. Conditional distribution modelling for few-shot image synthesis with diffusion models. Computer Vision -- ACCV 2024. 2024:3--20.
+
+\bibitem{cao2024conditional}
+Cao Y, Gong S. Few-shot image generation by conditional relaxing diffusion inversion. Computer Vision -- ECCV 2024. 2024:20--37.
+
+\bibitem{kim2024datadream}
+Kim J M, Bader J, Alaniz S, Schmid C, Akata Z. DataDream: Few-shot guided dataset generation. Computer Vision -- ECCV 2024. 2024:252--268.
+
+\bibitem{duan2024domaingallery}
+Duan Y, Hong Y, Lan J, Niu L, Wang W, Zhang B, Zhang J, Zhang L, Zhu H. DomainGallery: Few-shot domain-driven image generation by attribute-centric finetuning. Advances in Neural Information Processing Systems. 2024;37:537--561.
+
+\bibitem{wang2024inversion}
+Wang Y, Chen L. Inversion circle interpolation: Diffusion-based image augmentation for data-scarce classification. arXiv preprint arXiv:2408.16266. 2024.
+
+\bibitem{li2025hypdae}
+Li L, Fan K, Gong B, Yue X. HypDAE: Hyperbolic diffusion autoencoders for hierarchical few-shot image generation. Proceedings of the IEEE/CVF International Conference on Computer Vision. 2025:17119--17128.
+
+\bibitem{han2026few}
+Han Y, Ruan L, Wang B. Few-shot image generation via information transfer from the built Geodesic surface. Pattern Recognition. 2026;172:112293.
+
+\bibitem{heusel2017gans}
+Heusel M, Ramsauer H, Unterthiner T, Nessler B, Hochreiter S. GANs trained by a two time-scale update rule converge to a local Nash equilibrium. Advances in Neural Information Processing Systems. 2017;30.
+
+\bibitem{binkowski2018demystifying}
+Binkowski M, Sutherland D J, Arbel M, Gretton A. Demystifying MMD GANs. International Conference on Learning Representations. 2018.
+
+\bibitem{kynkaanniemi2019improved}
+Kynkaanniemi T, Karras T, Laine S, Lehtinen J, Aila T. Improved precision and recall metric for assessing generative models. Advances in Neural Information Processing Systems. 2019;32.
+
+\bibitem{zhang2018unreasonable}
+Zhang R, Isola P, Efros A A, Shechtman E, Wang O. The unreasonable effectiveness of deep features as a perceptual metric. Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018:586--595.
+
+\bibitem{dudley1967sizes}
+Dudley R M. The sizes of compact subsets of Hilbert space and continuity of Gaussian processes. Journal of Functional Analysis. 1967;1(3):290--330.
+
+\bibitem{vandervaart1996weak}
+van der Vaart A W, Wellner J A. Weak Convergence and Empirical Processes: With Applications to Statistics. Springer. 1996.
+
+\bibitem{wainwright2019high}
+Wainwright M J. High-Dimensional Statistics: A Non-Asymptotic Viewpoint. Cambridge University Press. 2019.
+
+\bibitem{vinyals2016matching}
+Vinyals O, Blundell C, Lillicrap T, Wierstra D. Matching networks for one shot learning. Advances in Neural Information Processing Systems. 2016;29.
+
+\bibitem{ren2018meta}
+Ren M, Triantafillou E, Ravi S, Snell J, Swersky K, Tenenbaum J B, Larochelle H, Zemel R S. Meta-learning for semi-supervised few-shot classification. International Conference on Learning Representations. 2018.
+
+\bibitem{deng2009imagenet}
+Deng J, Dong W, Socher R, Li L J, Li K, Fei-Fei L. ImageNet: A large-scale hierarchical image database. Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2009:248--255.
+
+\bibitem{vanhorn2018inaturalist}
+Van Horn G, Mac Aodha O, Song Y, Cui Y, Sun C, Shepard A, Adam H, Perona P, Belongie S. The iNaturalist species classification and detection dataset. Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018:8769--8778.
+
+\bibitem{wah2011caltech}
+Wah C, Branson S, Welinder P, Perona P, Belongie S. The Caltech-UCSD Birds-200-2011 dataset. Technical Report CNS-TR-2011-001, California Institute of Technology. 2011.
+
+\bibitem{krause20133d}
+Krause J, Stark M, Deng J, Fei-Fei L. 3D object representations for fine-grained categorization. Proceedings of the IEEE International Conference on Computer Vision Workshops. 2013:554--561.
+
+\bibitem{nilsback2008automated}
+Nilsback M E, Zisserman A. Automated flower classification over a large number of classes. Indian Conference on Computer Vision, Graphics and Image Processing. 2008:722--729.
+
+\bibitem{peng2019moment}
+Peng X, Bai Q, Xia X, Huang Z, Saenko K, Wang B. Moment matching for multi-source domain adaptation. Proceedings of the IEEE International Conference on Computer Vision. 2019:1406--1415.
+
+\bibitem{li2017deeper}
+Li D, Yang Y, Song Y-Z, Hospedales T M. Deeper, broader and artier domain generalization. Proceedings of the IEEE International Conference on Computer Vision. 2017:5542--5550.
+
+\bibitem{karras2019style}
+Karras T, Laine S, Aila T. A style-based generator architecture for generative adversarial networks. Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2019:4401--4410.
+
+\bibitem{yu2015lsun}
+Yu F, Zhang Y, Song S, Seff A, Xiao J. LSUN: Construction of a large-scale image dataset using deep learning with humans in the loop. arXiv preprint arXiv:1506.03365. 2015.
+
+\bibitem{lopez2018deep}
+Lopez R, Regier J, Cole M B, Jordan M I, Yosef N. Deep generative modeling for single-cell transcriptomics. Nature Methods. 2018;15:1053--1058.
+
+\bibitem{gayoso2021joint}
+Gayoso A, Steier Z, Lopez R, Regier J, Nazor K L, Streets A, Yosef N. Joint probabilistic modeling of single-cell multi-omic data with totalVI. Nature Methods. 2021;18:272--282.
+
+\bibitem{lotfollahi2022mapping}
+Lotfollahi M, Naghipourfar M, Luecken M D, Khajavi M, Buttner M, Wagenstetter M, Avsec Z, Gayoso A, Yosef N, Interlandi M, Rybakov S, McHardy A C, Theis F J. Mapping single-cell data to reference atlases by transfer learning. Nature Biotechnology. 2022;40:121--130.
+
+\bibitem{theodoris2023transfer}
+Theodoris C V, Xiao L, Chopra A, Chaffin M D, Al Sayed Z R, Hill M C, Mantineo H, Brydon E M, Zeng Z, Liu X S, Ellinor P T. Transfer learning enables predictions in network biology. Nature. 2023;618:616--624.
+
+\bibitem{cui2024scgpt}
+Cui H, Wang C, Maan H, Pang K, Luo F, Wang N, Wang B. scGPT: Toward building a foundation model for single-cell multi-omics using generative AI. Nature Methods. 2024;21:1470--1480.
+
+\bibitem{trapnell2014dynamics}
+Trapnell C, Cacchiarelli D, Grimsby J, Pokharel P, Li S, Morse M, Lennon N J, Livak K J, Mikkelsen T S, Rinn J L. The dynamics and regulators of cell fate decisions are revealed by pseudotemporal ordering of single cells. Nature Biotechnology. 2014;32:381--386.
+
+\bibitem{wolf2019paga}
+Wolf F A, Hamey F K, Plass M, Solana J, Dahlin J S, Gottgens B, Rajewsky N, Simon L, Theis F J. PAGA: graph abstraction reconciles clustering with trajectory inference through a topology preserving map of single cells. Genome Biology. 2019;20:59.
+
+\bibitem{moon2019phate}
+Moon K R, van Dijk D, Wang Z, Gigante S, Burkhardt D B, Chen W S, Yim K, van den Elzen A, Hirn M J, Coifman R R, Ivanova N B, Wolf G, Krishnaswamy S. Visualizing structure and transitions in high-dimensional biological data. Nature Biotechnology. 2019;37:1482--1492.
+
+\bibitem{bergen2020generalizing}
+Bergen V, Lange M, Peidli S, Wolf F A, Theis F J. Generalizing RNA velocity to transient cell states through dynamical modeling. Nature Biotechnology. 2020;38:1408--1414.
+
+\bibitem{tabula2022single}
+Tabula Sapiens Consortium. The Tabula Sapiens: A multiple-organ, single-cell transcriptomic atlas of humans. Science. 2022;376:eabl4896.
+
+\bibitem{regev2017human}
+Regev A, Teichmann S A, Lander E S, Amit I, Benoist C, Birney E, Bodenmiller B, Campbell P, Carninci P, Clatworthy M, Clevers H, Deplancke B, Dunham I, Eberwine J, Eils R, Enard W, Farmer A, Fugger L, Gottgens B, Hacohen N, Haniffa M, Hemberg M, Kim S, Klenerman P, Kriegstein A, Lein E, Linnarsson S, Lundberg E, Lundeberg J, Majumder P, Marioni J C, Merad M, Mhlanga M, Nawijn M, Netea M, Nolan G, Pe'er D, Phillipakis A, Ponting C P, Quake S, Reik W, Rozenblatt-Rosen O, Sanes J, Satija R, Schumacher T N, Shalek A, Shapiro E, Sharma P, Shin J W, Stegle O, Stratton M, Stubbington M J T, Theis F J, Uhlen M, van Oudenaarden A, Wagner A, Watt F, Weissman J, Wold B, Xavier R, Yosef N. The Human Cell Atlas. eLife. 2017;6:e27041.
+
+\bibitem{hao2021integrated}
+Hao Y, Hao S, Andersen-Nissen E, Mauck W M, Zheng S, Butler A, Lee M J, Wilk A J, Darby C, Zager M, Hoffman P, Stoeckius M, Papalexi E, Mimitou E P, Jain J, Srivastava A, Stuart T, Fleming L B, Yeung B, Rogers A J, McElrath J M, Blish C A, Gottardo R, Smibert P, Satija R. Integrated analysis of multimodal single-cell data. Cell. 2021;184:3573--3587.e29.
+
+\bibitem{dixit2016perturbseq}
+Dixit A, Parnas O, Li B, Chen J, Fulco C P, Jerby-Arnon L, Marjanovic N D, Dionne D, Burks T, Raychowdhury R, Adamson B, Norman T M, Lander E S, Weissman J S, Friedman N, Regev A. Perturb-Seq: Dissecting molecular circuits with scalable single-cell RNA profiling of pooled genetic screens. Cell. 2016;167:1853--1866.e17.
+
+\bibitem{replogle2022mapping}
+Replogle J M, Saunders R A, Pogson A N, Hussmann J A, Lenail A, Guna A, Mascibroda L, Wagner E J, Adelman K, Lithwick-Yanai G, Iremadze N, Oberstrass F, Lipson D, Bonnar J L, Jost M, Norman T M, Weissman J S. Mapping information-rich genotype-phenotype landscapes with genome-scale Perturb-seq. Cell. 2022;185:2559--2575.e28.
+
+\bibitem{chawla2002smote}
+Chawla N V, Bowyer K W, Hall L O, Kegelmeyer W P. SMOTE: Synthetic minority over-sampling technique. Journal of Artificial Intelligence Research. 2002;16:321--357.
+
+\bibitem{lotfollahi2019scgen}
+Lotfollahi M, Wolf F A, Theis F J. scGen predicts single-cell perturbation responses. Nature Methods. 2019;16:715--721.
+
+\bibitem{lotfollahi2023predicting}
+Lotfollahi M, Susmelj A K, De Donno C, Ji Y, Ibarra I L, Wolf F A, Yakubova N, Theis F J, Lopez R. Predicting cellular responses to complex perturbations in high-throughput screens. Molecular Systems Biology. 2023;19:e11517.
+\end{thebibliography}
+
+
+\end{document}
