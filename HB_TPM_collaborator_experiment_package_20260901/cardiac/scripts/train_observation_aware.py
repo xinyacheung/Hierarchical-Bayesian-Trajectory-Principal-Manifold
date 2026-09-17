@@ -33,6 +33,11 @@ sys.path.insert(0, str(CARDIAC_ROOT))
 from src.observation_aware_cardiac import (  # noqa: E402
     CardiacObservationAwareHBTPM,
 )
+from src.array_io import (  # noqa: E402
+    as_time_first,
+    load_array,
+    resolve_manifest_path,
+)
 
 
 METHODS = (
@@ -102,34 +107,17 @@ def stable_seed(base_seed: int, *parts: object) -> int:
     return int.from_bytes(hashlib.sha256(payload.encode()).digest()[:8], "little")
 
 
-def load_array(path: Path) -> np.ndarray:
-    suffixes = "".join(path.suffixes).lower()
-    if suffixes.endswith(".npy"):
-        return np.load(path)
-    if suffixes.endswith(".npz"):
-        archive = np.load(path)
-        if len(archive.files) != 1:
-            raise ValueError(f"NPZ must contain exactly one array: {path}")
-        return archive[archive.files[0]]
-    if suffixes.endswith(".nii") or suffixes.endswith(".nii.gz"):
-        import nibabel as nib
-
-        return np.asarray(nib.load(str(path)).dataobj)
-    raise ValueError(f"unsupported sequence format: {path}")
-
-
-def as_time_first(array: np.ndarray, time_axis: int, *, name: str) -> np.ndarray:
-    result = np.moveaxis(np.asarray(array), int(time_axis), 0)
-    result = np.squeeze(result)
-    if result.ndim != 3:
-        raise ValueError(f"{name}: expected (T,H,W) after squeeze; got {result.shape}")
-    return result
-
-
 class CardiacDataset(Dataset[dict[str, object]]):
-    def __init__(self, manifest: pd.DataFrame, patient_ids: Sequence[str]) -> None:
+    def __init__(
+        self,
+        manifest: pd.DataFrame,
+        patient_ids: Sequence[str],
+        *,
+        manifest_path: Path,
+    ) -> None:
         by_id = manifest.set_index("patient_id", drop=False)
         self.rows = [by_id.loc[str(patient_id)] for patient_id in patient_ids]
+        self.manifest_path = Path(manifest_path)
 
     def __len__(self) -> int:
         return len(self.rows)
@@ -139,12 +127,16 @@ class CardiacDataset(Dataset[dict[str, object]]):
         patient_id = str(row["patient_id"])
         time_axis = int(row["time_axis"])
         images = as_time_first(
-            load_array(Path(str(row["image_sequence_path"])).expanduser()),
+            load_array(
+                resolve_manifest_path(row["image_sequence_path"], self.manifest_path)
+            ),
             time_axis,
             name=f"{patient_id} images",
         ).astype(np.float32, copy=False)
         masks = as_time_first(
-            load_array(Path(str(row["mask_sequence_path"])).expanduser()),
+            load_array(
+                resolve_manifest_path(row["mask_sequence_path"], self.manifest_path)
+            ),
             time_axis,
             name=f"{patient_id} masks",
         )
@@ -468,6 +460,7 @@ def evaluate_targets(
     model: CardiacObservationAwareHBTPM,
     *,
     manifest: pd.DataFrame,
+    manifest_path: Path,
     selected_observations: pd.DataFrame,
     device: torch.device,
     method: str,
@@ -487,12 +480,12 @@ def evaluate_targets(
         patient_id = str(observation.patient_id)
         row = by_id.loc[patient_id]
         images_np = as_time_first(
-            load_array(Path(str(row["image_sequence_path"]))),
+            load_array(resolve_manifest_path(row["image_sequence_path"], manifest_path)),
             int(row["time_axis"]),
             name=f"{patient_id} images",
         ).astype(np.float32, copy=False)
         masks_np = as_time_first(
-            load_array(Path(str(row["mask_sequence_path"]))),
+            load_array(resolve_manifest_path(row["mask_sequence_path"], manifest_path)),
             int(row["time_axis"]),
             name=f"{patient_id} masks",
         ) > 0
@@ -820,7 +813,9 @@ def main(argv: Sequence[str] | None = None) -> None:
         raise ValueError("no frozen target observations match fold/k/strategy")
 
     train_loader = DataLoader(
-        CardiacDataset(manifest, role_ids["train"]),
+        CardiacDataset(
+            manifest, role_ids["train"], manifest_path=args.manifest
+        ),
         batch_size=args.batch_size,
         shuffle=True,
         num_workers=args.num_workers,
@@ -829,7 +824,9 @@ def main(argv: Sequence[str] | None = None) -> None:
         collate_fn=collate_uniform,
     )
     validation_loader = DataLoader(
-        CardiacDataset(manifest, role_ids["validation"]),
+        CardiacDataset(
+            manifest, role_ids["validation"], manifest_path=args.manifest
+        ),
         batch_size=args.batch_size,
         shuffle=False,
         num_workers=args.num_workers,
@@ -981,6 +978,7 @@ def main(argv: Sequence[str] | None = None) -> None:
     results, visible = evaluate_targets(
         model,
         manifest=manifest,
+        manifest_path=args.manifest,
         selected_observations=selected_observations,
         device=device,
         method=args.method,

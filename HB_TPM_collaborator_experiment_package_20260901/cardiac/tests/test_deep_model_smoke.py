@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -21,6 +22,8 @@ from src.observation_aware_cardiac import CardiacObservationAwareHBTPM  # noqa: 
 
 class DeepCardiacModelTests(unittest.TestCase):
     def test_slurm_array_mapping_and_bounds(self) -> None:
+        if shutil.which("bash") is None:
+            self.skipTest("bash is unavailable; SLURM mapping is exercised on Linux")
         script = CARDIAC_ROOT / "slurm_cardiac_array.sbatch"
         with tempfile.TemporaryDirectory(prefix="hb_tpm_slurm_test_") as raw:
             environment = os.environ.copy()
@@ -123,10 +126,11 @@ class DeepCardiacModelTests(unittest.TestCase):
                 0,
                 msg=accepted.stdout + "\n" + accepted.stderr,
             )
-            prepared = pd.read_csv(
-                root / "accepted" / "standardized_manifest.csv"
+            prepared_manifest = root / "accepted" / "standardized_manifest.csv"
+            prepared = pd.read_csv(prepared_manifest)
+            selected = np.load(
+                prepared_manifest.parent / prepared.iloc[0]["mask_sequence_path"]
             )
-            selected = np.load(prepared.iloc[0]["mask_sequence_path"])
             self.assertEqual(set(np.unique(selected)), {0, 1})
             self.assertEqual(prepared.iloc[0]["foreground_mask_label"], 1)
 
@@ -277,7 +281,9 @@ class DeepCardiacModelTests(unittest.TestCase):
             first = prepared.iloc[0]
             source_indices = json.loads(first["temporal_source_indices_json"])
             raw_images = np.load(rows[0]["image_sequence_path"])
-            processed_images = np.load(first["image_sequence_path"])
+            processed_images = np.load(
+                standardized_manifest.parent / first["image_sequence_path"]
+            )
             for target_index, source_index in enumerate(source_indices):
                 np.testing.assert_allclose(
                     processed_images[target_index], raw_images[source_index]

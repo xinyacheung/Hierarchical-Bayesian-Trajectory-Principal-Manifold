@@ -12,12 +12,24 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import sys
 from typing import Sequence
 
 import numpy as np
 import pandas as pd
 import torch
 import torch.nn.functional as F
+
+
+CARDIAC_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(CARDIAC_ROOT))
+
+from src.array_io import (  # noqa: E402
+    as_time_first,
+    load_array,
+    portable_manifest_path,
+    resolve_manifest_path,
+)
 
 
 REQUIRED_COLUMNS = (
@@ -29,30 +41,6 @@ REQUIRED_COLUMNS = (
     "dataset",
     "time_axis",
 )
-
-
-def load_array(path: Path) -> np.ndarray:
-    suffixes = "".join(path.suffixes).lower()
-    if suffixes.endswith(".npy"):
-        return np.load(path)
-    if suffixes.endswith(".npz"):
-        archive = np.load(path)
-        if len(archive.files) != 1:
-            raise ValueError(f"NPZ must contain exactly one array: {path}")
-        return archive[archive.files[0]]
-    if suffixes.endswith(".nii") or suffixes.endswith(".nii.gz"):
-        import nibabel as nib
-
-        return np.asarray(nib.load(str(path)).dataobj)
-    raise ValueError(f"unsupported sequence format: {path}")
-
-
-def as_time_first(array: np.ndarray, time_axis: int, *, name: str) -> np.ndarray:
-    result = np.moveaxis(np.asarray(array), int(time_axis), 0)
-    result = np.squeeze(result)
-    if result.ndim != 3:
-        raise ValueError(f"{name}: expected (T,H,W) after squeeze; got {result.shape}")
-    return result
 
 
 def periodic_nearest_indices(source_frames: int, target_frames: int) -> np.ndarray:
@@ -136,17 +124,18 @@ def main(argv: Sequence[str] | None = None) -> None:
         raise FileExistsError(f"nonempty output directory: {args.output_dir}")
     sequence_dir = args.output_dir / "sequences"
     sequence_dir.mkdir(parents=True, exist_ok=True)
+    output_manifest = args.output_dir / "standardized_manifest.csv"
 
     rows: list[dict[str, object]] = []
     for row in manifest.itertuples(index=False):
         patient_id = str(row.patient_id)
         images = as_time_first(
-            load_array(Path(str(row.image_sequence_path)).expanduser()),
+            load_array(resolve_manifest_path(row.image_sequence_path, args.manifest)),
             int(row.time_axis),
             name=f"{patient_id} images",
         )
         masks = as_time_first(
-            load_array(Path(str(row.mask_sequence_path)).expanduser()),
+            load_array(resolve_manifest_path(row.mask_sequence_path, args.manifest)),
             int(row.time_axis),
             name=f"{patient_id} masks",
         )
@@ -186,8 +175,12 @@ def main(argv: Sequence[str] | None = None) -> None:
         item.update(
             {
                 "patient_id": patient_id,
-                "image_sequence_path": str(image_path),
-                "mask_sequence_path": str(mask_path),
+                "image_sequence_path": portable_manifest_path(
+                    image_path, output_manifest
+                ),
+                "mask_sequence_path": portable_manifest_path(
+                    mask_path, output_manifest
+                ),
                 "n_frames": int(args.frames),
                 "frame_period_s": float(row.frame_period_s)
                 * float(images.shape[0])
@@ -208,7 +201,6 @@ def main(argv: Sequence[str] | None = None) -> None:
         )
         rows.append(item)
 
-    output_manifest = args.output_dir / "standardized_manifest.csv"
     pd.DataFrame(rows).to_csv(output_manifest, index=False)
     print(
         f"Standardized {len(rows)} patients to "

@@ -1,1 +1,7 @@
 *.md
+/private_data/
+/TED.zip
+/TED/
+/.venv-cpu/
+__pycache__/
+*.py[cod]

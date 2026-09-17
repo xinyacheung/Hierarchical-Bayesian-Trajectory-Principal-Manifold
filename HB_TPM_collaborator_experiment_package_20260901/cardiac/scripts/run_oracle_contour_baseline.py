@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import sys
 import time
 from typing import Sequence
 
@@ -14,28 +15,14 @@ import pandas as pd
 from scipy.ndimage import binary_erosion, distance_transform_edt
 
 
-def load_array(path: Path) -> np.ndarray:
-    suffixes = "".join(path.suffixes).lower()
-    if suffixes.endswith(".npy"):
-        return np.load(path)
-    if suffixes.endswith(".npz"):
-        archive = np.load(path)
-        if len(archive.files) != 1:
-            raise ValueError(f"NPZ must contain exactly one array: {path}")
-        return archive[archive.files[0]]
-    if suffixes.endswith(".nii") or suffixes.endswith(".nii.gz"):
-        import nibabel as nib
+CARDIAC_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(CARDIAC_ROOT))
 
-        return np.asarray(nib.load(str(path)).dataobj)
-    raise ValueError(f"unsupported mask sequence: {path}")
-
-
-def as_time_first(array: np.ndarray, time_axis: int) -> np.ndarray:
-    result = np.moveaxis(np.asarray(array), int(time_axis), 0)
-    result = np.squeeze(result)
-    if result.ndim != 3:
-        raise ValueError(f"expected a 3D mask sequence after squeeze; got {result.shape}")
-    return result > 0
+from src.array_io import (  # noqa: E402
+    as_time_first,
+    load_array,
+    resolve_manifest_path,
+)
 
 
 def periodic_design(phases: np.ndarray, harmonics: int) -> np.ndarray:
@@ -138,9 +125,12 @@ def main(argv: Sequence[str] | None = None) -> None:
         patient_id = str(observation.patient_id)
         patient = manifest_by_id.loc[patient_id]
         masks = as_time_first(
-            load_array(Path(str(patient["mask_sequence_path"]))),
+            load_array(
+                resolve_manifest_path(patient["mask_sequence_path"], args.manifest)
+            ),
             int(patient["time_axis"]),
-        )
+            name=f"{patient_id} masks",
+        ) > 0
         observed_indices = np.asarray(
             json.loads(observation.observed_frame_indices_json), dtype=int
         )

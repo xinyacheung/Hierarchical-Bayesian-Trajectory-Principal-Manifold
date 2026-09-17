@@ -5,10 +5,21 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import sys
 from typing import Sequence
 
 import numpy as np
 import pandas as pd
+
+
+CARDIAC_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(CARDIAC_ROOT))
+
+from src.array_io import (  # noqa: E402
+    as_time_first,
+    load_array,
+    resolve_manifest_path,
+)
 
 
 REQUIRED_COLUMNS = (
@@ -22,22 +33,6 @@ REQUIRED_COLUMNS = (
 )
 
 
-def load_array(path: Path) -> np.ndarray:
-    suffixes = "".join(path.suffixes).lower()
-    if suffixes.endswith(".npy"):
-        return np.load(path, mmap_mode="r")
-    if suffixes.endswith(".npz"):
-        archive = np.load(path)
-        if len(archive.files) != 1:
-            raise ValueError(f"NPZ must contain exactly one array: {path}")
-        return archive[archive.files[0]]
-    if suffixes.endswith(".nii") or suffixes.endswith(".nii.gz"):
-        import nibabel as nib
-
-        return np.asanyarray(nib.load(str(path)).dataobj)
-    raise ValueError(f"unsupported sequence format: {path}")
-
-
 def time_length(array: np.ndarray, time_axis: int) -> int:
     axis = int(time_axis)
     if axis < 0:
@@ -48,7 +43,7 @@ def time_length(array: np.ndarray, time_axis: int) -> int:
 
 
 def time_first_shape(array: np.ndarray, time_axis: int) -> tuple[int, ...]:
-    result = np.squeeze(np.moveaxis(np.asarray(array), int(time_axis), 0))
+    result = as_time_first(array, time_axis, name="manifest array")
     return tuple(int(value) for value in result.shape)
 
 
@@ -78,8 +73,8 @@ def main(argv: Sequence[str] | None = None) -> None:
         raise ValueError("frame_period_s must be positive")
 
     for row in frame.itertuples(index=False):
-        image_path = Path(str(row.image_sequence_path)).expanduser()
-        mask_path = Path(str(row.mask_sequence_path)).expanduser()
+        image_path = resolve_manifest_path(row.image_sequence_path, args.manifest)
+        mask_path = resolve_manifest_path(row.mask_sequence_path, args.manifest)
         if not image_path.is_file():
             raise FileNotFoundError(f"missing image sequence: {image_path}")
         if not mask_path.is_file():
