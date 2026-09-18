@@ -132,7 +132,7 @@ class CardiacDataset(Dataset[dict[str, object]]):
             ),
             time_axis,
             name=f"{patient_id} images",
-        ).astype(np.float32, copy=False)
+        ).astype(np.float32, order="C", copy=True)
         masks = as_time_first(
             load_array(
                 resolve_manifest_path(row["mask_sequence_path"], self.manifest_path)

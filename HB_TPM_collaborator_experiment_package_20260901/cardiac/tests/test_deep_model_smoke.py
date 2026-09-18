@@ -359,6 +359,7 @@ class DeepCardiacModelTests(unittest.TestCase):
                     0,
                     msg=f"method={method}\n{completed.stdout}\n{completed.stderr}",
                 )
+                self.assertNotIn("not writable", completed.stderr.lower())
                 self.assertIn("Checkpoint:", completed.stdout)
                 results = pd.read_csv(output / "patient_results.csv")
                 self.assertEqual(results["patient_id"].nunique(), 2)
