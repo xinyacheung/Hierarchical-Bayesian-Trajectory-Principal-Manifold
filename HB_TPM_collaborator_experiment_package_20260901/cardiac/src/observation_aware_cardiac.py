@@ -20,6 +20,50 @@ import torch.nn.functional as F
 CoefficientMode = Literal["hierarchical", "weak", "source_mean"]
 
 
+def stable_covariance_cholesky(covariance: Tensor) -> Tensor:
+    """Factor a theoretically SPD covariance despite float32 roundoff."""
+
+    if covariance.ndim < 2 or covariance.shape[-1] != covariance.shape[-2]:
+        raise ValueError(
+            "covariance must contain square matrices; "
+            f"received {tuple(covariance.shape)}"
+        )
+    symmetric = 0.5 * (covariance + covariance.transpose(-1, -2))
+    cholesky, info = torch.linalg.cholesky_ex(symmetric, check_errors=False)
+    if bool(torch.all(info == 0)):
+        return cholesky
+
+    diagonal_scale = (
+        symmetric.diagonal(dim1=-2, dim2=-1)
+        .abs()
+        .amax(dim=-1)
+        .clamp_min(torch.finfo(symmetric.dtype).tiny)
+    )
+    identity = torch.eye(
+        symmetric.shape[-1],
+        dtype=symmetric.dtype,
+        device=symmetric.device,
+    )
+    base_relative_jitter = 10.0 * torch.finfo(symmetric.dtype).eps
+    for multiplier in (1.0, 10.0, 100.0):
+        jitter = (
+            diagonal_scale * base_relative_jitter * multiplier
+        )[..., None, None]
+        cholesky, info = torch.linalg.cholesky_ex(
+            symmetric + jitter * identity,
+            check_errors=False,
+        )
+        if bool(torch.all(info == 0)):
+            return cholesky
+
+    minimum_eigenvalue = float(torch.linalg.eigvalsh(symmetric).amin().detach().cpu())
+    raise RuntimeError(
+        "posterior covariance is not numerically positive definite after "
+        "adaptive roundoff jitter; "
+        f"minimum eigenvalue={minimum_eigenvalue:.8g}"
+    )
+
+
 def periodic_fourier_basis(phases: Tensor, harmonics: int) -> Tensor:
     """Return ``[1, cos, sin, ...]`` at phases in cycles."""
 
@@ -412,9 +456,10 @@ class CardiacObservationAwareHBTPM(nn.Module):
             raise ValueError("n_samples must be positive")
         mean = output["coefficient_mean"].transpose(1, 2)
         covariance = output["coefficient_covariance"]
+        scale_tril = stable_covariance_cholesky(covariance)
         distribution = torch.distributions.MultivariateNormal(
             loc=mean,
-            covariance_matrix=covariance,
+            scale_tril=scale_tril,
         )
         sampled = distribution.rsample((int(n_samples),))
         sampled = sampled.permute(0, 1, 3, 2)

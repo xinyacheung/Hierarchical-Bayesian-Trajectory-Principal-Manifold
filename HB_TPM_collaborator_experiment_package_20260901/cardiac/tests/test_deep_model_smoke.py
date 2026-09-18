@@ -162,6 +162,33 @@ class DeepCardiacModelTests(unittest.TestCase):
         )
         self.assertEqual(tuple(samples.shape), (2, 2, 8, 1, 24, 24))
 
+    def test_posterior_sampling_repairs_float32_roundoff(self) -> None:
+        torch.manual_seed(9)
+        model = CardiacObservationAwareHBTPM(
+            latent_dim=2,
+            harmonics=1,
+            base_channels=4,
+        )
+        observed = torch.randn(1, 2, 1, 24, 24)
+        observed_times = torch.tensor([[0.0, 0.5]])
+        full_times = torch.arange(8, dtype=torch.float32)[None] / 8
+        output = model(
+            observed,
+            observed_times,
+            full_times,
+            output_size=(24, 24),
+        )
+        covariance = torch.eye(3)[None, None].repeat(1, 2, 1, 1)
+        covariance[..., 0, 0] = -torch.finfo(torch.float32).eps
+        output["coefficient_covariance"] = covariance
+        samples = model.sample_mask_probabilities(
+            output,
+            output_size=(24, 24),
+            n_samples=2,
+        )
+        self.assertTrue(torch.isfinite(samples).all())
+        self.assertEqual(tuple(samples.shape), (2, 1, 8, 1, 24, 24))
+
     def test_two_shot_underdetermined_posterior_is_stable(self) -> None:
         torch.manual_seed(11)
         for isotropic in (False, True):
