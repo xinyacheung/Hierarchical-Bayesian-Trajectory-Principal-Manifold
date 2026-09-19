@@ -217,6 +217,32 @@ class DeepCardiacModelTests(unittest.TestCase):
                     )
                 )
 
+    def test_weak_two_shot_posterior_survives_float32_rank_deficiency(self) -> None:
+        torch.manual_seed(17)
+        model = CardiacObservationAwareHBTPM(
+            latent_dim=4,
+            harmonics=3,
+            base_channels=4,
+        )
+        encoded_mean = torch.randn(20, 2, 4, dtype=torch.float32)
+        encoded_log_variance = torch.full_like(encoded_mean, -7.0)
+        observed_times = torch.zeros(20, 2, dtype=torch.float32)
+        phase_offset = torch.zeros(20, dtype=torch.float32)
+
+        mean, covariance, _ = model.infer_trajectory_posterior(
+            encoded_mean,
+            encoded_log_variance,
+            observed_times,
+            phase_offset,
+            coefficient_mode="weak",
+        )
+
+        self.assertEqual(mean.dtype, torch.float32)
+        self.assertEqual(covariance.dtype, torch.float32)
+        self.assertTrue(torch.isfinite(mean).all())
+        self.assertTrue(torch.isfinite(covariance).all())
+        self.assertTrue(torch.all(covariance.diagonal(dim1=-2, dim2=-1) > 0))
+
     def test_one_epoch_end_to_end_runner(self) -> None:
         with tempfile.TemporaryDirectory(prefix="hb_tpm_deep_card_test_") as raw:
             root = Path(raw)

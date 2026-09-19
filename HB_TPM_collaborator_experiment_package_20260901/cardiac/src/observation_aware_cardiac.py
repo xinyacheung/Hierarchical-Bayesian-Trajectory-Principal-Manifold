@@ -314,21 +314,44 @@ class CardiacObservationAwareHBTPM(nn.Module):
             raise ValueError(f"unknown coefficient_mode={coefficient_mode}")
 
         observation_precision = encoded_log_variance.neg().exp()
+
+        # With the weak prior, K can be smaller than the Fourier basis dimension
+        # (for example, K=2 and P=7). The data term is then rank deficient and
+        # its largest eigenvalues can be large enough that the 1e-4 weak-prior
+        # precision is rounded away in float32. Keep the intended prior strength
+        # and solve this small posterior system in float64 instead of silently
+        # changing the statistical model with a larger diagonal jitter.
+        posterior_dtype = encoded_mean.dtype
+        solve_dtype = (
+            torch.float64
+            if coefficient_mode == "weak"
+            and encoded_mean.device.type != "mps"
+            and encoded_mean.dtype != torch.float64
+            else posterior_dtype
+        )
+        solve_design = design.to(dtype=solve_dtype)
+        solve_observation_precision = observation_precision.to(dtype=solve_dtype)
+        solve_prior_precision = prior_precision.to(dtype=solve_dtype)
+        solve_prior_mean = prior_mean.to(dtype=solve_dtype)
+        solve_encoded_mean = encoded_mean.to(dtype=solve_dtype)
         data_precision = torch.einsum(
             "bkp,bkq,bkl->blpq",
-            design,
-            design,
-            observation_precision,
+            solve_design,
+            solve_design,
+            solve_observation_precision,
         )
-        precision = data_precision + prior_precision[None]
+        precision = data_precision + solve_prior_precision[None]
+        precision = 0.5 * (precision + precision.transpose(-1, -2))
         prior_rhs = torch.einsum(
-            "lpq,lq->lp", prior_precision, prior_mean.transpose(0, 1)
+            "lpq,lq->lp",
+            solve_prior_precision,
+            solve_prior_mean.transpose(0, 1),
         )[None]
         data_rhs = torch.einsum(
             "bkp,bkl,bkl->blp",
-            design,
-            observation_precision,
-            encoded_mean,
+            solve_design,
+            solve_observation_precision,
+            solve_encoded_mean,
         )
         rhs = prior_rhs + data_rhs
         cholesky = torch.linalg.cholesky(precision)
@@ -341,7 +364,11 @@ class CardiacObservationAwareHBTPM(nn.Module):
         mean_latent_first = torch.cholesky_solve(
             rhs.unsqueeze(-1), cholesky
         ).squeeze(-1)
-        return mean_latent_first.transpose(1, 2), covariance, design
+        return (
+            mean_latent_first.transpose(1, 2).to(dtype=posterior_dtype),
+            covariance.to(dtype=posterior_dtype),
+            design,
+        )
 
     def latent_trajectory(
         self,
