@@ -1,0 +1,115 @@
+{
+  "bootstrap_draws": 5000,
+  "created_utc": "2026-09-18T13:04:41.925126+00:00",
+  "input_files": [
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold0_k10_all_strategies/patient_results.csv",
+      "sha256": "80ef4bc81fbf3eb8f88e947f0ef9d322cb60206d4b8bedc36830644bb63a5133"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold0_k2_all_strategies/patient_results.csv",
+      "sha256": "d15887d098e19a7698d3608667a3a42781f451d612e93c69b4ef756cdb9b96c9"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold0_k3_all_strategies/patient_results.csv",
+      "sha256": "4d44c2f74f671052ee026c4aaafa46a6496d539efe8b93521d099e8d65c3f94e"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold0_k5_all_strategies/patient_results.csv",
+      "sha256": "159dd8ba329d0ea9f4a968b60fdf38a6755c6b8736ac8cf2841bff9b85bf723a"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold0_k7_all_strategies/patient_results.csv",
+      "sha256": "d788ebcf035ee58611fead8a0c9fdf9c500c545d4b990d06f4195deca174f611"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold1_k10_all_strategies/patient_results.csv",
+      "sha256": "b9a05c11524f2c5a3cc7af56e25a11ef94d507f11a0a17779faf566063c7b30b"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold1_k2_all_strategies/patient_results.csv",
+      "sha256": "9eee2b70791a9b3e15d56e79e55331e70cd365061fa574c2c6d36433e71406e8"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold1_k3_all_strategies/patient_results.csv",
+      "sha256": "75b6ad967aca04b52d1bd51b715d249b4d8ad73d675312facc3a867660e17428"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold1_k5_all_strategies/patient_results.csv",
+      "sha256": "750d5904af9ab6423809271fb4c124a655205a9616e756628716c566c7166e71"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold1_k7_all_strategies/patient_results.csv",
+      "sha256": "d30b32644dae7c54953620398fa6ab0e5a5611a2ed8a0523455fd56192e2ee12"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold2_k10_all_strategies/patient_results.csv",
+      "sha256": "c33fe767a215136750954ba63ea0cf14be6165e37313e7a7f98ed7cb13b9363c"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold2_k2_all_strategies/patient_results.csv",
+      "sha256": "0ed1cf6f36c66f405418c854d56bbe6f5d6e2c9a4950c7ebdb273914b0618be1"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold2_k3_all_strategies/patient_results.csv",
+      "sha256": "f6b8c89abb5422bc66df3f39d67a1c5cd11d0a9c8bcad6e7f0a191bc03ac58e9"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold2_k5_all_strategies/patient_results.csv",
+      "sha256": "38eadfa9a3b018635e0aa6ce7287896fd2435374ef19b0f1d7f9ac538ea8735f"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold2_k7_all_strategies/patient_results.csv",
+      "sha256": "eaf762c1dcbbd125c06b4f79b315dc178dc555fcda4cfe406534283cccd0aa69"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold3_k10_all_strategies/patient_results.csv",
+      "sha256": "94fc7ada2b537c75498fe796f77b481281a7ac9aadb80bf12cfed6dbf2fef8d8"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold3_k2_all_strategies/patient_results.csv",
+      "sha256": "3bc1970c0bce4e400dac8283b5f247df2c71f65a3497b7326843953d3615a257"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold3_k3_all_strategies/patient_results.csv",
+      "sha256": "0fc016c8b3b257c66d719056b6ab5d293d55cec17a2cc713ded2993ea7fc8c4f"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold3_k5_all_strategies/patient_results.csv",
+      "sha256": "52c1e05d1b98ef330b5019c3e851b6723d71c75b661e58f16d05d1461d0b9c6a"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold3_k7_all_strategies/patient_results.csv",
+      "sha256": "bd8cc75c803867cef74c5d0ff6d120fd163c480774938d12c12fc8f304e21c26"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold4_k10_all_strategies/patient_results.csv",
+      "sha256": "02f91f3c0095660be02b4131b5c2888af87e884cbcbfba510b37187547595a3d"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold4_k2_all_strategies/patient_results.csv",
+      "sha256": "a53f0c5c4c996c89266be5d0b382b0ea036254d5c23cab3e48a2073506d46b1f"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold4_k3_all_strategies/patient_results.csv",
+      "sha256": "eff68c5320e80506a0c6ddeb66bedbc705780dbb7578ec1111c30bac64c0bb42"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold4_k5_all_strategies/patient_results.csv",
+      "sha256": "65d87699279b585bd12ffd41560b438f277e717817e258a609746a4397374faa"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold4_k7_all_strategies/patient_results.csv",
+      "sha256": "d27e529fc7b3b5c3061b0593325bb27c21a1ad82a1996d6f4cf611805a736d0f"
+    }
+  ],
+  "input_root": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map",
+  "methods": [
+    "oa_hb_tpm_map"
+  ],
+  "n_rows": 5390,
+  "n_unique_patients": 98,
+  "reference_method": "oa_hb_tpm_map",
+  "seed": 20260825,
+  "statistical_unit": "patient"
+}

@@ -1,0 +1,42 @@
+epoch=000 train_loss=1.51030 validation_dice=0.65821 best=0.65821
+epoch=001 train_loss=1.38108 validation_dice=0.73401 best=0.73401
+epoch=002 train_loss=1.19766 validation_dice=0.74244 best=0.74244
+epoch=003 train_loss=0.98801 validation_dice=0.73827 best=0.74244
+epoch=004 train_loss=0.80100 validation_dice=0.75228 best=0.75228
+epoch=005 train_loss=0.65745 validation_dice=0.76158 best=0.76158
+epoch=006 train_loss=0.55702 validation_dice=0.76507 best=0.76507
+epoch=007 train_loss=0.50817 validation_dice=0.75926 best=0.76507
+epoch=008 train_loss=0.46762 validation_dice=0.76391 best=0.76507
+epoch=009 train_loss=0.45808 validation_dice=0.76347 best=0.76507
+epoch=010 train_loss=0.44620 validation_dice=0.76781 best=0.76781
+epoch=011 train_loss=0.43939 validation_dice=0.76667 best=0.76781
+epoch=012 train_loss=0.43305 validation_dice=0.76883 best=0.76883
+epoch=013 train_loss=0.43587 validation_dice=0.77130 best=0.77130
+epoch=014 train_loss=0.42399 validation_dice=0.76608 best=0.77130
+epoch=015 train_loss=0.42569 validation_dice=0.76914 best=0.77130
+epoch=016 train_loss=0.42127 validation_dice=0.77043 best=0.77130
+epoch=017 train_loss=0.41798 validation_dice=0.76717 best=0.77130
+epoch=018 train_loss=0.41741 validation_dice=0.76456 best=0.77130
+epoch=019 train_loss=0.42055 validation_dice=0.76812 best=0.77130
+epoch=020 train_loss=0.42389 validation_dice=0.76406 best=0.77130
+epoch=021 train_loss=0.43475 validation_dice=0.77229 best=0.77229
+epoch=022 train_loss=0.42231 validation_dice=0.76653 best=0.77229
+epoch=023 train_loss=0.41006 validation_dice=0.76969 best=0.77229
+epoch=024 train_loss=0.42561 validation_dice=0.77263 best=0.77263
+epoch=025 train_loss=0.41984 validation_dice=0.76962 best=0.77263
+epoch=026 train_loss=0.42544 validation_dice=0.76567 best=0.77263
+epoch=027 train_loss=0.42270 validation_dice=0.77019 best=0.77263
+epoch=028 train_loss=0.41664 validation_dice=0.76981 best=0.77263
+epoch=029 train_loss=0.41184 validation_dice=0.77135 best=0.77263
+epoch=030 train_loss=0.41839 validation_dice=0.76698 best=0.77263
+epoch=031 train_loss=0.40485 validation_dice=0.76992 best=0.77263
+epoch=032 train_loss=0.39936 validation_dice=0.76425 best=0.77263
+epoch=033 train_loss=0.41142 validation_dice=0.75353 best=0.77263
+epoch=034 train_loss=0.40221 validation_dice=0.77008 best=0.77263
+epoch=035 train_loss=0.40120 validation_dice=0.76587 best=0.77263
+epoch=036 train_loss=0.39642 validation_dice=0.76512 best=0.77263
+        method_id  k  strategy  n_patients  n_patient_observations  mean_hidden_dice  mean_hidden_hd95_px  mean_area_curve_relative_rmse  mean_hidden_brier  mean_hidden_area_95_coverage  trust_gate_rejection_rate  mean_runtime_s
+hb_tpm_latent_mse  2 clustered          20                     100          0.755479             8.979611                       0.303504           0.032490                      0.999091                       0.24        0.039121
+hb_tpm_latent_mse  2    random          20                     100          0.755111             8.936997                       0.295964           0.032304                      0.999545                       0.25        0.039184
+hb_tpm_latent_mse  2   uniform          20                      20          0.753443             8.891015                       0.281798           0.031794                      1.000000                       0.25        0.043053
+Checkpoint: private_data/ted_full/runs/hb_tpm_latent_mse/fold1_k2_all_strategies/checkpoints/best_model.pt

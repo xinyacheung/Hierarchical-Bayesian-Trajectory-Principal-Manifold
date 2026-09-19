@@ -1,0 +1,23 @@
+{
+  "method": "oa_hb_tpm_map",
+  "epochs": 1,
+  "patience": 1,
+  "batch_size": 2,
+  "learning_rate": 0.001,
+  "weight_decay": 0.00001,
+  "latent_dim": 4,
+  "harmonics": 1,
+  "base_channels": 8,
+  "maximum_phase_shift": 0.25,
+  "posterior_samples": 2,
+  "train_strategy": "mixed",
+  "observation_weight": 0.1,
+  "kl_weight": 0.001,
+  "cycle_weight": 0.05,
+  "temporal_weight": 0.01,
+  "trust_quantile": 0.95,
+  "seed": 20260825,
+  "device": "cpu",
+  "num_workers": 0,
+  "save_predictions": false
+}

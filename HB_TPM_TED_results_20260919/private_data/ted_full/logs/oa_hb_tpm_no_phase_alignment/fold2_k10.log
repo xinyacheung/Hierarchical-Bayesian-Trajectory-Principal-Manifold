@@ -1,0 +1,51 @@
+epoch=000 train_loss=1.49574 validation_dice=0.63666 best=0.63666
+epoch=001 train_loss=1.34027 validation_dice=0.72204 best=0.72204
+epoch=002 train_loss=1.14176 validation_dice=0.73983 best=0.73983
+epoch=003 train_loss=0.92191 validation_dice=0.73807 best=0.73983
+epoch=004 train_loss=0.71835 validation_dice=0.74203 best=0.74203
+epoch=005 train_loss=0.55948 validation_dice=0.75329 best=0.75329
+epoch=006 train_loss=0.45953 validation_dice=0.75099 best=0.75329
+epoch=007 train_loss=0.38248 validation_dice=0.75289 best=0.75329
+epoch=008 train_loss=0.34174 validation_dice=0.75041 best=0.75329
+epoch=009 train_loss=0.31307 validation_dice=0.75759 best=0.75759
+epoch=010 train_loss=0.29213 validation_dice=0.75334 best=0.75759
+epoch=011 train_loss=0.27341 validation_dice=0.75779 best=0.75779
+epoch=012 train_loss=0.25303 validation_dice=0.75714 best=0.75779
+epoch=013 train_loss=0.23871 validation_dice=0.75494 best=0.75779
+epoch=014 train_loss=0.21648 validation_dice=0.75440 best=0.75779
+epoch=015 train_loss=0.20001 validation_dice=0.75569 best=0.75779
+epoch=016 train_loss=0.17823 validation_dice=0.75724 best=0.75779
+epoch=017 train_loss=0.16209 validation_dice=0.75521 best=0.75779
+epoch=018 train_loss=0.14041 validation_dice=0.75644 best=0.75779
+epoch=019 train_loss=0.12392 validation_dice=0.75728 best=0.75779
+epoch=020 train_loss=0.11559 validation_dice=0.75765 best=0.75779
+epoch=021 train_loss=0.10422 validation_dice=0.75627 best=0.75779
+epoch=022 train_loss=0.10351 validation_dice=0.75816 best=0.75816
+epoch=023 train_loss=0.10174 validation_dice=0.75645 best=0.75816
+epoch=024 train_loss=0.10222 validation_dice=0.75655 best=0.75816
+epoch=025 train_loss=0.10481 validation_dice=0.75634 best=0.75816
+epoch=026 train_loss=0.09862 validation_dice=0.75687 best=0.75816
+epoch=027 train_loss=0.09878 validation_dice=0.75620 best=0.75816
+epoch=028 train_loss=0.10251 validation_dice=0.75765 best=0.75816
+epoch=029 train_loss=0.09681 validation_dice=0.75474 best=0.75816
+epoch=030 train_loss=0.09710 validation_dice=0.75714 best=0.75816
+epoch=031 train_loss=0.09971 validation_dice=0.75701 best=0.75816
+epoch=032 train_loss=0.09517 validation_dice=0.75710 best=0.75816
+epoch=033 train_loss=0.10313 validation_dice=0.75849 best=0.75849
+epoch=034 train_loss=0.09582 validation_dice=0.75425 best=0.75849
+epoch=035 train_loss=0.09852 validation_dice=0.75692 best=0.75849
+epoch=036 train_loss=0.09684 validation_dice=0.75732 best=0.75849
+epoch=037 train_loss=0.09661 validation_dice=0.75572 best=0.75849
+epoch=038 train_loss=0.09551 validation_dice=0.75795 best=0.75849
+epoch=039 train_loss=0.10002 validation_dice=0.75602 best=0.75849
+epoch=040 train_loss=0.09364 validation_dice=0.75762 best=0.75849
+epoch=041 train_loss=0.09606 validation_dice=0.75769 best=0.75849
+epoch=042 train_loss=0.09943 validation_dice=0.75649 best=0.75849
+epoch=043 train_loss=0.09850 validation_dice=0.75729 best=0.75849
+epoch=044 train_loss=0.09497 validation_dice=0.75693 best=0.75849
+epoch=045 train_loss=0.09703 validation_dice=0.75579 best=0.75849
+                   method_id  k  strategy  n_patients  n_patient_observations  mean_hidden_dice  mean_hidden_hd95_px  mean_area_curve_relative_rmse  mean_hidden_brier  mean_hidden_area_95_coverage  trust_gate_rejection_rate  mean_runtime_s
+oa_hb_tpm_no_phase_alignment 10 clustered          20                     100          0.775640             9.119365                       0.367389           0.031863                      0.569286                       0.02        0.027406
+oa_hb_tpm_no_phase_alignment 10    random          20                     100          0.768216             9.132402                       0.363571           0.031521                      0.011429                       0.02        0.027371
+oa_hb_tpm_no_phase_alignment 10   uniform          20                      20          0.767237             9.159563                       0.363529           0.031468                      0.003571                       0.10        0.029306
+Checkpoint: private_data/ted_full/runs/oa_hb_tpm_no_phase_alignment/fold2_k10_all_strategies/checkpoints/best_model.pt

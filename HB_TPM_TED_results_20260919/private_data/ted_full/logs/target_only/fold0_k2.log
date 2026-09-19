@@ -1,0 +1,35 @@
+epoch=000 train_loss=1.49786 validation_dice=0.62945 best=0.62945
+epoch=001 train_loss=1.34122 validation_dice=0.73115 best=0.73115
+epoch=002 train_loss=1.14266 validation_dice=0.74151 best=0.74151
+epoch=003 train_loss=0.91850 validation_dice=0.74151 best=0.74151
+epoch=004 train_loss=0.71219 validation_dice=0.74776 best=0.74776
+epoch=005 train_loss=0.54436 validation_dice=0.74299 best=0.74776
+epoch=006 train_loss=0.43080 validation_dice=0.74998 best=0.74998
+epoch=007 train_loss=0.36191 validation_dice=0.75347 best=0.75347
+epoch=008 train_loss=0.31502 validation_dice=0.74890 best=0.75347
+epoch=009 train_loss=0.28831 validation_dice=0.74447 best=0.75347
+epoch=010 train_loss=0.25754 validation_dice=0.75407 best=0.75407
+epoch=011 train_loss=0.23788 validation_dice=0.74584 best=0.75407
+epoch=012 train_loss=0.21364 validation_dice=0.75072 best=0.75407
+epoch=013 train_loss=0.19626 validation_dice=0.74840 best=0.75407
+Traceback (most recent call last):
+  File "/data0/code/pyh/hb-tpm/version2/HB_TPM_collaborator_experiment_package_20260901/cardiac/scripts/train_observation_aware.py", line 1075, in <module>
+    main()
+  File "/data0/code/pyh/hb-tpm/version2/HB_TPM_collaborator_experiment_package_20260901/cardiac/scripts/train_observation_aware.py", line 891, in main
+    validation_metrics = run_epoch(
+                         ^^^^^^^^^^
+  File "/data0/code/pyh/hb-tpm/version2/HB_TPM_collaborator_experiment_package_20260901/cardiac/scripts/train_observation_aware.py", line 350, in run_epoch
+    output = model(
+             ^^^^^^
+  File "/data0/anaconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1751, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data0/anaconda3/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1762, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data0/code/pyh/hb-tpm/version2/HB_TPM_collaborator_experiment_package_20260901/cardiac/src/observation_aware_cardiac.py", line 409, in forward
+    self.infer_trajectory_posterior(
+  File "/data0/code/pyh/hb-tpm/version2/HB_TPM_collaborator_experiment_package_20260901/cardiac/src/observation_aware_cardiac.py", line 334, in infer_trajectory_posterior
+    cholesky = torch.linalg.cholesky(precision)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch._C._LinAlgError: linalg.cholesky: (Batch element 5): The factorization could not be completed because the input is not positive-definite (the leading minor of order 4 is not positive-definite).

@@ -1,0 +1,22 @@
+epoch=000 train_loss=1.50388 validation_dice=0.62770 best=0.62770
+epoch=001 train_loss=1.34899 validation_dice=0.73863 best=0.73863
+epoch=002 train_loss=1.14774 validation_dice=0.74277 best=0.74277
+epoch=003 train_loss=0.92177 validation_dice=0.74022 best=0.74277
+epoch=004 train_loss=0.71321 validation_dice=0.74349 best=0.74349
+epoch=005 train_loss=0.54100 validation_dice=0.73743 best=0.74349
+epoch=006 train_loss=0.42424 validation_dice=0.73799 best=0.74349
+epoch=007 train_loss=0.35069 validation_dice=0.74082 best=0.74349
+epoch=008 train_loss=0.29973 validation_dice=0.73826 best=0.74349
+epoch=009 train_loss=0.26610 validation_dice=0.73341 best=0.74349
+epoch=010 train_loss=0.24129 validation_dice=0.73039 best=0.74349
+epoch=011 train_loss=0.21730 validation_dice=0.73594 best=0.74349
+epoch=012 train_loss=0.19531 validation_dice=0.73057 best=0.74349
+epoch=013 train_loss=0.18090 validation_dice=0.73488 best=0.74349
+epoch=014 train_loss=0.15618 validation_dice=0.73510 best=0.74349
+epoch=015 train_loss=0.13975 validation_dice=0.73387 best=0.74349
+epoch=016 train_loss=0.12390 validation_dice=0.72717 best=0.74349
+    method_id  k  strategy  n_patients  n_patient_observations  mean_hidden_dice  mean_hidden_hd95_px  mean_area_curve_relative_rmse  mean_hidden_brier  mean_hidden_area_95_coverage  trust_gate_rejection_rate  mean_runtime_s
+oa_hb_tpm_map  3 clustered          19                      95          0.724484            11.557333                       1.047111           0.049606                      0.006015                   1.000000        0.035820
+oa_hb_tpm_map  3    random          19                      95          0.722863            11.558636                       1.046143           0.049621                      0.008521                   0.431579        0.035910
+oa_hb_tpm_map  3   uniform          19                      19          0.723068            11.461102                       1.046816           0.049332                      0.010025                   0.052632        0.037366
+Checkpoint: private_data/ted_full/runs/oa_hb_tpm_map/fold4_k3_all_strategies/checkpoints/best_model.pt

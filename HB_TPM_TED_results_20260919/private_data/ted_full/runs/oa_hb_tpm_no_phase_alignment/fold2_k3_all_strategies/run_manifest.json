@@ -1,0 +1,43 @@
+{
+  "best_epoch": 38,
+  "best_validation_patient_mean_dice": 0.7615395589185303,
+  "config_sha256": "a977b9797a6595bcd757fcf8d461ca7ec644aa076de728a5d9eecebc1735d5dd",
+  "created_utc": "2026-09-19T10:39:05.480171+00:00",
+  "dataset": [
+    "TED"
+  ],
+  "estimator_visible_fields": [
+    "pixel values at frozen observed_frame_indices",
+    "observed normalized times",
+    "full-cycle time grid",
+    "source-patient full images and masks during training"
+  ],
+  "git_commit": "6fbc8c9490ed64612236c5346b62c2f769e2b2a8",
+  "manifest_file_sha256": "8d15c313c5a75aa6ef776c4361cb9609b023978f463144b5290104de2abac2d6",
+  "n_failed_patient_observations": 0,
+  "n_successful_patient_observations": 220,
+  "observation_file_sha256": "1837a5404a6313245bd19a086dd643784d78ddecf38932ccc19915626df43bdc",
+  "output_sha256": {
+    "checkpoints/best_model.pt": "640056f544b43763f7c0705186d58aea5d1651ddf101373720108d257d1c5830",
+    "config_resolved.json": "e866f2c7b71b21c7afb47e17d8d5f57aaa5fe88117ee91c651b1cf93222772ec",
+    "environment.json": "a8c104484978c151b1018c545a8d2648b160e3b23080457b07550cecc4b7adc1",
+    "history.csv": "1b7ff87fae10fb01b57a0072a17fa1b95d8f378254c182c144d5ccc0184755d6",
+    "method_summary.csv": "fdf4c09ba82b7dee8c2bdfc8e1d70bca88167f77d4f4e3e2804c283920f97884",
+    "observed_inputs/estimator_visible_inputs.csv": "522103e377bb54025d8c11dc29f0c875048008dab1bd75caff73174887a03357",
+    "patient_or_record_results.csv": "3cd6f52ce5b6967b2b389e582fc80d7a4644edcc06dccda7bc2e13d89cdc2509",
+    "patient_results.csv": "3cd6f52ce5b6967b2b389e582fc80d7a4644edcc06dccda7bc2e13d89cdc2509",
+    "trust_gate_calibration.csv": "81374fcd5c88db739089fe0ecc7326a9aa9aac37fe5ed90c4ad26a3d3bfba1ba"
+  },
+  "run_id": "cardiac_f2_k3_all_oa_hb_tpm_no_phase_alignment",
+  "seed": 20260825,
+  "source_patient_ids_sha256": "4e7d07de33fdb8156276d9e011df87305986f37fe0978945a0e21c4311f72b62",
+  "split_file_sha256": "b93551e2e23ae00da768f39cb0dd19efeec7e06fe6434b48018d071e86d7a2c8",
+  "target_patient_ids_sha256": "7105d4f73df4df9cfc37a82f6f2d5f8d14245ba5b5bf1113f10b8b035628cd50",
+  "trust_gate_metric": "standardized_observation_residual",
+  "trust_gate_quantile": 0.95,
+  "trust_gate_threshold": 9.98660721052147e-07,
+  "truth_only_fields": [
+    "target hidden image pixels",
+    "target full-cycle masks"
+  ]
+}

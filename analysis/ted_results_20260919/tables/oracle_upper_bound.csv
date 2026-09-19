@@ -1,0 +1,4 @@
+metric,oracle_mean,best_learned_method,best_learned_mean,oracle_advantage_improvement_oriented,oracle_is_end_to_end
+mean_hidden_dice,0.9375422506523361,hb_tpm_latent_mse,0.7531708163189378,0.1843714343333983,False
+mean_hidden_hd95_px,2.2900044234056156,hb_tpm_latent_mse,9.40627857520595,7.116274151800335,False
+area_curve_relative_rmse,0.09264125327059443,hb_tpm_latent_mse,0.5646183004798967,0.4719770472093023,False

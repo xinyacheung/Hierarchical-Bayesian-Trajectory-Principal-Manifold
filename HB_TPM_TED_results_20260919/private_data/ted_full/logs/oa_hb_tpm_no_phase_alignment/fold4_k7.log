@@ -1,0 +1,22 @@
+epoch=000 train_loss=1.50569 validation_dice=0.63106 best=0.63106
+epoch=001 train_loss=1.35066 validation_dice=0.73776 best=0.73776
+epoch=002 train_loss=1.14957 validation_dice=0.74194 best=0.74194
+epoch=003 train_loss=0.92447 validation_dice=0.73863 best=0.74194
+epoch=004 train_loss=0.71707 validation_dice=0.74314 best=0.74314
+epoch=005 train_loss=0.54519 validation_dice=0.73755 best=0.74314
+epoch=006 train_loss=0.42807 validation_dice=0.73502 best=0.74314
+epoch=007 train_loss=0.35602 validation_dice=0.74097 best=0.74314
+epoch=008 train_loss=0.30619 validation_dice=0.73884 best=0.74314
+epoch=009 train_loss=0.27222 validation_dice=0.73236 best=0.74314
+epoch=010 train_loss=0.24733 validation_dice=0.73102 best=0.74314
+epoch=011 train_loss=0.22528 validation_dice=0.73540 best=0.74314
+epoch=012 train_loss=0.20409 validation_dice=0.73074 best=0.74314
+epoch=013 train_loss=0.18980 validation_dice=0.73457 best=0.74314
+epoch=014 train_loss=0.16631 validation_dice=0.73317 best=0.74314
+epoch=015 train_loss=0.15146 validation_dice=0.73353 best=0.74314
+epoch=016 train_loss=0.13471 validation_dice=0.73053 best=0.74314
+                   method_id  k  strategy  n_patients  n_patient_observations  mean_hidden_dice  mean_hidden_hd95_px  mean_area_curve_relative_rmse  mean_hidden_brier  mean_hidden_area_95_coverage  trust_gate_rejection_rate  mean_runtime_s
+oa_hb_tpm_no_phase_alignment  7 clustered          19                      95          0.727622            11.600302                       1.049031           0.049767                      0.014861                   1.000000        0.031712
+oa_hb_tpm_no_phase_alignment  7    random          19                      95          0.721948            11.608264                       1.048745           0.049862                      0.013003                   0.863158        0.031850
+oa_hb_tpm_no_phase_alignment  7   uniform          19                      19          0.721970            11.586318                       1.049081           0.049731                      0.012384                   0.000000        0.034373
+Checkpoint: private_data/ted_full/runs/oa_hb_tpm_no_phase_alignment/fold4_k7_all_strategies/checkpoints/best_model.pt

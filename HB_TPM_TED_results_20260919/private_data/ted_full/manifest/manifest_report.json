@@ -1,0 +1,1579 @@
+{
+  "frame_count_max": 78,
+  "frame_count_median": 47.0,
+  "frame_count_min": 24,
+  "patient_count": 98,
+  "patient_ids": [
+    "patient001",
+    "patient002",
+    "patient003",
+    "patient004",
+    "patient005",
+    "patient006",
+    "patient007",
+    "patient008",
+    "patient009",
+    "patient010",
+    "patient011",
+    "patient012",
+    "patient013",
+    "patient014",
+    "patient015",
+    "patient016",
+    "patient017",
+    "patient018",
+    "patient019",
+    "patient020",
+    "patient021",
+    "patient022",
+    "patient023",
+    "patient024",
+    "patient025",
+    "patient026",
+    "patient027",
+    "patient028",
+    "patient029",
+    "patient030",
+    "patient031",
+    "patient032",
+    "patient033",
+    "patient034",
+    "patient035",
+    "patient036",
+    "patient037",
+    "patient038",
+    "patient039",
+    "patient040",
+    "patient041",
+    "patient042",
+    "patient043",
+    "patient044",
+    "patient045",
+    "patient046",
+    "patient047",
+    "patient048",
+    "patient049",
+    "patient050",
+    "patient051",
+    "patient052",
+    "patient053",
+    "patient054",
+    "patient055",
+    "patient056",
+    "patient057",
+    "patient058",
+    "patient059",
+    "patient060",
+    "patient061",
+    "patient062",
+    "patient063",
+    "patient064",
+    "patient065",
+    "patient066",
+    "patient067",
+    "patient068",
+    "patient069",
+    "patient070",
+    "patient071",
+    "patient072",
+    "patient073",
+    "patient074",
+    "patient075",
+    "patient076",
+    "patient077",
+    "patient078",
+    "patient079",
+    "patient080",
+    "patient081",
+    "patient082",
+    "patient083",
+    "patient084",
+    "patient085",
+    "patient086",
+    "patient087",
+    "patient088",
+    "patient089",
+    "patient090",
+    "patient091",
+    "patient092",
+    "patient093",
+    "patient094",
+    "patient095",
+    "patient096",
+    "patient097",
+    "patient098"
+  ],
+  "patients": [
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient001",
+      "raw_image_bytes": 28806228,
+      "raw_mask_bytes": 28806228,
+      "shape_time_first": [
+        33,
+        1167,
+        748
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient002",
+      "raw_image_bytes": 20370980,
+      "raw_mask_bytes": 20370980,
+      "shape_time_first": [
+        35,
+        908,
+        641
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient003",
+      "raw_image_bytes": 17826333,
+      "raw_mask_bytes": 17826333,
+      "shape_time_first": [
+        31,
+        973,
+        591
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient004",
+      "raw_image_bytes": 50016211,
+      "raw_mask_bytes": 50016211,
+      "shape_time_first": [
+        49,
+        1297,
+        787
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient005",
+      "raw_image_bytes": 42798606,
+      "raw_mask_bytes": 42798606,
+      "shape_time_first": [
+        58,
+        1103,
+        669
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient006",
+      "raw_image_bytes": 29781504,
+      "raw_mask_bytes": 29781504,
+      "shape_time_first": [
+        69,
+        843,
+        512
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient007",
+      "raw_image_bytes": 25826745,
+      "raw_mask_bytes": 25826745,
+      "shape_time_first": [
+        35,
+        1103,
+        669
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient008",
+      "raw_image_bytes": 29851640,
+      "raw_mask_bytes": 29851640,
+      "shape_time_first": [
+        52,
+        973,
+        590
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient009",
+      "raw_image_bytes": 45155264,
+      "raw_mask_bytes": 45155264,
+      "shape_time_first": [
+        49,
+        1232,
+        748
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient010",
+      "raw_image_bytes": 32043060,
+      "raw_mask_bytes": 32043060,
+      "shape_time_first": [
+        49,
+        1038,
+        630
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient011",
+      "raw_image_bytes": 35018270,
+      "raw_mask_bytes": 35018270,
+      "shape_time_first": [
+        61,
+        973,
+        590
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient012",
+      "raw_image_bytes": 42022566,
+      "raw_mask_bytes": 42022566,
+      "shape_time_first": [
+        57,
+        1102,
+        669
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient013",
+      "raw_image_bytes": 25465344,
+      "raw_mask_bytes": 25465344,
+      "shape_time_first": [
+        59,
+        843,
+        512
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient014",
+      "raw_image_bytes": 16602520,
+      "raw_mask_bytes": 16602520,
+      "shape_time_first": [
+        55,
+        778,
+        388
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient015",
+      "raw_image_bytes": 39236400,
+      "raw_mask_bytes": 39236400,
+      "shape_time_first": [
+        60,
+        1038,
+        630
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient016",
+      "raw_image_bytes": 34951536,
+      "raw_mask_bytes": 34951536,
+      "shape_time_first": [
+        46,
+        1038,
+        732
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient017",
+      "raw_image_bytes": 35312760,
+      "raw_mask_bytes": 35312760,
+      "shape_time_first": [
+        54,
+        1038,
+        630
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient018",
+      "raw_image_bytes": 36746604,
+      "raw_mask_bytes": 36746604,
+      "shape_time_first": [
+        36,
+        1297,
+        787
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient019",
+      "raw_image_bytes": 34650186,
+      "raw_mask_bytes": 34650186,
+      "shape_time_first": [
+        47,
+        1102,
+        669
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient020",
+      "raw_image_bytes": 28177107,
+      "raw_mask_bytes": 28177107,
+      "shape_time_first": [
+        49,
+        973,
+        591
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient021",
+      "raw_image_bytes": 33049440,
+      "raw_mask_bytes": 33049440,
+      "shape_time_first": [
+        40,
+        1167,
+        708
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient022",
+      "raw_image_bytes": 49247968,
+      "raw_mask_bytes": 49247968,
+      "shape_time_first": [
+        46,
+        1232,
+        869
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient023",
+      "raw_image_bytes": 42390656,
+      "raw_mask_bytes": 42390656,
+      "shape_time_first": [
+        46,
+        1232,
+        748
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient024",
+      "raw_image_bytes": 27602064,
+      "raw_mask_bytes": 27602064,
+      "shape_time_first": [
+        48,
+        973,
+        591
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient025",
+      "raw_image_bytes": 39808821,
+      "raw_mask_bytes": 39808821,
+      "shape_time_first": [
+        39,
+        1297,
+        787
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient026",
+      "raw_image_bytes": 37212480,
+      "raw_mask_bytes": 37212480,
+      "shape_time_first": [
+        45,
+        1168,
+        708
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient027",
+      "raw_image_bytes": 28773360,
+      "raw_mask_bytes": 28773360,
+      "shape_time_first": [
+        44,
+        1038,
+        630
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient028",
+      "raw_image_bytes": 17510780,
+      "raw_mask_bytes": 17510780,
+      "shape_time_first": [
+        35,
+        908,
+        551
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient029",
+      "raw_image_bytes": 17264640,
+      "raw_mask_bytes": 17264640,
+      "shape_time_first": [
+        40,
+        843,
+        512
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient030",
+      "raw_image_bytes": 30963996,
+      "raw_mask_bytes": 30963996,
+      "shape_time_first": [
+        42,
+        1102,
+        669
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient031",
+      "raw_image_bytes": 38833092,
+      "raw_mask_bytes": 38833092,
+      "shape_time_first": [
+        47,
+        1167,
+        708
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient032",
+      "raw_image_bytes": 16418268,
+      "raw_mask_bytes": 16418268,
+      "shape_time_first": [
+        36,
+        843,
+        541
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient033",
+      "raw_image_bytes": 23307264,
+      "raw_mask_bytes": 23307264,
+      "shape_time_first": [
+        54,
+        843,
+        512
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient034",
+      "raw_image_bytes": 30735180,
+      "raw_mask_bytes": 30735180,
+      "shape_time_first": [
+        47,
+        1038,
+        630
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient035",
+      "raw_image_bytes": 18634656,
+      "raw_mask_bytes": 18634656,
+      "shape_time_first": [
+        48,
+        778,
+        499
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient036",
+      "raw_image_bytes": 14155209,
+      "raw_mask_bytes": 14155209,
+      "shape_time_first": [
+        27,
+        779,
+        673
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient037",
+      "raw_image_bytes": 33175296,
+      "raw_mask_bytes": 33175296,
+      "shape_time_first": [
+        36,
+        1232,
+        748
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient038",
+      "raw_image_bytes": 16694748,
+      "raw_mask_bytes": 16694748,
+      "shape_time_first": [
+        54,
+        714,
+        433
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient039",
+      "raw_image_bytes": 33927537,
+      "raw_mask_bytes": 33927537,
+      "shape_time_first": [
+        59,
+        973,
+        591
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient040",
+      "raw_image_bytes": 41311800,
+      "raw_mask_bytes": 41311800,
+      "shape_time_first": [
+        50,
+        1167,
+        708
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient041",
+      "raw_image_bytes": 32253760,
+      "raw_mask_bytes": 32253760,
+      "shape_time_first": [
+        35,
+        1232,
+        748
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient042",
+      "raw_image_bytes": 32697000,
+      "raw_mask_bytes": 32697000,
+      "shape_time_first": [
+        50,
+        1038,
+        630
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient043",
+      "raw_image_bytes": 22513860,
+      "raw_mask_bytes": 22513860,
+      "shape_time_first": [
+        45,
+        908,
+        551
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient044",
+      "raw_image_bytes": 28486656,
+      "raw_mask_bytes": 28486656,
+      "shape_time_first": [
+        66,
+        843,
+        512
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient045",
+      "raw_image_bytes": 22013552,
+      "raw_mask_bytes": 22013552,
+      "shape_time_first": [
+        44,
+        908,
+        551
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient046",
+      "raw_image_bytes": 26540568,
+      "raw_mask_bytes": 26540568,
+      "shape_time_first": [
+        36,
+        1102,
+        669
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient047",
+      "raw_image_bytes": 20012320,
+      "raw_mask_bytes": 20012320,
+      "shape_time_first": [
+        40,
+        908,
+        551
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient048",
+      "raw_image_bytes": 23899720,
+      "raw_mask_bytes": 23899720,
+      "shape_time_first": [
+        65,
+        779,
+        472
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient049",
+      "raw_image_bytes": 31178904,
+      "raw_mask_bytes": 31178904,
+      "shape_time_first": [
+        59,
+        908,
+        582
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient050",
+      "raw_image_bytes": 39810852,
+      "raw_mask_bytes": 39810852,
+      "shape_time_first": [
+        54,
+        1102,
+        669
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient051",
+      "raw_image_bytes": 34513500,
+      "raw_mask_bytes": 34513500,
+      "shape_time_first": [
+        50,
+        1038,
+        665
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient052",
+      "raw_image_bytes": 27465480,
+      "raw_mask_bytes": 27465480,
+      "shape_time_first": [
+        42,
+        1038,
+        630
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient053",
+      "raw_image_bytes": 38955700,
+      "raw_mask_bytes": 38955700,
+      "shape_time_first": [
+        50,
+        1102,
+        707
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient054",
+      "raw_image_bytes": 22444032,
+      "raw_mask_bytes": 22444032,
+      "shape_time_first": [
+        52,
+        843,
+        512
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient055",
+      "raw_image_bytes": 24029208,
+      "raw_mask_bytes": 24029208,
+      "shape_time_first": [
+        36,
+        973,
+        686
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient056",
+      "raw_image_bytes": 20512628,
+      "raw_mask_bytes": 20512628,
+      "shape_time_first": [
+        41,
+        908,
+        551
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient057",
+      "raw_image_bytes": 23307264,
+      "raw_mask_bytes": 23307264,
+      "shape_time_first": [
+        54,
+        843,
+        512
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient058",
+      "raw_image_bytes": 30776700,
+      "raw_mask_bytes": 30776700,
+      "shape_time_first": [
+        50,
+        1038,
+        593
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient059",
+      "raw_image_bytes": 26516324,
+      "raw_mask_bytes": 26516324,
+      "shape_time_first": [
+        53,
+        908,
+        551
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient060",
+      "raw_image_bytes": 33350940,
+      "raw_mask_bytes": 33350940,
+      "shape_time_first": [
+        51,
+        1038,
+        630
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient061",
+      "raw_image_bytes": 28918260,
+      "raw_mask_bytes": 28918260,
+      "shape_time_first": [
+        35,
+        1167,
+        708
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient062",
+      "raw_image_bytes": 28015044,
+      "raw_mask_bytes": 28015044,
+      "shape_time_first": [
+        38,
+        1102,
+        669
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient063",
+      "raw_image_bytes": 27265788,
+      "raw_mask_bytes": 27265788,
+      "shape_time_first": [
+        33,
+        1167,
+        708
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient064",
+      "raw_image_bytes": 32043060,
+      "raw_mask_bytes": 32043060,
+      "shape_time_first": [
+        49,
+        1038,
+        630
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient065",
+      "raw_image_bytes": 34650186,
+      "raw_mask_bytes": 34650186,
+      "shape_time_first": [
+        47,
+        1102,
+        669
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient066",
+      "raw_image_bytes": 22426677,
+      "raw_mask_bytes": 22426677,
+      "shape_time_first": [
+        39,
+        973,
+        591
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient067",
+      "raw_image_bytes": 30081240,
+      "raw_mask_bytes": 30081240,
+      "shape_time_first": [
+        46,
+        1038,
+        630
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient068",
+      "raw_image_bytes": 40485564,
+      "raw_mask_bytes": 40485564,
+      "shape_time_first": [
+        49,
+        1167,
+        708
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient069",
+      "raw_image_bytes": 35725865,
+      "raw_mask_bytes": 35725865,
+      "shape_time_first": [
+        35,
+        1297,
+        787
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient070",
+      "raw_image_bytes": 29851640,
+      "raw_mask_bytes": 29851640,
+      "shape_time_first": [
+        52,
+        973,
+        590
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient071",
+      "raw_image_bytes": 28773360,
+      "raw_mask_bytes": 28773360,
+      "shape_time_first": [
+        44,
+        1038,
+        630
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient072",
+      "raw_image_bytes": 18728016,
+      "raw_mask_bytes": 18728016,
+      "shape_time_first": [
+        51,
+        778,
+        472
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient073",
+      "raw_image_bytes": 29427300,
+      "raw_mask_bytes": 29427300,
+      "shape_time_first": [
+        45,
+        1038,
+        630
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient074",
+      "raw_image_bytes": 17693712,
+      "raw_mask_bytes": 17693712,
+      "shape_time_first": [
+        24,
+        1102,
+        669
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient075",
+      "raw_image_bytes": 28918260,
+      "raw_mask_bytes": 28918260,
+      "shape_time_first": [
+        35,
+        1167,
+        708
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient076",
+      "raw_image_bytes": 17330394,
+      "raw_mask_bytes": 17330394,
+      "shape_time_first": [
+        38,
+        843,
+        541
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient077",
+      "raw_image_bytes": 26540568,
+      "raw_mask_bytes": 26540568,
+      "shape_time_first": [
+        36,
+        1102,
+        669
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient078",
+      "raw_image_bytes": 26157600,
+      "raw_mask_bytes": 26157600,
+      "shape_time_first": [
+        40,
+        1038,
+        630
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient079",
+      "raw_image_bytes": 34701912,
+      "raw_mask_bytes": 34701912,
+      "shape_time_first": [
+        42,
+        1167,
+        708
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient080",
+      "raw_image_bytes": 28752150,
+      "raw_mask_bytes": 28752150,
+      "shape_time_first": [
+        50,
+        973,
+        591
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient081",
+      "raw_image_bytes": 21851634,
+      "raw_mask_bytes": 21851634,
+      "shape_time_first": [
+        38,
+        973,
+        591
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient082",
+      "raw_image_bytes": 37036272,
+      "raw_mask_bytes": 37036272,
+      "shape_time_first": [
+        61,
+        973,
+        624
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient083",
+      "raw_image_bytes": 24332784,
+      "raw_mask_bytes": 24332784,
+      "shape_time_first": [
+        48,
+        973,
+        521
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient084",
+      "raw_image_bytes": 19503648,
+      "raw_mask_bytes": 19503648,
+      "shape_time_first": [
+        48,
+        843,
+        482
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient085",
+      "raw_image_bytes": 16510164,
+      "raw_mask_bytes": 16510164,
+      "shape_time_first": [
+        33,
+        908,
+        551
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient086",
+      "raw_image_bytes": 15694560,
+      "raw_mask_bytes": 15694560,
+      "shape_time_first": [
+        24,
+        1038,
+        630
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient087",
+      "raw_image_bytes": 12256470,
+      "raw_mask_bytes": 12256470,
+      "shape_time_first": [
+        45,
+        713,
+        382
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient088",
+      "raw_image_bytes": 20196880,
+      "raw_mask_bytes": 20196880,
+      "shape_time_first": [
+        55,
+        778,
+        472
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient089",
+      "raw_image_bytes": 22012416,
+      "raw_mask_bytes": 22012416,
+      "shape_time_first": [
+        51,
+        843,
+        512
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient090",
+      "raw_image_bytes": 39024024,
+      "raw_mask_bytes": 39024024,
+      "shape_time_first": [
+        78,
+        908,
+        551
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient091",
+      "raw_image_bytes": 30735180,
+      "raw_mask_bytes": 30735180,
+      "shape_time_first": [
+        47,
+        1038,
+        630
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient092",
+      "raw_image_bytes": 35652666,
+      "raw_mask_bytes": 35652666,
+      "shape_time_first": [
+        62,
+        973,
+        591
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient093",
+      "raw_image_bytes": 22426677,
+      "raw_mask_bytes": 22426677,
+      "shape_time_first": [
+        39,
+        973,
+        591
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient094",
+      "raw_image_bytes": 40485564,
+      "raw_mask_bytes": 40485564,
+      "shape_time_first": [
+        49,
+        1167,
+        708
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient095",
+      "raw_image_bytes": 33205815,
+      "raw_mask_bytes": 33205815,
+      "shape_time_first": [
+        45,
+        1103,
+        669
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient096",
+      "raw_image_bytes": 21580800,
+      "raw_mask_bytes": 21580800,
+      "shape_time_first": [
+        50,
+        843,
+        512
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient097",
+      "raw_image_bytes": 18011088,
+      "raw_mask_bytes": 18011088,
+      "shape_time_first": [
+        36,
+        908,
+        551
+      ]
+    },
+    {
+      "mask_labels": [
+        0,
+        1,
+        2
+      ],
+      "patient_id": "patient098",
+      "raw_image_bytes": 39846978,
+      "raw_mask_bytes": 39846978,
+      "shape_time_first": [
+        54,
+        1103,
+        669
+      ]
+    }
+  ],
+  "timebase": "normalized_cycle"
+}

@@ -1,0 +1,19 @@
+{
+  "cpu_count": 128,
+  "cuda_available": true,
+  "cuda_version": "12.6",
+  "cudnn_benchmark": false,
+  "cudnn_deterministic": true,
+  "cudnn_version": 90501,
+  "device": "cuda",
+  "gpu_compute_capability": "8.9",
+  "gpu_name": "NVIDIA GeForce RTX 4090 D",
+  "gpu_total_memory_bytes": 25282281472,
+  "machine": "x86_64",
+  "mps_available": false,
+  "numpy": "1.26.4",
+  "pandas": "2.2.2",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "python": "3.12.7",
+  "torch": "2.7.1+cu126"
+}

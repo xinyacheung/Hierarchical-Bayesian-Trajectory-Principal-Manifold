@@ -1,0 +1,354 @@
+{
+  "archive": {
+    "bytes": 5679806152,
+    "part_sha256": {},
+    "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_preflight/archive/TED.zip",
+    "reused": true,
+    "sha256": "b4b1f5a51595777521090e06f6358a761e4fd6f715478daa4955bf05aff2b88e"
+  },
+  "archive_inspection": {
+    "entry_count": 495,
+    "frame_count_max": 78,
+    "frame_count_median": 47.0,
+    "frame_count_min": 24,
+    "metadata_sha256": "978046998e3d9d7433c9cf6635d9dd3e8f348677cfbb91cdbf5e7f12144701d7",
+    "patient_count": 98,
+    "representative_metadata": [
+      {
+        "dim_size_xyz": [
+          748,
+          1167,
+          33
+        ],
+        "element_type": "MET_UCHAR",
+        "n_frames": 33,
+        "patient_id": "patient001"
+      },
+      {
+        "dim_size_xyz": [
+          787,
+          1297,
+          49
+        ],
+        "element_type": "MET_UCHAR",
+        "n_frames": 49,
+        "patient_id": "patient004"
+      },
+      {
+        "dim_size_xyz": [
+          669,
+          1102,
+          24
+        ],
+        "element_type": "MET_UCHAR",
+        "n_frames": 24,
+        "patient_id": "patient074"
+      },
+      {
+        "dim_size_xyz": [
+          382,
+          713,
+          45
+        ],
+        "element_type": "MET_UCHAR",
+        "n_frames": 45,
+        "patient_id": "patient087"
+      },
+      {
+        "dim_size_xyz": [
+          551,
+          908,
+          78
+        ],
+        "element_type": "MET_UCHAR",
+        "n_frames": 78,
+        "patient_id": "patient090"
+      }
+    ]
+  },
+  "code_sha256": {
+    "cardiac/configs/ted_sparse_cycle.json": "25ed10002aec7dc2f54e8ba0ed81dac097a1dcb418d97e8d0ae62fcfa8f15714",
+    "cardiac/scripts/build_ted_manifest.py": "7cd90e358d3d62bda940d40fc28c623328e3469d866474b77afe1de343143062",
+    "cardiac/scripts/make_sparse_splits.py": "82bb96905622d42cfe4b46ea3a7ac498d36a5a03fdc89cc3bba200818edfb1f3",
+    "cardiac/scripts/prepare_standardized_sequences.py": "dd7e1689dbdb81fb247e32edc812ed954a290d2ec218f49d88d8e907bd5f8718",
+    "cardiac/scripts/run_oracle_contour_baseline.py": "235c7292733da3caaf456fbbfc7b162f6c9d9a4d4f9f1fab71340353ac26cef0",
+    "cardiac/scripts/ted_preflight.py": "4efb9ecf2b40d1a23edde9079fe157585e2a83eb8337b86b4dddd11dcb064e7d",
+    "cardiac/src/array_io.py": "cbe47b1c7dbb6af7f03e5ddc70eb25a5a9575a12b49c56ee62d6ff3bebdc9fed",
+    "cardiac/src/observation_aware_cardiac.py": "f57899cbb59224c607a94b862ca1675ab4f630d41f34f2c4fb4cb037db75808c"
+  },
+  "commands": [
+    {
+      "command": [
+        "/data0/anaconda3/bin/python",
+        "/data0/code/pyh/hb-tpm/version2/HB_TPM_collaborator_experiment_package_20260901/cardiac/scripts/validate_manifest.py",
+        "--manifest",
+        "/data0/code/pyh/hb-tpm/version2/private_data/ted_preflight/manifests/ted_preflight_manifest.csv",
+        "--check-arrays"
+      ],
+      "returncode": 0,
+      "stdout_tail": [
+        "Validated 5 unique patients across 1 dataset(s).",
+        "Frame counts: min=24, median=45.0, max=78."
+      ]
+    },
+    {
+      "command": [
+        "/data0/anaconda3/bin/python",
+        "/data0/code/pyh/hb-tpm/version2/HB_TPM_collaborator_experiment_package_20260901/cardiac/scripts/prepare_standardized_sequences.py",
+        "--manifest",
+        "/data0/code/pyh/hb-tpm/version2/private_data/ted_preflight/manifests/ted_preflight_manifest.csv",
+        "--output-dir",
+        "/data0/code/pyh/hb-tpm/version2/private_data/ted_preflight/processed/ted_24x112",
+        "--frames",
+        "24",
+        "--height",
+        "112",
+        "--width",
+        "112",
+        "--mask-label",
+        "1"
+      ],
+      "returncode": 0,
+      "stdout_tail": [
+        "Standardized 5 patients to (24,112,112).",
+        "Manifest: /data0/code/pyh/hb-tpm/version2/private_data/ted_preflight/processed/ted_24x112/standardized_manifest.csv"
+      ]
+    },
+    {
+      "command": [
+        "/data0/anaconda3/bin/python",
+        "/data0/code/pyh/hb-tpm/version2/HB_TPM_collaborator_experiment_package_20260901/cardiac/scripts/make_sparse_splits.py",
+        "--manifest",
+        "/data0/code/pyh/hb-tpm/version2/private_data/ted_preflight/processed/ted_24x112/standardized_manifest.csv",
+        "--config",
+        "/data0/code/pyh/hb-tpm/version2/HB_TPM_collaborator_experiment_package_20260901/cardiac/configs/ted_sparse_cycle.json",
+        "--output-dir",
+        "/data0/code/pyh/hb-tpm/version2/private_data/ted_preflight/splits_v1"
+      ],
+      "returncode": 0,
+      "stdout_tail": [
+        "3        1      3           1",
+        "4        1      3           1",
+        "Wrote 275 frozen target observation masks."
+      ]
+    },
+    {
+      "command": [
+        "/data0/anaconda3/bin/python",
+        "/data0/code/pyh/hb-tpm/version2/HB_TPM_collaborator_experiment_package_20260901/cardiac/scripts/run_oracle_contour_baseline.py",
+        "--manifest",
+        "/data0/code/pyh/hb-tpm/version2/private_data/ted_preflight/processed/ted_24x112/standardized_manifest.csv",
+        "--splits",
+        "/data0/code/pyh/hb-tpm/version2/private_data/ted_preflight/splits_v1/patient_splits.csv",
+        "--observations",
+        "/data0/code/pyh/hb-tpm/version2/private_data/ted_preflight/splits_v1/sparse_observations.csv",
+        "--fold",
+        "0",
+        "--output-dir",
+        "/data0/code/pyh/hb-tpm/version2/private_data/ted_preflight/oracle/fold0"
+      ],
+      "returncode": 0,
+      "stdout_tail": [
+        "oracle_contour_periodic_fourier 10 clustered           1          0.921044             2.930904                       0.128415",
+        "oracle_contour_periodic_fourier 10    random           1          0.975002             1.279687                       0.029755",
+        "oracle_contour_periodic_fourier 10   uniform           1          0.985296             1.000000                       0.018002"
+      ]
+    }
+  ],
+  "completed_at_utc": "2026-09-18T04:06:59.208891+00:00",
+  "environment": {
+    "cuda_available": true,
+    "numpy": "1.26.4",
+    "pandas": "2.2.2",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.12.7",
+    "torch": "2.7.1+cu126"
+  },
+  "exceptions": [],
+  "extraction": {
+    "entry_count": 25,
+    "patient_ids": [
+      "patient001",
+      "patient004",
+      "patient074",
+      "patient087",
+      "patient090"
+    ]
+  },
+  "manifest": {
+    "frame_count_max": 78,
+    "frame_count_median": 45.0,
+    "frame_count_min": 24,
+    "patient_count": 5,
+    "patient_ids": [
+      "patient001",
+      "patient004",
+      "patient074",
+      "patient087",
+      "patient090"
+    ],
+    "patients": [
+      {
+        "mask_labels": [
+          0,
+          1,
+          2
+        ],
+        "patient_id": "patient001",
+        "raw_image_bytes": 28806228,
+        "raw_mask_bytes": 28806228,
+        "shape_time_first": [
+          33,
+          1167,
+          748
+        ]
+      },
+      {
+        "mask_labels": [
+          0,
+          1,
+          2
+        ],
+        "patient_id": "patient004",
+        "raw_image_bytes": 50016211,
+        "raw_mask_bytes": 50016211,
+        "shape_time_first": [
+          49,
+          1297,
+          787
+        ]
+      },
+      {
+        "mask_labels": [
+          0,
+          1,
+          2
+        ],
+        "patient_id": "patient074",
+        "raw_image_bytes": 17693712,
+        "raw_mask_bytes": 17693712,
+        "shape_time_first": [
+          24,
+          1102,
+          669
+        ]
+      },
+      {
+        "mask_labels": [
+          0,
+          1,
+          2
+        ],
+        "patient_id": "patient087",
+        "raw_image_bytes": 12256470,
+        "raw_mask_bytes": 12256470,
+        "shape_time_first": [
+          45,
+          713,
+          382
+        ]
+      },
+      {
+        "mask_labels": [
+          0,
+          1,
+          2
+        ],
+        "patient_id": "patient090",
+        "raw_image_bytes": 39024024,
+        "raw_mask_bytes": 39024024,
+        "shape_time_first": [
+          78,
+          908,
+          551
+        ]
+      }
+    ],
+    "timebase": "normalized_cycle"
+  },
+  "model_check": {
+    "finite_gradients": true,
+    "input_shape": [
+      1,
+      5,
+      1,
+      112,
+      112
+    ],
+    "loss": 0.6790035963058472,
+    "observed_indices": [
+      0,
+      6,
+      12,
+      17,
+      23
+    ],
+    "output_shape": [
+      1,
+      24,
+      1,
+      112,
+      112
+    ],
+    "patient_id": "patient090",
+    "posterior_sample_shape": [
+      2,
+      1,
+      24,
+      1,
+      112,
+      112
+    ]
+  },
+  "oracle": {
+    "patient_ids": [
+      "patient090"
+    ],
+    "patient_result_rows": 55,
+    "summary_rows": 15
+  },
+  "representative_patients": [
+    "patient001",
+    "patient004",
+    "patient074",
+    "patient087",
+    "patient090"
+  ],
+  "schema_version": "ted-engineering-preflight-1.0.0",
+  "splits": {
+    "observation_rows": 275,
+    "split_rows": 25
+  },
+  "standardized": {
+    "patient_count": 5,
+    "shapes": {
+      "patient001": [
+        24,
+        112,
+        112
+      ],
+      "patient004": [
+        24,
+        112,
+        112
+      ],
+      "patient074": [
+        24,
+        112,
+        112
+      ],
+      "patient087": [
+        24,
+        112,
+        112
+      ],
+      "patient090": [
+        24,
+        112,
+        112
+      ]
+    }
+  },
+  "started_at_utc": "2026-09-18T04:06:39.889390+00:00",
+  "status": "passed"
+}

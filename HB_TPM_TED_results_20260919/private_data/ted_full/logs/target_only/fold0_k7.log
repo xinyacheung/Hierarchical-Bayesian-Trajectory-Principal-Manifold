@@ -1,0 +1,28 @@
+epoch=000 train_loss=1.49910 validation_dice=0.62620 best=0.62620
+epoch=001 train_loss=1.34220 validation_dice=0.72728 best=0.72728
+epoch=002 train_loss=1.14271 validation_dice=0.73885 best=0.73885
+epoch=003 train_loss=0.91982 validation_dice=0.74102 best=0.74102
+epoch=004 train_loss=0.71337 validation_dice=0.74688 best=0.74688
+epoch=005 train_loss=0.54460 validation_dice=0.74368 best=0.74688
+epoch=006 train_loss=0.43146 validation_dice=0.75072 best=0.75072
+epoch=007 train_loss=0.36240 validation_dice=0.75317 best=0.75317
+epoch=008 train_loss=0.31482 validation_dice=0.74873 best=0.75317
+epoch=009 train_loss=0.28898 validation_dice=0.74314 best=0.75317
+epoch=010 train_loss=0.25945 validation_dice=0.75392 best=0.75392
+epoch=011 train_loss=0.23781 validation_dice=0.74522 best=0.75392
+epoch=012 train_loss=0.21410 validation_dice=0.75052 best=0.75392
+epoch=013 train_loss=0.19811 validation_dice=0.74836 best=0.75392
+epoch=014 train_loss=0.17729 validation_dice=0.75285 best=0.75392
+epoch=015 train_loss=0.15724 validation_dice=0.74688 best=0.75392
+epoch=016 train_loss=0.12974 validation_dice=0.75192 best=0.75392
+epoch=017 train_loss=0.11130 validation_dice=0.75039 best=0.75392
+epoch=018 train_loss=0.09709 validation_dice=0.74703 best=0.75392
+epoch=019 train_loss=0.07983 validation_dice=0.75169 best=0.75392
+epoch=020 train_loss=0.06921 validation_dice=0.74840 best=0.75392
+epoch=021 train_loss=0.06577 validation_dice=0.75151 best=0.75392
+epoch=022 train_loss=0.06338 validation_dice=0.74584 best=0.75392
+  method_id  k  strategy  n_patients  n_patient_observations  mean_hidden_dice  mean_hidden_hd95_px  mean_area_curve_relative_rmse  mean_hidden_brier  mean_hidden_area_95_coverage  trust_gate_rejection_rate  mean_runtime_s
+target_only  7 clustered          20                     100          0.743094             9.927871                       0.352048           0.039013                      0.773529                        1.0        0.032549
+target_only  7    random          20                     100          0.740475             9.909978                       0.351671           0.038812                      0.437059                        1.0        0.032648
+target_only  7   uniform          20                      20          0.740866             9.861889                       0.351333           0.038466                      0.082353                        0.1        0.034571
+Checkpoint: private_data/ted_full/runs/target_only/fold0_k7_all_strategies/checkpoints/best_model.pt

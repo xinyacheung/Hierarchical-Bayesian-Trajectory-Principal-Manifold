@@ -1,0 +1,14 @@
+check,status,expected,observed,details
+zip_sha256,pass,2ba9ace5b8baf2717a6d7e24a063b47d80da8b5e2f087e72c7c2ed1f6b15351d,2ba9ace5b8baf2717a6d7e24a063b47d80da8b5e2f087e72c7c2ed1f6b15351d,C:\Users\Intel\OneDrive\Documents\GitHub\HB-TPM\Hierarchical-Bayesian-Trajectory-Principal-Manifold\HB_TPM_TED_results_20260919.zip
+normalized_run_code_snapshot,pass,18 bundled files represented in current package,18 normalized-content matches; 28 current-only files,CRLF/LF normalized before comparison
+learned_result_rows,pass,32340,32340,C:\Users\Intel\OneDrive\Documents\GitHub\HB-TPM\Hierarchical-Bayesian-Trajectory-Principal-Manifold\HB_TPM_TED_results_20260919\private_data\ted_full\aggregate\all_learned_methods_v2\all_patient_results.csv
+unique_patients,pass,98,98,anonymized identifiers
+factorial_completeness,pass,6 methods x 5 K x 3 strategies; 1/5/5 replicates,complete,uniform/random/clustered
+duplicate_full_keys,pass,0,0,"method_id,patient_id,fold,k,strategy,replicate"
+patient_fold_exclusivity,pass,one fold per patient,one fold per patient,fold counts 20/20/20/19/19
+primary_metric_finiteness,pass,all finite,all finite,"mean_hidden_dice,mean_hidden_hd95_px,area_curve_relative_rmse"
+hidden_data_leakage_flags,pass,all false,all false,image and mask flags
+run_manifests_and_output_hashes,pass,150 manifests; zero failures; every recorded output hash matches,150 manifests; 1350 output hashes matched,recorded commit 6fbc8c9490ed64612236c5346b62c2f769e2b2a8
+supplied_aggregate_summary_reproduction,pass,90 rows; tolerance 1e-12,maximum error 1.78e-15,C:\Users\Intel\OneDrive\Documents\GitHub\HB-TPM\Hierarchical-Bayesian-Trajectory-Principal-Manifold\HB_TPM_TED_results_20260919\private_data\ted_full\aggregate\all_learned_methods_v2\aggregate_summary.csv
+supplied_paired_summary_reproduction,pass,300 rows; 5000 draws; tolerance 1e-12,maximum error 2.22e-16,C:\Users\Intel\OneDrive\Documents\GitHub\HB-TPM\Hierarchical-Bayesian-Trajectory-Principal-Manifold\HB_TPM_TED_results_20260919\private_data\ted_full\aggregate\all_learned_methods_v2\paired_differences.csv
+stale_log_provenance,warning,failed-attempt traceback followed by successful rerun,traceback retained; completed manifest reports 220 successful and 0 failed observations,C:\Users\Intel\OneDrive\Documents\GitHub\HB-TPM\Hierarchical-Bayesian-Trajectory-Principal-Manifold\HB_TPM_TED_results_20260919\private_data\ted_full\logs\target_only\fold0_k2.log

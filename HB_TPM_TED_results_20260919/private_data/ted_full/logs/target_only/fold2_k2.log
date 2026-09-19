@@ -1,0 +1,51 @@
+epoch=000 train_loss=1.49146 validation_dice=0.64641 best=0.64641
+epoch=001 train_loss=1.33643 validation_dice=0.72561 best=0.72561
+epoch=002 train_loss=1.13868 validation_dice=0.73744 best=0.73744
+epoch=003 train_loss=0.91609 validation_dice=0.73778 best=0.73778
+epoch=004 train_loss=0.71037 validation_dice=0.74276 best=0.74276
+epoch=005 train_loss=0.55084 validation_dice=0.75306 best=0.75306
+epoch=006 train_loss=0.44864 validation_dice=0.75174 best=0.75306
+epoch=007 train_loss=0.37175 validation_dice=0.75338 best=0.75338
+epoch=008 train_loss=0.32904 validation_dice=0.75072 best=0.75338
+epoch=009 train_loss=0.29916 validation_dice=0.75758 best=0.75758
+epoch=010 train_loss=0.27788 validation_dice=0.75418 best=0.75758
+epoch=011 train_loss=0.25691 validation_dice=0.75686 best=0.75758
+epoch=012 train_loss=0.23500 validation_dice=0.75638 best=0.75758
+epoch=013 train_loss=0.21912 validation_dice=0.75573 best=0.75758
+epoch=014 train_loss=0.19212 validation_dice=0.75417 best=0.75758
+epoch=015 train_loss=0.17538 validation_dice=0.75681 best=0.75758
+epoch=016 train_loss=0.15332 validation_dice=0.75750 best=0.75758
+epoch=017 train_loss=0.13397 validation_dice=0.75508 best=0.75758
+epoch=018 train_loss=0.11251 validation_dice=0.75647 best=0.75758
+epoch=019 train_loss=0.09702 validation_dice=0.75766 best=0.75766
+epoch=020 train_loss=0.08803 validation_dice=0.75740 best=0.75766
+epoch=021 train_loss=0.07821 validation_dice=0.75650 best=0.75766
+epoch=022 train_loss=0.07953 validation_dice=0.75797 best=0.75797
+epoch=023 train_loss=0.07825 validation_dice=0.75692 best=0.75797
+epoch=024 train_loss=0.07912 validation_dice=0.75665 best=0.75797
+epoch=025 train_loss=0.08223 validation_dice=0.75694 best=0.75797
+epoch=026 train_loss=0.07560 validation_dice=0.75677 best=0.75797
+epoch=027 train_loss=0.07521 validation_dice=0.75644 best=0.75797
+epoch=028 train_loss=0.07864 validation_dice=0.75788 best=0.75797
+epoch=029 train_loss=0.07294 validation_dice=0.75544 best=0.75797
+epoch=030 train_loss=0.07404 validation_dice=0.75743 best=0.75797
+epoch=031 train_loss=0.07598 validation_dice=0.75715 best=0.75797
+epoch=032 train_loss=0.07271 validation_dice=0.75738 best=0.75797
+epoch=033 train_loss=0.07969 validation_dice=0.75879 best=0.75879
+epoch=034 train_loss=0.07287 validation_dice=0.75484 best=0.75879
+epoch=035 train_loss=0.07514 validation_dice=0.75724 best=0.75879
+epoch=036 train_loss=0.07409 validation_dice=0.75771 best=0.75879
+epoch=037 train_loss=0.07359 validation_dice=0.75637 best=0.75879
+epoch=038 train_loss=0.07234 validation_dice=0.75785 best=0.75879
+epoch=039 train_loss=0.07684 validation_dice=0.75644 best=0.75879
+epoch=040 train_loss=0.07047 validation_dice=0.75800 best=0.75879
+epoch=041 train_loss=0.07324 validation_dice=0.75807 best=0.75879
+epoch=042 train_loss=0.07637 validation_dice=0.75657 best=0.75879
+epoch=043 train_loss=0.07462 validation_dice=0.75766 best=0.75879
+epoch=044 train_loss=0.07151 validation_dice=0.75730 best=0.75879
+epoch=045 train_loss=0.07386 validation_dice=0.75631 best=0.75879
+  method_id  k  strategy  n_patients  n_patient_observations  mean_hidden_dice  mean_hidden_hd95_px  mean_area_curve_relative_rmse  mean_hidden_brier  mean_hidden_area_95_coverage  trust_gate_rejection_rate  mean_runtime_s
+target_only  2 clustered          20                     100          0.768222             9.151189                       0.367207           0.031607                      0.765000                       0.09        0.039432
+target_only  2    random          20                     100          0.767550             9.172976                       0.367096           0.031650                      0.764091                       0.23        0.039533
+target_only  2   uniform          20                      20          0.766300             9.140126                       0.360510           0.031344                      0.770455                       0.25        0.043829
+Checkpoint: private_data/ted_full/runs/target_only/fold2_k2_all_strategies/checkpoints/best_model.pt

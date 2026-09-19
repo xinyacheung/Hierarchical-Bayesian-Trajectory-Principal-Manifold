@@ -1,0 +1,31 @@
+{
+  "allocated_memory_bytes": 23734784,
+  "compute_capability": "8.9",
+  "cuda_available": true,
+  "cuda_runtime": "12.6",
+  "cudnn_version": 90501,
+  "device": "cuda",
+  "finite_gradients": true,
+  "forward_shape": [
+    2,
+    16,
+    1,
+    64,
+    64
+  ],
+  "gpu_name": "NVIDIA GeForce RTX 4090 D",
+  "gpu_total_memory_bytes": 25282281472,
+  "loss": 0.6738171577453613,
+  "mps_available": false,
+  "peak_allocated_memory_bytes": 24786432,
+  "posterior_sample_shape": [
+    2,
+    2,
+    16,
+    1,
+    64,
+    64
+  ],
+  "python": "3.12.7",
+  "torch": "2.7.1+cu126"
+}

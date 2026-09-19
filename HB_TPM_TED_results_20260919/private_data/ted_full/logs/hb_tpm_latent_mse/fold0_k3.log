@@ -1,0 +1,28 @@
+epoch=000 train_loss=1.51603 validation_dice=0.63465 best=0.63465
+epoch=001 train_loss=1.38195 validation_dice=0.72957 best=0.72957
+epoch=002 train_loss=1.19908 validation_dice=0.74150 best=0.74150
+epoch=003 train_loss=0.99085 validation_dice=0.74057 best=0.74150
+epoch=004 train_loss=0.79972 validation_dice=0.74816 best=0.74816
+epoch=005 train_loss=0.64640 validation_dice=0.74271 best=0.74816
+epoch=006 train_loss=0.54673 validation_dice=0.74847 best=0.74847
+epoch=007 train_loss=0.49210 validation_dice=0.75419 best=0.75419
+epoch=008 train_loss=0.45940 validation_dice=0.74992 best=0.75419
+epoch=009 train_loss=0.44665 validation_dice=0.74619 best=0.75419
+epoch=010 train_loss=0.42833 validation_dice=0.75613 best=0.75613
+epoch=011 train_loss=0.42744 validation_dice=0.74760 best=0.75613
+epoch=012 train_loss=0.41973 validation_dice=0.75136 best=0.75613
+epoch=013 train_loss=0.42054 validation_dice=0.75120 best=0.75613
+epoch=014 train_loss=0.41742 validation_dice=0.75584 best=0.75613
+epoch=015 train_loss=0.41298 validation_dice=0.74954 best=0.75613
+epoch=016 train_loss=0.40356 validation_dice=0.75416 best=0.75613
+epoch=017 train_loss=0.40325 validation_dice=0.75238 best=0.75613
+epoch=018 train_loss=0.40908 validation_dice=0.74893 best=0.75613
+epoch=019 train_loss=0.40454 validation_dice=0.75525 best=0.75613
+epoch=020 train_loss=0.40459 validation_dice=0.75035 best=0.75613
+epoch=021 train_loss=0.40451 validation_dice=0.75475 best=0.75613
+epoch=022 train_loss=0.40779 validation_dice=0.74716 best=0.75613
+        method_id  k  strategy  n_patients  n_patient_observations  mean_hidden_dice  mean_hidden_hd95_px  mean_area_curve_relative_rmse  mean_hidden_brier  mean_hidden_area_95_coverage  trust_gate_rejection_rate  mean_runtime_s
+hb_tpm_latent_mse  3 clustered          20                     100          0.745300             9.816244                       0.355110           0.038373                      0.949524                       0.72        0.037663
+hb_tpm_latent_mse  3    random          20                     100          0.744356             9.775625                       0.347694           0.038178                      0.938095                       0.34        0.037677
+hb_tpm_latent_mse  3   uniform          20                      20          0.743924             9.733961                       0.345271           0.037840                      0.942857                       0.05        0.039340
+Checkpoint: private_data/ted_full/runs/hb_tpm_latent_mse/fold0_k3_all_strategies/checkpoints/best_model.pt

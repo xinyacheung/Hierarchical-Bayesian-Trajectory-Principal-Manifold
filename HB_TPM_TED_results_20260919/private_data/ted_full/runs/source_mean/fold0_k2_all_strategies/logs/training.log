@@ -1,0 +1,5 @@
+device=cuda
+best_epoch=10
+best_validation_patient_mean_dice=0.75756197
+training_seconds=9.167
+patient_observations=220

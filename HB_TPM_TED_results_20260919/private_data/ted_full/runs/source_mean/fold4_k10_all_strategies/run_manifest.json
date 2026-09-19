@@ -1,0 +1,43 @@
+{
+  "best_epoch": 4,
+  "best_validation_patient_mean_dice": 0.7449862243964309,
+  "config_sha256": "b4a729bfbbd1337c2d1e1bfaea09214757ba897b5527047fb2788e2e276812fb",
+  "created_utc": "2026-09-19T07:26:57.752879+00:00",
+  "dataset": [
+    "TED"
+  ],
+  "estimator_visible_fields": [
+    "pixel values at frozen observed_frame_indices",
+    "observed normalized times",
+    "full-cycle time grid",
+    "source-patient full images and masks during training"
+  ],
+  "git_commit": "6fbc8c9490ed64612236c5346b62c2f769e2b2a8",
+  "manifest_file_sha256": "8d15c313c5a75aa6ef776c4361cb9609b023978f463144b5290104de2abac2d6",
+  "n_failed_patient_observations": 0,
+  "n_successful_patient_observations": 209,
+  "observation_file_sha256": "1837a5404a6313245bd19a086dd643784d78ddecf38932ccc19915626df43bdc",
+  "output_sha256": {
+    "checkpoints/best_model.pt": "08e6f7e87151a6d7c345a7a5d11d68d278e8cd8d4437f0e2754093482705fdad",
+    "config_resolved.json": "e8b535310e9b5cb81809892ecb0c163f1a5d4c626882c393fb747f1536644fa5",
+    "environment.json": "a8c104484978c151b1018c545a8d2648b160e3b23080457b07550cecc4b7adc1",
+    "history.csv": "e31459f4171802bfdb5f2127b223331b1b84ef14be2180a5388c11f0276325e4",
+    "method_summary.csv": "85b2273ea52ba5cd88f2efe6f0e614f138e89a78f4089b1df043ebb710ca6383",
+    "observed_inputs/estimator_visible_inputs.csv": "4a9a6df0be9037d37dc31212d8b24094dd5cc48332a14bf090ac741ce0175f00",
+    "patient_or_record_results.csv": "9d934af47042f38535bc39e2ac7c51e352d379b71bbf08ee320c256ce82e0cd4",
+    "patient_results.csv": "9d934af47042f38535bc39e2ac7c51e352d379b71bbf08ee320c256ce82e0cd4",
+    "trust_gate_calibration.csv": "088b307c50c79f3528dd0b71d24f95154d1a65d8559d376c9cc5da4f3d65240a"
+  },
+  "run_id": "cardiac_f4_k10_all_source_mean",
+  "seed": 20260825,
+  "source_patient_ids_sha256": "98ab4195a46081ef0db55f915c77fb115603b93f6d4abda5fc1165edeb6e5885",
+  "split_file_sha256": "b93551e2e23ae00da768f39cb0dd19efeec7e06fe6434b48018d071e86d7a2c8",
+  "target_patient_ids_sha256": "09e642ac3836ded702d125dc3309755cc634f7e76cb9e2ba5b41ecb48d1b4ece",
+  "trust_gate_metric": "standardized_observation_residual",
+  "trust_gate_quantile": 0.95,
+  "trust_gate_threshold": 0.0014248917577788234,
+  "truth_only_fields": [
+    "target hidden image pixels",
+    "target full-cycle masks"
+  ]
+}

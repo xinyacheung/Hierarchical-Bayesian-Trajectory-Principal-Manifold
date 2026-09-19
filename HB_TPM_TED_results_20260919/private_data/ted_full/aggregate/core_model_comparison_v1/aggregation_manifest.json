@@ -1,0 +1,317 @@
+{
+  "bootstrap_draws": 5000,
+  "created_utc": "2026-09-19T09:29:27.869794+00:00",
+  "input_files": [
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold0_k10_all_strategies/patient_results.csv",
+      "sha256": "80ef4bc81fbf3eb8f88e947f0ef9d322cb60206d4b8bedc36830644bb63a5133"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold0_k2_all_strategies/patient_results.csv",
+      "sha256": "d15887d098e19a7698d3608667a3a42781f451d612e93c69b4ef756cdb9b96c9"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold0_k3_all_strategies/patient_results.csv",
+      "sha256": "4d44c2f74f671052ee026c4aaafa46a6496d539efe8b93521d099e8d65c3f94e"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold0_k5_all_strategies/patient_results.csv",
+      "sha256": "159dd8ba329d0ea9f4a968b60fdf38a6755c6b8736ac8cf2841bff9b85bf723a"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold0_k7_all_strategies/patient_results.csv",
+      "sha256": "d788ebcf035ee58611fead8a0c9fdf9c500c545d4b990d06f4195deca174f611"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold1_k10_all_strategies/patient_results.csv",
+      "sha256": "b9a05c11524f2c5a3cc7af56e25a11ef94d507f11a0a17779faf566063c7b30b"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold1_k2_all_strategies/patient_results.csv",
+      "sha256": "9eee2b70791a9b3e15d56e79e55331e70cd365061fa574c2c6d36433e71406e8"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold1_k3_all_strategies/patient_results.csv",
+      "sha256": "75b6ad967aca04b52d1bd51b715d249b4d8ad73d675312facc3a867660e17428"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold1_k5_all_strategies/patient_results.csv",
+      "sha256": "750d5904af9ab6423809271fb4c124a655205a9616e756628716c566c7166e71"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold1_k7_all_strategies/patient_results.csv",
+      "sha256": "d30b32644dae7c54953620398fa6ab0e5a5611a2ed8a0523455fd56192e2ee12"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold2_k10_all_strategies/patient_results.csv",
+      "sha256": "c33fe767a215136750954ba63ea0cf14be6165e37313e7a7f98ed7cb13b9363c"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold2_k2_all_strategies/patient_results.csv",
+      "sha256": "0ed1cf6f36c66f405418c854d56bbe6f5d6e2c9a4950c7ebdb273914b0618be1"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold2_k3_all_strategies/patient_results.csv",
+      "sha256": "f6b8c89abb5422bc66df3f39d67a1c5cd11d0a9c8bcad6e7f0a191bc03ac58e9"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold2_k5_all_strategies/patient_results.csv",
+      "sha256": "38eadfa9a3b018635e0aa6ce7287896fd2435374ef19b0f1d7f9ac538ea8735f"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold2_k7_all_strategies/patient_results.csv",
+      "sha256": "eaf762c1dcbbd125c06b4f79b315dc178dc555fcda4cfe406534283cccd0aa69"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold3_k10_all_strategies/patient_results.csv",
+      "sha256": "94fc7ada2b537c75498fe796f77b481281a7ac9aadb80bf12cfed6dbf2fef8d8"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold3_k2_all_strategies/patient_results.csv",
+      "sha256": "3bc1970c0bce4e400dac8283b5f247df2c71f65a3497b7326843953d3615a257"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold3_k3_all_strategies/patient_results.csv",
+      "sha256": "0fc016c8b3b257c66d719056b6ab5d293d55cec17a2cc713ded2993ea7fc8c4f"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold3_k5_all_strategies/patient_results.csv",
+      "sha256": "52c1e05d1b98ef330b5019c3e851b6723d71c75b661e58f16d05d1461d0b9c6a"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold3_k7_all_strategies/patient_results.csv",
+      "sha256": "bd8cc75c803867cef74c5d0ff6d120fd163c480774938d12c12fc8f304e21c26"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold4_k10_all_strategies/patient_results.csv",
+      "sha256": "02f91f3c0095660be02b4131b5c2888af87e884cbcbfba510b37187547595a3d"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold4_k2_all_strategies/patient_results.csv",
+      "sha256": "a53f0c5c4c996c89266be5d0b382b0ea036254d5c23cab3e48a2073506d46b1f"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold4_k3_all_strategies/patient_results.csv",
+      "sha256": "eff68c5320e80506a0c6ddeb66bedbc705780dbb7578ec1111c30bac64c0bb42"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold4_k5_all_strategies/patient_results.csv",
+      "sha256": "65d87699279b585bd12ffd41560b438f277e717817e258a609746a4397374faa"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/oa_hb_tpm_map/fold4_k7_all_strategies/patient_results.csv",
+      "sha256": "d27e529fc7b3b5c3061b0593325bb27c21a1ad82a1996d6f4cf611805a736d0f"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold0_k10_all_strategies/patient_results.csv",
+      "sha256": "bacc076d215c11792f7edc2647f1053b112d6feb5829a393923ab0eb860d38e8"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold0_k2_all_strategies/patient_results.csv",
+      "sha256": "ad9709c6d9ceab3b59d08e6606533bb21cf6ae02a0643c8ca97d202b1cd9a840"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold0_k3_all_strategies/patient_results.csv",
+      "sha256": "b148f487fa413daf292a5b7e52698df61a848b7b386d2b808810de53b60309f0"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold0_k5_all_strategies/patient_results.csv",
+      "sha256": "2e088138f4c419928f13e50a9fd9461fe76a869d74870d9e52b50dbd95238686"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold0_k7_all_strategies/patient_results.csv",
+      "sha256": "0efd7620daaac7f5cd9ffde8ff543ffec48b4e829605729ce6df0e58ebc88087"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold1_k10_all_strategies/patient_results.csv",
+      "sha256": "2bb728532e2e55981d223438b4ab30cd55b6bf8819a3d0044534dbe263b43764"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold1_k2_all_strategies/patient_results.csv",
+      "sha256": "64cd1888c02ce9eec59d0e378db4d15a3f250d63659c03dc3a1fc8b789c58a93"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold1_k3_all_strategies/patient_results.csv",
+      "sha256": "876196b1ccf7c9f74fb785ec5394baa42177f28971930050dcf2e34629c4a8cb"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold1_k5_all_strategies/patient_results.csv",
+      "sha256": "de65c08ddc2e440dd9c1dad0fea29b8cccac37e5eb289cec2b5df2dd3fb5ca8e"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold1_k7_all_strategies/patient_results.csv",
+      "sha256": "44f6c96fd29549309e707dce0da8e738436872f6a04e270760c0c51d84f394ef"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold2_k10_all_strategies/patient_results.csv",
+      "sha256": "0fa39ef41672848b4b9694a16b8447b846bd93449a553591af59387e7cde2fe4"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold2_k2_all_strategies/patient_results.csv",
+      "sha256": "a4c6d95472cecdaf9e1a3fff1e4f65dc905382c7405daf552644afda4f603716"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold2_k3_all_strategies/patient_results.csv",
+      "sha256": "780b1b2e9de7f70eac71533ef019397f1eff4f06c08e8410428d91130a133df1"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold2_k5_all_strategies/patient_results.csv",
+      "sha256": "f601ebd852fd9bbc2d27614cbd6cef6d6898d8f05fce829add2f98f74fe75621"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold2_k7_all_strategies/patient_results.csv",
+      "sha256": "06b0e31f74cfb4fa71df90c3ac1e703cc91d667dd94b9fe8570c5f8c7f090fd8"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold3_k10_all_strategies/patient_results.csv",
+      "sha256": "17f45261b0ec50a6f8f23433324d9c5c95d3f04b27dc37a420339fcc169eb246"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold3_k2_all_strategies/patient_results.csv",
+      "sha256": "11ee5df6d831a6c5d4838dc0befbb125d85bb04f4e28d25b7b3206a3b345238d"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold3_k3_all_strategies/patient_results.csv",
+      "sha256": "1308951ce58401109e9296077b055558cf3f39d0769794ff63ac6dbacdb8fd99"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold3_k5_all_strategies/patient_results.csv",
+      "sha256": "046ed1defbad3afa27706a4125858a46cec8386c6e9b8f3c0e8b50635e5f88c9"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold3_k7_all_strategies/patient_results.csv",
+      "sha256": "a9863ab28f2d024d3fb2997779c77ae0623e2ec89de0cb0f906de2eec8632bf3"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold4_k10_all_strategies/patient_results.csv",
+      "sha256": "9d934af47042f38535bc39e2ac7c51e352d379b71bbf08ee320c256ce82e0cd4"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold4_k2_all_strategies/patient_results.csv",
+      "sha256": "a4aaa9aec60873d84cfe914ae1d8515a1c9b8359abf60b4ebae74752a20440a3"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold4_k3_all_strategies/patient_results.csv",
+      "sha256": "a1905ceaed6312198714b79c0e05ce6e5525faae37f689faa0c49e18c2f9ccf8"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold4_k5_all_strategies/patient_results.csv",
+      "sha256": "d8b48ae26daa208be199f3f4be435ac56d11cc4ff5d7e463149481c100f601bb"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/source_mean/fold4_k7_all_strategies/patient_results.csv",
+      "sha256": "17d59ff5fc3f3e86026bf688785125031eb9a0e4b9999f4045518a5d17c50cb9"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold0_k10_all_strategies/patient_results.csv",
+      "sha256": "01bb5f07c42cb519d1a2e69f6ed353e3c3949a2e9c81bbb76e8852517999cb62"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold0_k2_all_strategies/patient_results.csv",
+      "sha256": "3e0aa4b6211180bcaa56929a220b55e015eb749122dadbf4c9b2cbcee34d3661"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold0_k3_all_strategies/patient_results.csv",
+      "sha256": "9f61ae8df2dfd099b1a314b69c6bd6c5d5c827d4b5b5e435fff5d7398badca07"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold0_k5_all_strategies/patient_results.csv",
+      "sha256": "99366441674a0c1040402134bbba8755f45e37973d169fd95c5c2e2e4b3a1ee5"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold0_k7_all_strategies/patient_results.csv",
+      "sha256": "11cc3c36cb1f7057d2fccb4f04060e64be34f03d5077e918d0c5149517b2fc83"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold1_k10_all_strategies/patient_results.csv",
+      "sha256": "67bdb1790beb9597775d631d02f87505a962345e6b26a740fc10e5a1e60a38dc"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold1_k2_all_strategies/patient_results.csv",
+      "sha256": "5c67ce4fd58bad5672f5c8fce32b1520291e3e85d946bbf9a8a9bae63e4d992b"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold1_k3_all_strategies/patient_results.csv",
+      "sha256": "c9303f5afc279907aad7abd652f7ce1e6f19f13cf00a9010839af4c93415d904"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold1_k5_all_strategies/patient_results.csv",
+      "sha256": "0e61cf96af53af42aaa17979d8a012a3ed5d4c1fbd5a36c785a01d3330ae3672"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold1_k7_all_strategies/patient_results.csv",
+      "sha256": "2cfad7fac925b4058339c362131679abcaa6fcd9222ee4eb8d3ca504de321c19"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold2_k10_all_strategies/patient_results.csv",
+      "sha256": "76f2c89aa4d3cedbfd9cc8415f308a27a3466fdb6a852fc358422b2f6295cbd4"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold2_k2_all_strategies/patient_results.csv",
+      "sha256": "0c225117884ffa261838869a534a06d2e8194b6438d182be1aed040560d1b740"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold2_k3_all_strategies/patient_results.csv",
+      "sha256": "1bcf970e30ac64b2688a2ee967580a6a2f01a9a1ed6d921de46c590e771c7467"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold2_k5_all_strategies/patient_results.csv",
+      "sha256": "5973f00a1588690b413123d2a4ea803c8483bbaa5ab36c18fb3b49074325ae86"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold2_k7_all_strategies/patient_results.csv",
+      "sha256": "15ab6c55136637c3bb642bda4a7a3f35cdb451e804e5f16126a1b3c958339e40"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold3_k10_all_strategies/patient_results.csv",
+      "sha256": "24a04165a818c9ffc12023b85a29a0ec2057be55ae23d989e88d7d6f0ee2fe2d"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold3_k2_all_strategies/patient_results.csv",
+      "sha256": "09cfb729c2c408abe10d2e20bf27ed797c1a28e674423725a8089da84f3aa36b"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold3_k3_all_strategies/patient_results.csv",
+      "sha256": "4cab1e7edaccd6217ab50cd8b68381967feeee4a67dc89609b5bb08a8ef82617"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold3_k5_all_strategies/patient_results.csv",
+      "sha256": "9f2ff125dc4811e7c66d14008be7889c454b9a3a9c4ba2a191cbb57817a40aaa"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold3_k7_all_strategies/patient_results.csv",
+      "sha256": "c9e0686ab7909cfda59c1643acfdcacd68257c5b8f319c58cfe5910f2b91846b"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold4_k10_all_strategies/patient_results.csv",
+      "sha256": "faf559128e3ce150d7f3c1e4983b56fbf6f03c783fff72ee7cfd410c35f353b2"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold4_k2_all_strategies/patient_results.csv",
+      "sha256": "f45d1b815f07b5a9904f0b654898294d6424087af9a4237336e6787c315b6b2f"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold4_k3_all_strategies/patient_results.csv",
+      "sha256": "d97d76ee34452e2fbf45d61eb7d662db6d5aa13a01c18836c1c36ba88c01219c"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold4_k5_all_strategies/patient_results.csv",
+      "sha256": "3219f140b1f0c9590ccd0d18d540cc878dfeea8d81d7711852a107abe209364f"
+    },
+    {
+      "path": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs/target_only/fold4_k7_all_strategies/patient_results.csv",
+      "sha256": "c1094eed195f003e71fff311582f2b1844c7880dc311be7cafcf72354d4a594a"
+    }
+  ],
+  "input_root": "/data0/code/pyh/hb-tpm/version2/private_data/ted_full/runs",
+  "methods": [
+    "oa_hb_tpm_map",
+    "source_mean",
+    "target_only"
+  ],
+  "n_rows": 16170,
+  "n_unique_patients": 98,
+  "reference_method": "oa_hb_tpm_map",
+  "seed": 20260825,
+  "statistical_unit": "patient"
+}

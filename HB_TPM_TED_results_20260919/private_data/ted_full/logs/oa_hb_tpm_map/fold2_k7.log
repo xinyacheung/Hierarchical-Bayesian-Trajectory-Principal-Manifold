@@ -1,0 +1,51 @@
+epoch=000 train_loss=1.49488 validation_dice=0.63631 best=0.63631
+epoch=001 train_loss=1.33949 validation_dice=0.72186 best=0.72186
+epoch=002 train_loss=1.14108 validation_dice=0.73893 best=0.73893
+epoch=003 train_loss=0.92094 validation_dice=0.73810 best=0.73893
+epoch=004 train_loss=0.71704 validation_dice=0.74242 best=0.74242
+epoch=005 train_loss=0.55800 validation_dice=0.75321 best=0.75321
+epoch=006 train_loss=0.45791 validation_dice=0.75099 best=0.75321
+epoch=007 train_loss=0.38092 validation_dice=0.75279 best=0.75321
+epoch=008 train_loss=0.33945 validation_dice=0.75031 best=0.75321
+epoch=009 train_loss=0.31101 validation_dice=0.75755 best=0.75755
+epoch=010 train_loss=0.29039 validation_dice=0.75273 best=0.75755
+epoch=011 train_loss=0.27157 validation_dice=0.75777 best=0.75777
+epoch=012 train_loss=0.25127 validation_dice=0.75714 best=0.75777
+epoch=013 train_loss=0.23675 validation_dice=0.75463 best=0.75777
+epoch=014 train_loss=0.21442 validation_dice=0.75446 best=0.75777
+epoch=015 train_loss=0.19759 validation_dice=0.75573 best=0.75777
+epoch=016 train_loss=0.17615 validation_dice=0.75720 best=0.75777
+epoch=017 train_loss=0.16005 validation_dice=0.75496 best=0.75777
+epoch=018 train_loss=0.13876 validation_dice=0.75653 best=0.75777
+epoch=019 train_loss=0.12226 validation_dice=0.75742 best=0.75777
+epoch=020 train_loss=0.11338 validation_dice=0.75766 best=0.75777
+epoch=021 train_loss=0.10173 validation_dice=0.75649 best=0.75777
+epoch=022 train_loss=0.10097 validation_dice=0.75821 best=0.75821
+epoch=023 train_loss=0.09902 validation_dice=0.75651 best=0.75821
+epoch=024 train_loss=0.09967 validation_dice=0.75666 best=0.75821
+epoch=025 train_loss=0.10223 validation_dice=0.75620 best=0.75821
+epoch=026 train_loss=0.09653 validation_dice=0.75690 best=0.75821
+epoch=027 train_loss=0.09648 validation_dice=0.75603 best=0.75821
+epoch=028 train_loss=0.10003 validation_dice=0.75753 best=0.75821
+epoch=029 train_loss=0.09422 validation_dice=0.75482 best=0.75821
+epoch=030 train_loss=0.09480 validation_dice=0.75726 best=0.75821
+epoch=031 train_loss=0.09731 validation_dice=0.75692 best=0.75821
+epoch=032 train_loss=0.09289 validation_dice=0.75711 best=0.75821
+epoch=033 train_loss=0.10040 validation_dice=0.75842 best=0.75842
+epoch=034 train_loss=0.09362 validation_dice=0.75430 best=0.75842
+epoch=035 train_loss=0.09591 validation_dice=0.75690 best=0.75842
+epoch=036 train_loss=0.09462 validation_dice=0.75735 best=0.75842
+epoch=037 train_loss=0.09428 validation_dice=0.75566 best=0.75842
+epoch=038 train_loss=0.09291 validation_dice=0.75796 best=0.75842
+epoch=039 train_loss=0.09735 validation_dice=0.75601 best=0.75842
+epoch=040 train_loss=0.09128 validation_dice=0.75752 best=0.75842
+epoch=041 train_loss=0.09373 validation_dice=0.75780 best=0.75842
+epoch=042 train_loss=0.09697 validation_dice=0.75670 best=0.75842
+epoch=043 train_loss=0.09561 validation_dice=0.75739 best=0.75842
+epoch=044 train_loss=0.09267 validation_dice=0.75702 best=0.75842
+epoch=045 train_loss=0.09490 validation_dice=0.75566 best=0.75842
+    method_id  k  strategy  n_patients  n_patient_observations  mean_hidden_dice  mean_hidden_hd95_px  mean_area_curve_relative_rmse  mean_hidden_brier  mean_hidden_area_95_coverage  trust_gate_rejection_rate  mean_runtime_s
+oa_hb_tpm_map  7 clustered          20                     100          0.772776             9.083296                       0.367085           0.031536                      0.564706                       1.00        0.030918
+oa_hb_tpm_map  7    random          20                     100          0.767787             9.186865                       0.364282           0.031644                      0.151176                       0.99        0.030816
+oa_hb_tpm_map  7   uniform          20                      20          0.767475             9.148553                       0.363635           0.031432                      0.002941                       0.00        0.032357
+Checkpoint: private_data/ted_full/runs/oa_hb_tpm_map/fold2_k7_all_strategies/checkpoints/best_model.pt

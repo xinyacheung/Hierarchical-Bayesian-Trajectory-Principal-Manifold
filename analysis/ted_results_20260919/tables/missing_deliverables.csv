@@ -1,0 +1,7 @@
+item,delivery_status,evidence,manuscript_boundary
+Classical trajectory baselines,absent,Linear/spline/GP or other frozen-design classical comparators were not delivered,No superiority claim versus classical methods
+Family-shift validation,absent,No held-out family/vendor/acquisition-shift test is present,Trust-gate evidence is limited to sampling-pattern sensitivity
+ED/ES timing error,absent,No ED/ES timing metric appears in patient results,Do not claim improved cardiac event timing
+Temporal jerk/smoothness secondary outcome,absent,No jerk metric appears in delivered results,Do not claim improved physiological smoothness from outcomes
+Raw image arrays,absent,"Package contains derived results, checkpoints, and manifests but not target image arrays",Inference cannot be independently rerun from this package
+Clinical significance threshold,not prespecified,No minimally important difference is defined,Report statistical uncertainty without clinical-significance language

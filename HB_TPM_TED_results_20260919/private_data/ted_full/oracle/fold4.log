@@ -1,0 +1,16 @@
+                      method_id  k  strategy  n_patients  mean_hidden_dice  mean_hidden_hd95_px  mean_area_curve_relative_rmse
+oracle_contour_periodic_fourier  2 clustered          19          0.933538             2.482033                       0.116700
+oracle_contour_periodic_fourier  2    random          19          0.922156             2.922043                       0.148324
+oracle_contour_periodic_fourier  2   uniform          19          0.871165             4.898169                       0.265150
+oracle_contour_periodic_fourier  3 clustered          19          0.935319             2.496340                       0.098004
+oracle_contour_periodic_fourier  3    random          19          0.934705             2.396781                       0.103217
+oracle_contour_periodic_fourier  3   uniform          19          0.916852             3.121864                       0.102469
+oracle_contour_periodic_fourier  5 clustered          19          0.928644             2.616258                       0.123428
+oracle_contour_periodic_fourier  5    random          19          0.952603             1.880117                       0.063783
+oracle_contour_periodic_fourier  5   uniform          19          0.938872             2.266456                       0.044434
+oracle_contour_periodic_fourier  7 clustered          19          0.915520             3.063909                       0.140721
+oracle_contour_periodic_fourier  7    random          19          0.955708             1.788396                       0.058733
+oracle_contour_periodic_fourier  7   uniform          19          0.959495             1.647612                       0.029259
+oracle_contour_periodic_fourier 10 clustered          19          0.912199             3.165162                       0.126090
+oracle_contour_periodic_fourier 10    random          19          0.973306             1.270672                       0.025106
+oracle_contour_periodic_fourier 10   uniform          19          0.984292             1.001557                       0.015799

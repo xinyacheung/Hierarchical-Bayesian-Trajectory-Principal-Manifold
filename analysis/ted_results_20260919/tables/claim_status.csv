@@ -1,0 +1,8 @@
+claim,status,evidence,boundary
+Source-prior benefit (OA-HB-TPM MAP vs target-only),supported,tables/primary_paired_contrasts.csv,Patient-paired global primary metrics; no clinical threshold prespecified
+Observation-aware likelihood benefit over latent-MSE,not supported; latent-MSE is better,tables/primary_paired_contrasts.csv,Training objective comparison within delivered learned methods
+Target-specific posterior updating improves on source mean,not supported,tables/primary_paired_contrasts.csv,Source mean has no posterior interval outputs
+Nominal 95% posterior area intervals are calibrated,not supported,tables/uncertainty_summary.csv,Observed coverage ranges 0.402-0.600
+Trust gate is sensitive to sampling pattern,supported descriptively,tables/trust_gate_rates.csv,Uniform/random/clustered rejection 0.057/0.673/0.879; family shift not tested
+Oracle gap identifies image-to-latent estimation as the dominant bottleneck,supported as a diagnostic inference,tables/oracle_upper_bound.csv,Oracle uses manual contours and is not an end-to-end comparator
+Generalization under acquisition/vendor/family shift,not assessable,tables/missing_deliverables.csv,No family-shift split or external cohort was delivered

@@ -1,0 +1,28 @@
+epoch=000 train_loss=1.49936 validation_dice=0.62921 best=0.62921
+epoch=001 train_loss=1.34299 validation_dice=0.72961 best=0.72961
+epoch=002 train_loss=1.14449 validation_dice=0.74075 best=0.74075
+epoch=003 train_loss=0.92113 validation_dice=0.74142 best=0.74142
+epoch=004 train_loss=0.71531 validation_dice=0.74737 best=0.74737
+epoch=005 train_loss=0.54776 validation_dice=0.74358 best=0.74737
+epoch=006 train_loss=0.43432 validation_dice=0.74933 best=0.74933
+epoch=007 train_loss=0.36639 validation_dice=0.75365 best=0.75365
+epoch=008 train_loss=0.31941 validation_dice=0.74934 best=0.75365
+epoch=009 train_loss=0.29272 validation_dice=0.74432 best=0.75365
+epoch=010 train_loss=0.26160 validation_dice=0.75455 best=0.75455
+epoch=011 train_loss=0.24439 validation_dice=0.74758 best=0.75455
+epoch=012 train_loss=0.22089 validation_dice=0.75027 best=0.75455
+epoch=013 train_loss=0.20645 validation_dice=0.74998 best=0.75455
+epoch=014 train_loss=0.18660 validation_dice=0.75449 best=0.75455
+epoch=015 train_loss=0.16544 validation_dice=0.74852 best=0.75455
+epoch=016 train_loss=0.13921 validation_dice=0.75237 best=0.75455
+epoch=017 train_loss=0.12087 validation_dice=0.75129 best=0.75455
+epoch=018 train_loss=0.10939 validation_dice=0.74582 best=0.75455
+epoch=019 train_loss=0.08988 validation_dice=0.75354 best=0.75455
+epoch=020 train_loss=0.07828 validation_dice=0.74830 best=0.75455
+epoch=021 train_loss=0.07179 validation_dice=0.75315 best=0.75455
+epoch=022 train_loss=0.07156 validation_dice=0.74491 best=0.75455
+                   method_id  k  strategy  n_patients  n_patient_observations  mean_hidden_dice  mean_hidden_hd95_px  mean_area_curve_relative_rmse  mean_hidden_brier  mean_hidden_area_95_coverage  trust_gate_rejection_rate  mean_runtime_s
+oa_hb_tpm_no_phase_alignment  3 clustered          20                     100          0.743624             9.885698                       0.361122           0.038593                      0.880952                       0.96        0.037668
+oa_hb_tpm_no_phase_alignment  3    random          20                     100          0.742927             9.852995                       0.354149           0.038392                      0.851429                       0.64        0.037719
+oa_hb_tpm_no_phase_alignment  3   uniform          20                      20          0.742947             9.780531                       0.351838           0.038019                      0.847619                       0.05        0.040562
+Checkpoint: private_data/ted_full/runs/oa_hb_tpm_no_phase_alignment/fold0_k3_all_strategies/checkpoints/best_model.pt

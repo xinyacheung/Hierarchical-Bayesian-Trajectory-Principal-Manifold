@@ -1,0 +1,28 @@
+epoch=000 train_loss=1.49847 validation_dice=0.63319 best=0.63319
+epoch=001 train_loss=1.34126 validation_dice=0.72963 best=0.72963
+epoch=002 train_loss=1.14217 validation_dice=0.74216 best=0.74216
+epoch=003 train_loss=0.91768 validation_dice=0.74163 best=0.74216
+epoch=004 train_loss=0.71094 validation_dice=0.74939 best=0.74939
+epoch=005 train_loss=0.54196 validation_dice=0.74636 best=0.74939
+epoch=006 train_loss=0.42756 validation_dice=0.75321 best=0.75321
+epoch=007 train_loss=0.35578 validation_dice=0.75690 best=0.75690
+epoch=008 train_loss=0.30924 validation_dice=0.75187 best=0.75690
+epoch=009 train_loss=0.28262 validation_dice=0.74989 best=0.75690
+epoch=010 train_loss=0.25046 validation_dice=0.75764 best=0.75764
+epoch=011 train_loss=0.23240 validation_dice=0.74840 best=0.75764
+epoch=012 train_loss=0.20940 validation_dice=0.75339 best=0.75764
+epoch=013 train_loss=0.19131 validation_dice=0.75094 best=0.75764
+epoch=014 train_loss=0.17247 validation_dice=0.75646 best=0.75764
+epoch=015 train_loss=0.15391 validation_dice=0.74971 best=0.75764
+epoch=016 train_loss=0.12715 validation_dice=0.75439 best=0.75764
+epoch=017 train_loss=0.11162 validation_dice=0.75180 best=0.75764
+epoch=018 train_loss=0.10088 validation_dice=0.74973 best=0.75764
+epoch=019 train_loss=0.08353 validation_dice=0.75442 best=0.75764
+epoch=020 train_loss=0.07447 validation_dice=0.74879 best=0.75764
+epoch=021 train_loss=0.06907 validation_dice=0.75408 best=0.75764
+epoch=022 train_loss=0.06961 validation_dice=0.74513 best=0.75764
+  method_id  k  strategy  n_patients  n_patient_observations  mean_hidden_dice  mean_hidden_hd95_px  mean_area_curve_relative_rmse  mean_hidden_brier  mean_hidden_area_95_coverage  trust_gate_rejection_rate  mean_runtime_s
+source_mean  7 clustered          20                     100          0.746160             9.799647                       0.330285           0.038461                           NaN                       0.56        0.028319
+source_mean  7    random          20                     100          0.744101             9.753638                       0.330285           0.038091                           NaN                       0.35        0.028278
+source_mean  7   uniform          20                      20          0.743919             9.733665                       0.330285           0.037827                           NaN                       0.00        0.028833
+Checkpoint: private_data/ted_full/runs/source_mean/fold0_k7_all_strategies/checkpoints/best_model.pt

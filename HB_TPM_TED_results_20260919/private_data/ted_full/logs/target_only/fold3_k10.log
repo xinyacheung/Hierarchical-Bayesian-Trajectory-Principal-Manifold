@@ -1,0 +1,23 @@
+epoch=000 train_loss=1.49991 validation_dice=0.61549 best=0.61549
+epoch=001 train_loss=1.34372 validation_dice=0.71820 best=0.71820
+epoch=002 train_loss=1.14346 validation_dice=0.72163 best=0.72163
+epoch=003 train_loss=0.91738 validation_dice=0.72121 best=0.72163
+epoch=004 train_loss=0.71097 validation_dice=0.72425 best=0.72425
+epoch=005 train_loss=0.54168 validation_dice=0.72859 best=0.72859
+epoch=006 train_loss=0.42110 validation_dice=0.72265 best=0.72859
+epoch=007 train_loss=0.35660 validation_dice=0.70913 best=0.72859
+epoch=008 train_loss=0.30964 validation_dice=0.72294 best=0.72859
+epoch=009 train_loss=0.27297 validation_dice=0.72189 best=0.72859
+epoch=010 train_loss=0.24464 validation_dice=0.72002 best=0.72859
+epoch=011 train_loss=0.22134 validation_dice=0.71966 best=0.72859
+epoch=012 train_loss=0.19916 validation_dice=0.71829 best=0.72859
+epoch=013 train_loss=0.18579 validation_dice=0.72168 best=0.72859
+epoch=014 train_loss=0.17073 validation_dice=0.72073 best=0.72859
+epoch=015 train_loss=0.14718 validation_dice=0.72110 best=0.72859
+epoch=016 train_loss=0.12296 validation_dice=0.72059 best=0.72859
+epoch=017 train_loss=0.10334 validation_dice=0.71929 best=0.72859
+  method_id  k  strategy  n_patients  n_patient_observations  mean_hidden_dice  mean_hidden_hd95_px  mean_area_curve_relative_rmse  mean_hidden_brier  mean_hidden_area_95_coverage  trust_gate_rejection_rate  mean_runtime_s
+target_only 10 clustered          19                      95          0.761754             9.481089                       0.958850           0.035803                      0.100752                        0.0        0.028333
+target_only 10    random          19                      95          0.752390             9.738833                       0.960305           0.036252                      0.048120                        0.0        0.028363
+target_only 10   uniform          19                      19          0.749992             9.826173                       0.960306           0.036462                      0.011278                        0.0        0.030032
+Checkpoint: private_data/ted_full/runs/target_only/fold3_k10_all_strategies/checkpoints/best_model.pt
